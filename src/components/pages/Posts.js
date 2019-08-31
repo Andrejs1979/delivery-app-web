@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import Cards from 'components/ui/Cards';
 import { Section } from 'components/ui/bulma/layout';
@@ -9,8 +9,8 @@ import { Section } from 'components/ui/bulma/layout';
 import UserContext from 'context/UserContext';
 
 const POSTS = gql`
-	query Posts {
-		posts {
+	query Posts($limit: Int, $status: PostStatus) {
+		posts(limit: $limit, status: $status) {
 			id
 			date
 			status
@@ -24,12 +24,31 @@ const POSTS = gql`
 	}
 `;
 
-export default function Campaigns() {
-	const user = useContext(UserContext);
+const APPROVE_POST = gql`
+	mutation ApprovePost($postID: ID!) {
+		approvePost(postID: $postID) {
+			id
+		}
+	}
+`;
 
+const DECLINE_POST = gql`
+	mutation DeclinePost($postID: ID!, $statusText: String!) {
+		declinePost(postID: $postID, statusText: $statusText) {
+			id
+		}
+	}
+`;
+
+export default function Campaigns() {
+	const { uid } = useContext(UserContext);
+	const headers = { Authorization: `Bearer ${uid}` };
+
+	const [ approvePost, { data: approveData } ] = useMutation(APPROVE_POST, { context: { headers } });
+	const [ declinePost, { data: declineData } ] = useMutation(DECLINE_POST, { context: { headers } });
 	const { loading, data, error } = useQuery(POSTS, {
 		// variables: { email: user.email },
-		context: { headers: { Authorization: `Bearer ${user.uid}` } }
+		context: { headers }
 	});
 
 	if (loading) return <div>Loading</div>;
@@ -37,7 +56,7 @@ export default function Campaigns() {
 
 	return (
 		<Section>
-			<Cards type="posts" data={data.posts} />
+			<Cards type="posts" data={data.posts} actions={[ approvePost, declinePost ]} />
 		</Section>
 	);
 }

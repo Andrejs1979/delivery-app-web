@@ -26,10 +26,12 @@ export default function SidePanel() {
 	return (
 		<Menu>
 			<MenuItem name="Dashboard" icon="tachometer-alt" route="/" />
-			<MenuItem name="Campaigns" icon="globe" route="/campaigns" />
-			<MenuItem name="Consumers" icon="user-friends" route="/consumers" />
 			<MenuItem name="Posts" icon="images" route="/posts" />
 			<MenuItem name="Locations" icon="map-marker-alt" route="/locations" />
+			{/* <MenuItem name="Campaigns" icon="globe" route="/campaigns" /> */}
+			<MenuItem name="Ads" icon="map-marker-alt" route="/ads" />
+			<MenuItem name="Consumers" icon="user-friends" route="/consumers" />
+			<MenuItem name="Transactions" icon="map-marker-alt" route="/transactions" />
 		</Menu>
 	);
 }

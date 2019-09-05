@@ -5,10 +5,10 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
+import { firebaseAppAuth } from 'services/firebase';
+
 import Auth from 'components/pages/AuthPage';
 import Account from 'components/Account';
-
-import { firebaseAppAuth } from 'services/firebase';
 
 const API_URL = process.env.REACT_APP_API_ROOT_URL + '/graphql';
 

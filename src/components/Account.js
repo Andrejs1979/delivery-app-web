@@ -3,7 +3,7 @@ import { Router } from '@reach/router';
 
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-
+import { ModalProvider } from 'react-modal-hook';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
 
@@ -45,16 +45,18 @@ export default function Account() {
 
 	return (
 		<UserContext.Provider value={context}>
-			<Router>
-				<Layout path="/">
-					<Dashboard path="/" />
-					<Campaigns path="/campaigns" />
-					<Consumers path="/consumers" />
-					<Posts path="/posts" />
-					<Locations path="/locations" />
-					<Transactions path="/transactions" />
-				</Layout>
-			</Router>
+			<ModalProvider>
+				<Router>
+					<Layout path="/">
+						<Dashboard path="/" />
+						<Campaigns path="/campaigns" />
+						<Consumers path="/consumers" />
+						<Posts path="/posts" />
+						<Locations path="/locations" />
+						<Transactions path="/transactions" />
+					</Layout>
+				</Router>
+			</ModalProvider>
 		</UserContext.Provider>
 	);
 }

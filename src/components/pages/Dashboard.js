@@ -6,29 +6,29 @@ export default function Dashboard() {
 	return (
 		<div>
 			<br />
-			<nav class="level">
-				<div class="level-item has-text-centered">
+			<nav className="level">
+				<div className="level-item has-text-centered">
 					<div>
-						<p class="heading">Tweets</p>
-						<p class="title">3,456</p>
+						<p className="heading">Tweets</p>
+						<p className="title">3,456</p>
 					</div>
 				</div>
-				<div class="level-item has-text-centered">
+				<div className="level-item has-text-centered">
 					<div>
-						<p class="heading">Following</p>
-						<p class="title">123</p>
+						<p className="heading">Following</p>
+						<p className="title">123</p>
 					</div>
 				</div>
-				<div class="level-item has-text-centered">
+				<div className="level-item has-text-centered">
 					<div>
-						<p class="heading">Followers</p>
-						<p class="title">456K</p>
+						<p className="heading">Followers</p>
+						<p className="title">456K</p>
 					</div>
 				</div>
-				<div class="level-item has-text-centered">
+				<div className="level-item has-text-centered">
 					<div>
-						<p class="heading">Likes</p>
-						<p class="title">789</p>
+						<p className="heading">Likes</p>
+						<p className="title">789</p>
 					</div>
 				</div>
 			</nav>

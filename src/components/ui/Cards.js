@@ -6,6 +6,7 @@ const LOGO_URI = 'https://res.cloudinary.com/hqsczucpx/image/upload/c_scale,h_10
 // const POST_URL = 'https://res.cloudinary.com/hqsczucpx/image/upload/c_scale,h_400/posts/';
 
 export default function Cards({ type, data, actions }) {
+	if (!data) return <div>No data!</div>;
 	return (
 		<div className="columns is-multiline is-mobile">
 			{data.map((item) => <Item type={type} data={item} actions={actions} key={item.id} />)}

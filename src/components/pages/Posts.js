@@ -15,6 +15,16 @@ const POSTS = gql`
 			date
 			status
 			uri
+			location {
+				id
+			}
+			ad {
+				id
+				creativeURI
+			}
+			campaign {
+				id
+			}
 			consumer {
 				id
 				avatar
@@ -41,14 +51,15 @@ const DECLINE_POST = gql`
 `;
 
 export default function Campaigns() {
-	const { uid } = useContext(UserContext);
-	const headers = { Authorization: `Bearer ${uid}` };
+	const { user } = useContext(UserContext);
+	const headers = { Authorization: `Bearer ${user.uid}` };
 
 	const [ approvePost, { data: approveData } ] = useMutation(APPROVE_POST, { context: { headers } });
 	const [ declinePost, { data: declineData } ] = useMutation(DECLINE_POST, { context: { headers } });
 	const { loading, data, error } = useQuery(POSTS, {
-		// variables: { email: user.email },
-		context: { headers }
+		variables: { status: 'pending' },
+		context: { headers },
+		pollInterval: 500
 	});
 
 	if (loading) return <div>Loading</div>;

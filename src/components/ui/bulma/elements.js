@@ -10,7 +10,7 @@ export function Content({ children }) {
 export function Button({ action, children, icon, color, size }) {
 	return (
 		<div className="control">
-			<button onClick={action} className={`button is-${color} is-${size}`} >
+			<button onClick={action} className={`button is-${color} is-${size}`}>
 				<span className="icon">
 					<i className={`fas fa-${icon} is-${size}`} />
 				</span>

@@ -10,30 +10,31 @@ import { Input } from 'components/ui/bulma/form';
 
 export default function AuthPage({ props }) {
 	const [ mode, setMode ] = useState('signUp');
-
-	console.log(props);
-
-	// state = {
-	// 	signUp: true,
-	// 	reset: false,
-	// 	error: false,
-	// 	resetSuccess: false
-	// };
-	// { !this.state.reset ? this.renderAuth() : this.renderReset() }
+	console.log(mode);
 
 	return (
 		<div>
 			<Hero>
-				<h1 className="title">Create Account</h1>
-				<h2 className="subtitle">Fullheight subtitle</h2>
-				<Box>{renderAuth(mode, setMode)}</Box>
+				<div className="columns is-mobile is-centered">
+					<div className="column is-half">
+						<h1 className="title">Create Account</h1>
+						{/* <h2 className="subtitle">Fullheight subtitle</h2> */}
+						<Box>
+							<Auth mode={mode} />
+							<br />
+							<button onClick={() => setMode('Login')}>
+								<strong>Have an account? Sign in</strong>
+							</button>
+						</Box>
+					</div>
+				</div>
 			</Hero>
 			<Footer>©2019 Cashmark</Footer>
 		</div>
 	);
 }
 
-const renderAuth = (mode) => (
+const Auth = ({ mode }) => (
 	<Formik
 		component={authForm}
 		initialValues={{
@@ -101,7 +102,9 @@ const authForm = ({ status, isSubmitting, handleSubmit, handleChange, handleBlur
 		/>
 		<br />
 		{status && <Notification>{status}</Notification>}
-		<Button>Create Account</Button>
+		<Button color="primary" size="large" icon="check-circle">
+			Create Account
+		</Button>
 	</Form>
 );
 

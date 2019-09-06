@@ -79,42 +79,40 @@ export default function Navbar() {
 				<div id="navbarBasicExample" className="navbar-menu">
 					<div className="navbar-end">
 						<div className="navbar-item">
-							<strong>Available: $50</strong>
+							<Button icon="coins" color="light">
+								<strong>Available: $50</strong>
+							</Button>
 						</div>
 						<div className="navbar-item">
-							<div className="buttons">
-								<Button icon="plus-circle" color="primary">
-									New Campaign
-								</Button>
-							</div>
+							<Button icon="plus-circle" color="primary">
+								New Campaign
+							</Button>
 						</div>
-						<div className="navbar-item">
-							<div className="dropdown is-hoverable is-right">
-								<figure
-									className="image is-48x48 dropdown-trigger"
-									aria-haspopup="true"
-									aria-controls="dropdown-menu4"
-								>
-									<img className="is-rounded" src="https://bulma.io/images/placeholders/48x48.png" />
-									{/* <span className="icon is-small">
-									<i className="fas fa-angle-down" aria-hidden="true" />
-								</span> */}
-								</figure>
 
-								<div className="dropdown-menu" id="dropdown-menu4" role="menu">
-									<div className="dropdown-content">
-										<a href="#" className="dropdown-item">
-											Settings
-										</a>
+						<div
+							className="navbar-item  dropdown is-hoverable is-right"
+							aria-haspopup="true"
+							aria-controls="dropdown-menu4"
+						>
+							<span className="icon dropdown-trigger">
+								<i className="fas fa-2x fa-user-circle has-text-grey" aria-hidden="true" />
+								<i className="fas fa-angle-down" aria-hidden="true" />
+							</span>
 
-										<hr className="dropdown-divider" />
-										<a href="#" className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
-											<strong>Log Out</strong>
-										</a>
-									</div>
+							<div className="dropdown-menu" id="dropdown-menu4" role="menu">
+								<div className="dropdown-content">
+									<a href="#" className="dropdown-item">
+										Settings
+									</a>
+
+									<hr className="dropdown-divider" />
+									<a href="#" className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
+										<strong>Log Out</strong>
+									</a>
 								</div>
 							</div>
 						</div>
+
 						<div className="navbar-item" />
 					</div>
 				</div>

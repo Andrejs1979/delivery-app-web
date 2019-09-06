@@ -4,42 +4,150 @@ import { firebaseAppAuth } from 'services/firebase';
 
 import { Formik, Form, Field } from 'formik';
 
-import { Hero, Footer } from 'components/ui/bulma/layout';
+import { Hero } from 'components/ui/bulma/layout';
 import { Box, Button, Notification } from 'components/ui/bulma/elements';
 import { Input } from 'components/ui/bulma/form';
 
 export default function AuthPage({ props }) {
-	const [ mode, setMode ] = useState('signUp');
-	console.log(mode);
+	const [ isLogin, toggleLogin ] = useState(false);
+	const [ isReset, toggleReset ] = useState(false);
 
 	return (
-		<div>
-			<Hero>
-				<div className="columns is-mobile is-centered">
-					<div className="column is-half">
-						<h1 className="title">Create Account</h1>
-						{/* <h2 className="subtitle">Fullheight subtitle</h2> */}
-						<Box>
-							<Auth mode={mode} />
-							<br />
-							<button onClick={() => setMode('Login')}>
-								<strong>Have an account? Sign in</strong>
-							</button>
-						</Box>
-					</div>
+		<Hero>
+			<div className="columns is-mobile is-centered">
+				<div className="column is-half">
+					<h1 className="title">{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create Account'}</h1>
+					{/* <h2 className="subtitle">Fullheight subtitle</h2> */}
+
+					<Box>
+						{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
+						<br />
+						<div className="field is-grouped">
+							{isReset || (
+								<Button color="text" action={() => toggleLogin(!isLogin)}>
+									<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
+								</Button>
+							)}
+							<Button color="text" action={() => toggleReset(!isReset)}>
+								<strong>{isReset ? 'Back' : 'Reset Password'}</strong>
+							</Button>
+						</div>
+					</Box>
+					<p>© 2019 Cashmark</p>
 				</div>
-			</Hero>
-			<Footer>©2019 Cashmark</Footer>
-		</div>
+			</div>
+		</Hero>
 	);
 }
 
-const Auth = ({ mode }) => (
+const validate = (values) => {
+	let errors = {};
+
+	if (!values.email) {
+		errors.email = 'Please enter your email!';
+	} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,5}$/i.test(values.email))
+		errors.email = 'This email address is invalid';
+
+	if (!values.password) {
+		errors.password = 'Password is required!';
+	} else if (values.password.length < 8) {
+		errors.password = 'Password should be longer!';
+	}
+
+	return errors;
+};
+
+const handleAuth = async (values, { setSubmitting, setStatus, setErrors }) => {
+	setSubmitting(true);
+
+	try {
+		await firebaseAppAuth.createUserWithEmailAndPassword(values.email, values.password);
+	} catch (error) {
+		if (error.code === 'auth/email-already-in-use') {
+			try {
+				await firebaseAppAuth.signInWithEmailAndPassword(values.email, values.password);
+			} catch (error) {
+				setStatus(error.message);
+			}
+		} else {
+			setStatus(error.message);
+		}
+	}
+
+	setSubmitting(false);
+};
+
+const SignUp = () => (
 	<Formik
-		component={authForm}
 		initialValues={{
 			email: '',
 			password: ''
+		}}
+		validate={validate}
+		onSubmit={handleAuth}
+	>
+		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
+			<Form>
+				<Field
+					label="Business Email"
+					name="email"
+					component={Input}
+					placeholder="Email"
+					autoComplete="username"
+				/>
+				<br />
+				<Field
+					label="Set your password"
+					name="password"
+					type="password"
+					component={Input}
+					placeholder="Password"
+					autoComplete="current-password"
+				/>
+				<br />
+				{status && <Notification>{status}</Notification>}
+				<Button full type="submit" color="primary" size="large" icon="check-circle">
+					Create Account
+				</Button>
+			</Form>
+		)}
+	</Formik>
+);
+const Login = () => (
+	<Formik
+		initialValues={{
+			email: '',
+			password: ''
+		}}
+		validate={validate}
+		onSubmit={handleAuth}
+	>
+		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
+			<Form>
+				<Field label="Email" name="email" component={Input} placeholder="Email" autoComplete="username" />
+				<br />
+				<Field
+					label="Password"
+					name="password"
+					type="password"
+					component={Input}
+					placeholder="Password"
+					autoComplete="current-password"
+				/>
+				<br />
+				{status && <Notification>{status}</Notification>}
+				<Button full type="submit" color="primary" size="large" icon="key">
+					Sign In
+				</Button>
+			</Form>
+		)}
+	</Formik>
+);
+
+const Reset = () => (
+	<Formik
+		initialValues={{
+			email: ''
 		}}
 		validate={(values) => {
 			let errors = {};
@@ -49,131 +157,35 @@ const Auth = ({ mode }) => (
 			} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,5}$/i.test(values.email))
 				errors.email = 'This email address is invalid';
 
-			if (!values.password) {
-				errors.password = 'Password is required!';
-			} else if (values.password.length < 8) {
-				errors.password = 'Password should be longer!';
-			}
-
 			return errors;
 		}}
-		onSubmit={async (values, { setSubmitting, setStatus, setErrors }) => {
-			setSubmitting(true);
-
-			if (mode === 'signUp') {
-				try {
-					await firebaseAppAuth.createUserWithEmailAndPassword(values.email, values.password);
-				} catch (error) {
-					console.log(error);
-					if (error.code === 'auth/email-already-in-use') {
-						try {
-							await firebaseAppAuth.signInWithEmailAndPassword(values.email, values.password);
-						} catch (error) {
-							setStatus(error.message);
-						}
-					} else {
-						setStatus(error.message);
-					}
-				}
-			} else {
-				try {
-					await firebaseAppAuth.signInWithEmailAndPassword(values.email, values.password);
-				} catch (error) {
-					setStatus(error.message);
-				}
+		onSubmit={(values, { setSubmitting, setStatus }) => {
+			try {
+				firebaseAppAuth
+					.sendPasswordResetEmail(values.email)
+					.then(() => setStatus('Please check your email for the next steps.'));
+			} catch (error) {
+				setStatus(error.message);
 			}
 
 			setSubmitting(false);
 		}}
-	/>
+	>
+		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
+			<Form>
+				<Field
+					label="Account Email"
+					name="email"
+					component={Input}
+					placeholder="Email"
+					autoComplete="username"
+				/>
+				<br />
+				{status && <Notification>{status}</Notification>}
+				<Button full type="submit" color="primary" size="large" icon="envelope" disabled={isSubmitting}>
+					Reset Password
+				</Button>
+			</Form>
+		)}
+	</Formik>
 );
-
-const authForm = ({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
-	<Form>
-		<Field label="Email" name="email" component={Input} placeholder="Email" autoComplete="username" />
-		<br />
-		<Field
-			label="Password"
-			name="password"
-			type="password"
-			component={Input}
-			placeholder="Password"
-			autoComplete="current-password"
-		/>
-		<br />
-		{status && <Notification>{status}</Notification>}
-		<Button color="primary" size="large" icon="check-circle">
-			Create Account
-		</Button>
-	</Form>
-);
-
-// const renderReset = () => (
-// 	<Card>
-// 		<center>
-// 			<Heading>Reset your password</Heading>
-// 		</center>
-// 		<br />
-// 		<Formik
-// 			initialValues={{
-// 				email: ''
-// 			}}
-// 			validate={(values) => {
-// 				let errors = {};
-
-// 				if (!values.email) {
-// 					errors.email = 'Please enter your email!';
-// 				} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,5}$/i.test(values.email))
-// 					errors.email = 'This email address is invalid';
-
-// 				return errors;
-// 			}}
-// 			onSubmit={(values, { setSubmitting, setErrors }) => {
-// 				firebaseAppAuth
-// 					.sendPasswordResetEmail(values.email)
-// 					.then(() => this.setState({ resetSuccess: true }))
-// 					.catch((error) => this.setState({ error }));
-
-// 				setSubmitting(false);
-// 			}}
-// 		>
-// 			{({ isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
-// 				<Form>
-// 					<Field>
-// 						<Input
-// 							type="text"
-// 							name="email"
-// 							value={values.email}
-// 							onChange={handleChange}
-// 							onBlur={handleBlur}
-// 							placeholder="Account Email"
-// 							invalid={errors.email && touched.email}
-// 							autoComplete="username"
-// 						/>
-// 						{errors.email && touched.email && <Help>{errors.email}</Help>}
-// 					</Field>
-
-// 					<Field>
-// 						<Button type="submit" color="primary" disabled={isSubmitting}>
-// 							Reset Password
-// 							{/* <ChevronRight className="button-icon-xs" /> */}
-// 						</Button>
-// 						{this.state.resetSuccess && (
-// 							<Notification color="success">Please check your email for the next steps.</Notification>
-// 						)}
-// 						{this.props.error && <Notification color="danger">{this.props.error}</Notification>}
-// 						<br />
-// 						<hr />
-// 						<center>
-// 							<h5>
-// 								<Link to="" onClick={this.toggleReset}>
-// 									Back to sign in
-// 								</Link>
-// 							</h5>
-// 						</center>
-// 					</Field>
-// 				</Form>
-// 			)}
-// 		</Formik>
-// 	</Card>
-// );

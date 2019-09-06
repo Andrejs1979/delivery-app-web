@@ -1,7 +1,18 @@
 import React, { useContext } from 'react';
+import { useModal } from 'react-modal-hook';
 import UserContext from 'context/UserContext';
+
+const Modal = ({ onClose }) => (
+	<div className="modal">
+		<div className="modal-background" />
+		<div className="modal-content">
+			<div>sfsdf</div>
+		</div>
+		<button className="modal-close is-large" aria-label="close" />
+	</div>
+);
 export default function Dashboard() {
-	const user = useContext(UserContext);
+	const { account } = useContext(UserContext);
 
 	return (
 		<div>

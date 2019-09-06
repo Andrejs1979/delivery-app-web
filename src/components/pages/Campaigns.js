@@ -22,8 +22,7 @@ const CAMPAIGNS = gql`
 `;
 
 export default function Campaigns() {
-	const { user } = useContext(UserContext);
-	const headers = { Authorization: `Bearer ${user.uid}` };
+	const { headers } = useContext(UserContext);
 
 	const { loading, data, error } = useQuery(CAMPAIGNS, {
 		context: { headers }
@@ -31,7 +30,6 @@ export default function Campaigns() {
 
 	if (loading) return <div>Loading</div>;
 	if (error) return <div>{error}</div>;
-	console.log(data);
 
 	return (
 		<Section>

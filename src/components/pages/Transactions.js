@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { Container } from 'components/ui/bulma/layout';
 import { Content } from 'components/ui/bulma/elements';
 import Cards from 'components/ui/Cards';
+import Error from 'components/ui/Error';
 
 import UserContext from 'context/UserContext';
 
@@ -23,15 +24,15 @@ const CONSUMERS = gql`
 `;
 
 export default function Campaigns() {
-	const user = useContext(UserContext);
+	const { headers } = useContext(UserContext);
 
 	const { loading, data, error } = useQuery(CONSUMERS, {
 		// variables: { email: user.email },
-		context: { headers: { Authorization: `Bearer ${user.uid}` } }
+		context: { headers }
 	});
 
 	if (loading) return <div>Loading</div>;
-	if (error) return <div>{error}</div>;
+	if (error) return <Error error={error} />;
 
 	return <Cards type="consumers" data={data.consumers} />;
 }

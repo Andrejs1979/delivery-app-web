@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { Router } from '@reach/router';
-import { Formik, Form, Field } from 'formik';
 
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
+import { Router } from '@reach/router';
+import { Formik, Form, Field } from 'formik';
 import { ModalProvider } from 'react-modal-hook';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
 
 import Layout from 'components/ui/Layout';
 import { Hero } from 'components/ui/bulma/layout';
-import { Box, Icon, Button, ButtonGroup, Notification } from 'components/ui/bulma/elements';
+import { Box, Button, ButtonGroup } from 'components/ui/bulma/elements';
 import { Input } from 'components/ui/bulma/form';
 
 import Dashboard from 'components/pages/Dashboard';
@@ -19,6 +19,7 @@ import Campaigns from 'components/pages/Campaigns';
 import Consumers from 'components/pages/Consumers';
 import Posts from 'components/pages/Posts';
 import Locations from 'components/pages/Locations';
+import Ads from 'components/pages/Ads';
 import Transactions from 'components/pages/Transactions';
 
 import UserContext from 'context/UserContext';
@@ -81,6 +82,7 @@ export default function Account() {
 							<Consumers path="/consumers" />
 							<Posts path="/posts" />
 							<Locations path="/locations" />
+							<Ads path="/ads" />
 							<Transactions path="/transactions" />
 						</Layout>
 					</Router>

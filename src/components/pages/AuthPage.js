@@ -89,17 +89,21 @@ const SignUp = () => (
 		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 			<Form>
 				<Field
-					label="Business Email"
 					name="email"
+					label="Business Email"
+					size="large"
+					icon="at"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
 				/>
 				<br />
 				<Field
-					label="Set your password"
 					name="password"
 					type="password"
+					label="Set your password"
+					size="large"
+					icon="lock"
 					component={Input}
 					placeholder="Password"
 					autoComplete="current-password"
@@ -124,18 +128,28 @@ const Login = () => (
 	>
 		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 			<Form>
-				<Field label="Email" name="email" component={Input} placeholder="Email" autoComplete="username" />
+				<Field
+					label="Email"
+					name="email"
+					icon="at"
+					size="large"
+					component={Input}
+					placeholder="Email"
+					autoComplete="username"
+				/>
 				<br />
 				<Field
 					label="Password"
 					name="password"
 					type="password"
+					icon="lock"
+					size="large"
 					component={Input}
 					placeholder="Password"
 					autoComplete="current-password"
 				/>
 				<br />
-				{status && <Notification>{status}</Notification>}
+				{status && <Notification color="danger">{status}</Notification>}
 				<Button full type="submit" color="primary" size="large" icon="key">
 					Sign In
 				</Button>
@@ -174,8 +188,10 @@ const Reset = () => (
 		{({ status, isSubmitting, handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 			<Form>
 				<Field
-					label="Account Email"
 					name="email"
+					label="Account Email"
+					icon="at"
+					size="large"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"

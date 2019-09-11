@@ -1,12 +1,18 @@
 import React from 'react';
-import { Box, Button } from 'components/ui/bulma/elements';
+import { Box, Button, Notification } from 'components/ui/bulma/elements';
 
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 const LOGO_URI = 'https://res.cloudinary.com/hqsczucpx/image/upload/c_scale,h_100/logo/';
 // const POST_URL = 'https://res.cloudinary.com/hqsczucpx/image/upload/c_scale,h_400/posts/';
 
 export default function Cards({ type, data, actions }) {
-	if (!data) return <div>No data!</div>;
+	if (!data || data.length < 1)
+		return (
+			<Notification color="dark">
+				<strong>{`No ${type} found. Please check back later!`}</strong>
+			</Notification>
+		);
+
 	return (
 		<div className="columns is-multiline is-mobile">
 			{data.map((item) => <Item type={type} data={item} actions={actions} key={item.id} />)}
@@ -16,6 +22,25 @@ export default function Cards({ type, data, actions }) {
 
 const Item = ({ type, data, actions }) => {
 	switch (type) {
+		case 'ads':
+			return (
+				<div className="column is-narrow">
+					<Box>
+						<div className="media">
+							<div className="media-left">
+								<figure className="image is-48x48">
+									<img src={`${LOGO_URI}${data.creativeURI}`} alt="Post" />
+								</figure>
+							</div>
+							<div className="media-content">
+								<p className="title is-4">{data.status}</p>
+								<p className="subtitle is-6">${data.rate}</p>
+							</div>
+						</div>
+					</Box>
+				</div>
+			);
+
 		case 'campaigns':
 			return (
 				<div className="column is-narrow">
@@ -105,42 +130,44 @@ const Item = ({ type, data, actions }) => {
 									<p className="subtitle is-6">@{data.consumer.displayName}</p>
 								</div>
 							</div>
-							<div className="field is-grouped">
-								<Button
-									color="primary"
-									icon="check-circle"
-									action={() => actions[0]({ variables: { postID: data.id } })}
-								>
-									Approve
-								</Button>
-								<Button
-									color="warning"
-									icon="hashtag"
-									action={() =>
-										actions[1]({
-											variables: {
-												postID: data.id,
-												statusText:
-													'Post not found on Instagram. Please make sure your account is public and you add #cashmark tag to your post.'
-											}
-										})}
-								>
-									Not Found
-								</Button>
-								<Button
-									color="danger"
-									icon="smile"
-									action={() =>
-										actions[1]({
-											variables: {
-												postID: data.id,
-												statusText: 'Please make sure your face is in the picture!'
-											}
-										})}
-								>
-									No Face
-								</Button>
-							</div>
+							{actions && (
+								<div className="field is-grouped">
+									<Button
+										color="primary"
+										icon="check-circle"
+										action={() => actions[0]({ variables: { postID: data.id } })}
+									>
+										Approve
+									</Button>
+									<Button
+										color="warning"
+										icon="hashtag"
+										action={() =>
+											actions[1]({
+												variables: {
+													postID: data.id,
+													statusText:
+														'Post not found on Instagram. Please make sure your account is public and you add #cashmark tag to your post.'
+												}
+											})}
+									>
+										Not Found
+									</Button>
+									<Button
+										color="danger"
+										icon="smile"
+										action={() =>
+											actions[1]({
+												variables: {
+													postID: data.id,
+													statusText: 'Please make sure your face is in the picture!'
+												}
+											})}
+									>
+										No Face
+									</Button>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 import Cards from 'components/ui/Cards';
-import { Section } from 'components/ui/bulma/layout';
+import Error from 'components/ui/Error';
 
 import UserContext from 'context/UserContext';
 
@@ -29,11 +29,7 @@ export default function Campaigns() {
 	});
 
 	if (loading) return <div>Loading</div>;
-	if (error) return <div>{error}</div>;
+	if (error) return <Error error={error} />;
 
-	return (
-		<Section>
-			<Cards type="campaigns" data={data.campaigns} />
-		</Section>
-	);
+	return <Cards type="campaigns" data={data.campaigns} />;
 }

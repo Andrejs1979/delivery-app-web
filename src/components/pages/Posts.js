@@ -4,7 +4,8 @@ import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import Cards from 'components/ui/Cards';
-import { Section } from 'components/ui/bulma/layout';
+import Error from 'components/ui/Error';
+//import { Section } from 'components/ui/bulma/layout';
 
 import UserContext from 'context/UserContext';
 
@@ -51,8 +52,7 @@ const DECLINE_POST = gql`
 `;
 
 export default function Campaigns() {
-	const { user } = useContext(UserContext);
-	const headers = { Authorization: `Bearer ${user.uid}` };
+	const { headers } = useContext(UserContext);
 
 	const [ approvePost, { data: approveData } ] = useMutation(APPROVE_POST, { context: { headers } });
 	const [ declinePost, { data: declineData } ] = useMutation(DECLINE_POST, { context: { headers } });
@@ -63,11 +63,7 @@ export default function Campaigns() {
 	});
 
 	if (loading) return <div>Loading</div>;
-	if (error) return <div>{error}</div>;
+	if (error) return <Error error={error} />;
 
-	return (
-		<Section>
-			<Cards type="posts" data={data.posts} actions={[ approvePost, declinePost ]} />
-		</Section>
-	);
+	return <Cards type="posts" data={data.posts} actions={[ approvePost, declinePost ]} />;
 }

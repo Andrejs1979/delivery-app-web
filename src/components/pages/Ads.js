@@ -9,41 +9,30 @@ import Error from 'components/ui/Error';
 
 import UserContext from 'context/UserContext';
 
-const LOCATIONS = gql`
-	query Locations {
-		locations {
+const ADS = gql`
+	query Ads($campaignID: ID) {
+		ads(campaignID: $campaignID) {
 			id
-			name
-			category
-			address
-			city
-			state
-			zip
-			country
-			active
-			verified
-			campaigns {
-				id
-			}
-			assets {
-				id
-				logoURI
-				defaultPictureURI
-			}
+			status
+			creativeURI
+			radius
+			rate
+			currency
 		}
 	}
 `;
 
-export default function Campaigns() {
+export default function Ads() {
 	const { headers } = useContext(UserContext);
 
-	const { loading, data, error } = useQuery(LOCATIONS, {
+	const { loading, data, error } = useQuery(ADS, {
 		// variables: { email: user.email },
 		context: { headers }
 	});
 
 	if (loading) return <div>Loading</div>;
 	if (error) return <Error error={error} />;
+	console.log(data);
 
-	return <Cards type="locations" data={data.locations} />;
+	return <Cards type="ads" data={data.ads} />;
 }

@@ -6,16 +6,15 @@ import Navbar from 'components/ui/Navbar';
 
 export default function Layout({ children }) {
 	return (
-		<div>
-			<Navbar />
-			<div className="columns">
-				<div className="column is-narrow">
-					<Menu />
-				</div>
-				<div className="column">{children}</div>
-				<div className="column is-narrow" />
+		<div className="columns">
+			<div className="column is-narrow">
+				<Menu />
 			</div>
-			{/* <Footer>Cashmark</Footer> */}
+			<div className="column">
+				<Navbar />
+				{children}
+			</div>
+			<div className="column is-narrow" />
 		</div>
 	);
 }

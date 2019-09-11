@@ -49,6 +49,6 @@ export function Icon({ name, size }) {
 	);
 }
 
-export function Notification({ children }) {
-	return <div className="notification is-danger">{children}</div>;
+export function Notification({ children, color }) {
+	return <div className={`notification is-${color}`}>{children}</div>;
 }

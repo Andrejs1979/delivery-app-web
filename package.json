@@ -7,6 +7,7 @@
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.4.4",
     "bulma": "^0.7.5",
+    "bulma-addons": "^0.1.12",
     "firebase": "^6.5.0",
     "formik": "^1.5.8",
     "graphql": "^14.5.4",

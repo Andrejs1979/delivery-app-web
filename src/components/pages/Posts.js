@@ -54,8 +54,8 @@ const DECLINE_POST = gql`
 export default function Campaigns() {
 	const { headers } = useContext(UserContext);
 
-	const [ approvePost, { data: approveData } ] = useMutation(APPROVE_POST, { context: { headers } });
-	const [ declinePost, { data: declineData } ] = useMutation(DECLINE_POST, { context: { headers } });
+	const [ approvePost ] = useMutation(APPROVE_POST, { context: { headers } });
+	const [ declinePost ] = useMutation(DECLINE_POST, { context: { headers } });
 	const { loading, data, error } = useQuery(POSTS, {
 		variables: { status: 'pending' },
 		context: { headers },

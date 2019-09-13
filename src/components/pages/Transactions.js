@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
-import { Container } from 'components/ui/bulma/layout';
-import { Content } from 'components/ui/bulma/elements';
+// import { Container } from 'components/ui/bulma/layout';
+// import { Content } from 'components/ui/bulma/elements';
 import Cards from 'components/ui/Cards';
 import Error from 'components/ui/Error';
 

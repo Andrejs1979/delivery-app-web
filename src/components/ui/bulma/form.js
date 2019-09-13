@@ -1,10 +1,14 @@
 import React from 'react';
 
-export function Input({ field, form: { touched, errors }, type, placeholder, size, label, icon }) {
+export function Input(props) {
+	const { field, form: { touched, errors }, type, placeholder, size, label, icon, loading } = props;
+
 	return (
 		<div className="field">
 			<label className={`label is-${size}`}>{label}</label>
-			<div className={`control  ${icon && 'has-icons-left'} has-icons-right`}>
+			<div
+				className={`control is-${size} ${icon && 'has-icons-left'} has-icons-right ${loading && 'is-loading'}`}
+			>
 				<input
 					type={type}
 					placeholder={placeholder}

@@ -4,19 +4,25 @@
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.0.1",
+    "@charlietango/use-script": "^2.0.0",
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.4.4",
     "bulma": "^0.7.5",
     "bulma-addons": "^0.1.12",
     "firebase": "^6.5.0",
-    "formik": "^1.5.8",
+    "formik": "2.0.1-rc.13",
+    "formik-wizard": "^3.1.1",
     "graphql": "^14.5.4",
     "node-sass": "^4.12.0",
     "react": "^16.9.0",
+    "react-albus": "^2.0.0",
     "react-dom": "^16.9.0",
+    "react-driftjs": "^1.1.8",
     "react-firebase-hooks": "^2.1.0",
     "react-modal-hook": "^2.0.0",
-    "react-scripts": "3.1.1"
+    "react-places-autocomplete": "^7.2.1",
+    "react-scripts": "3.1.1",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",

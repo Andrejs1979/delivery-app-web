@@ -62,13 +62,13 @@ export default function Navbar() {
 
 							<div className="navbar-dropdown">
 								{account.campaigns.map((campaign) => (
-									<a className="navbar-item" key={campaign.id}>
+									<span className="navbar-item" key={campaign.id}>
 										<strong>{campaign.name}</strong>
-									</a>
+									</span>
 								))}
 
 								<hr className="navbar-divider" />
-								<a className="navbar-item">New Campaign</a>
+								<span className="navbar-item">New Campaign</span>
 							</div>
 						</div>
 					) : (
@@ -101,14 +101,12 @@ export default function Navbar() {
 
 							<div className="dropdown-menu" id="dropdown-menu4" role="menu">
 								<div className="dropdown-content">
-									<a href="#" className="dropdown-item">
-										Settings
-									</a>
+									<span className="dropdown-item">Settings</span>
 
 									<hr className="dropdown-divider" />
-									<a href="#" className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
+									<span className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
 										<strong>Log Out</strong>
-									</a>
+									</span>
 								</div>
 							</div>
 						</div>

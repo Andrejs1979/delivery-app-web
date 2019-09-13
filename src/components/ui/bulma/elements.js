@@ -4,12 +4,13 @@ export function Box({ children }) {
 	return <div className="box">{children}</div>;
 }
 
-export function Button({ type, action, children, icon, color, size, block }) {
+export function Button({ type, action, children, icon, color, size, block, disabled }) {
 	return (
 		<div className="control">
 			<button
 				type={type}
 				onClick={action}
+				disabled={disabled}
 				className={`button is-${color || 'primary'} is-${size || 'normal'} ${!block || 'is-fullwidth'}`}
 			>
 				{icon && (
@@ -51,4 +52,8 @@ export function Icon({ name, size }) {
 
 export function Notification({ children, color }) {
 	return <div className={`notification is-${color}`}>{children}</div>;
+}
+
+export function Progress({ value, color, size }) {
+	return <progress value={value} max="100" className={`progress is-${color} is-${size}`} />;
 }

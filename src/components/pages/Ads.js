@@ -32,7 +32,6 @@ export default function Ads() {
 
 	if (loading) return <div>Loading</div>;
 	if (error) return <Error error={error} />;
-	console.log(data);
 
 	return <Cards type="ads" data={data.ads} />;
 }

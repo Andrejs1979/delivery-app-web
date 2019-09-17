@@ -9,50 +9,87 @@ function Menu({ title, children }) {
 		</aside>
 	);
 }
-function MenuItem({ name, icon, route }) {
+function MenuItem({ extended, name, icon, route }) {
+	if (extended) {
+		return (
+			<li>
+				<Link to={route}>
+					<span className="icon">
+						<i className={`fas fa-${icon}`} />
+					</span>{' '}
+					<strong>{name}</strong>
+				</Link>
+			</li>
+		);
+	} else
+		return (
+			<li className="has-text-centered">
+				<Link to={route}>
+					<span className="icon is-large">
+						<i className={`fas fa-${icon} fa-lg`} />
+					</span>
+					<p className="is-size-7 has-text-weight-semibold">{name}</p>
+				</Link>
+			</li>
+		);
+}
+
+export default function SidePanel({ extendedMenu, extendMenu }) {
 	return (
-		<li>
-			<Link to={route}>
-				<span className="icon">
-					<i className={`fas fa-${icon}`} />
-				</span>{' '}
-				<strong>{name}</strong>
-			</Link>
-		</li>
+		<div>
+			<Menu>
+				<MenuItem name="Dashboard" icon="tachometer-alt" route="/" />
+				<MenuItem name="Campaigns" icon="globe" route="/campaigns" />
+				<MenuItem name="Posts" icon="images" route="/posts" />
+				<MenuItem name="Locations" icon="map-marked-alt" route="/locations" />
+				{/* <MenuItem name="Ads" icon="ad" route="/ads" /> */}
+				<MenuItem name="Promoters" icon="user-friends" route="/consumers" />
+				<MenuItem name="Rewards" icon="money-check-alt" route="/transactions" />
+			</Menu>
+			<ExtendedMenu extendedMenu={extendedMenu} extendMenu={extendMenu} />
+		</div>
 	);
 }
 
-export default function SidePanel() {
+function ExtendedMenu({ extendedMenu, extendMenu }) {
 	return (
-		<Menu>
-			<div className="navbar-brand">
-				<Link className="navbar-item" to="/">
-					<span className="icon is-large has-text-primary">
-						<span className="fa-stack fa-lg">
-							<i className="fas fa-square fa-stack-2x" />
-							<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
-						</span>
-					</span>
-				</Link>
+		<div className="demo">
+			<div className="block">
+				<div className={`navigation-view  ${extendedMenu ? 'is-active' : ''}`} id="myNavigationView">
+					<div className="navbar-brand">
+						<Link to="/">
+							<span className="icon is-large has-text-primary">
+								<span className="fa-stack fa-lg">
+									<i className="fas fa-square fa-stack-2x" />
+									<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
+								</span>
+							</span>
+						</Link>
+						<a
+							className={`navbar-burger ${extendedMenu ? 'is-active' : ''}`}
+							id="myToggleButton"
+							role="button"
+							aria-expanded="false"
+							aria-label="menu"
+							onClick={() => extendMenu(!extendedMenu)}
+						>
+							<span aria-hidden="true" />
+							<span aria-hidden="true" />
+							<span aria-hidden="true" />
+						</a>
+					</div>
 
-				<button
-					className="navbar-burger burger"
-					aria-label="menu"
-					aria-expanded="false"
-					data-target="navbarBasicExample"
-				>
-					<span aria-hidden="true" />
-					<span aria-hidden="true" />
-					<span aria-hidden="true" />
-				</button>
+					<Menu>
+						<MenuItem extended name="Dashboard" icon="tachometer-alt" route="/" />
+						<MenuItem extended name="Campaigns" icon="globe" route="/campaigns" />
+						<MenuItem extended name="Posts" icon="images" route="/posts" />
+						<MenuItem extended name="Locations" icon="map-marker-alt" route="/locations" />
+						<MenuItem extended name="Ads" icon="ad" route="/ads" />
+						<MenuItem extended name="Consumers" icon="user-friends" route="/consumers" />
+						<MenuItem extended name="Transactions" icon="dollar-sign" route="/transactions" />
+					</Menu>
+				</div>
 			</div>
-			<MenuItem name="Dashboard" icon="tachometer-alt" route="/" />
-			<MenuItem name="Posts" icon="images" route="/posts" />
-			<MenuItem name="Locations" icon="map-marker-alt" route="/locations" />
-			{/* <MenuItem name="Campaigns" icon="globe" route="/campaigns" />*/}
-			<MenuItem name="Ads" icon="ad" route="/ads" />
-			<MenuItem name="Consumers" icon="user-friends" route="/consumers" />
-			<MenuItem name="Transactions" icon="dollar-sign" route="/transactions" />
-		</Menu>
+		</div>
 	);
 }

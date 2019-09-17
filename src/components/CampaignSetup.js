@@ -2,14 +2,15 @@ import React, { useContext, useState } from 'react';
 // import gql from 'graphql-tag';
 // import { useQuery, useMutation } from '@apollo/react-hooks';
 
-import { FastField, Field, useFormikContext } from 'formik';
+import { FastField, FieldArray, useFormikContext } from 'formik';
 import { FormikWizard, useFormikWizard } from 'formik-wizard';
 import { object, string } from 'yup';
 
-import { Hero } from 'components/ui/bulma/layout';
-import { Box, Button, ButtonGroup, Progress } from 'components/ui/bulma/elements';
-import { Input } from 'components/ui/bulma/form';
 import Places from 'components/ui/Places';
+
+import { Hero } from 'components/ui/bulma/layout';
+import { Box, Button, ButtonGroup, Icon, Progress } from 'components/ui/bulma/elements';
+import { Input } from 'components/ui/bulma/form';
 
 import UserContext from 'context/UserContext';
 
@@ -55,16 +56,6 @@ export default function AccountSetup() {
 		</Hero>
 	);
 }
-
-const validate = (values) => {
-	let errors = {};
-
-	if (!values.name) errors.name = 'Please enter your email!';
-	if (!values.fullName) errors.fullName = 'Please enter your full name!';
-	if (!values.phone) errors.phone = 'Please enter your phone!';
-
-	return errors;
-};
 
 const stepTitles = [
 	{
@@ -155,8 +146,6 @@ const Welcome = () => (
 );
 
 function Brand() {
-	const { errors, touched } = useFormikContext();
-
 	return (
 		<div>
 			<FastField
@@ -181,16 +170,30 @@ function Brand() {
 }
 
 function Locations() {
-	const { errors, touched } = useFormikContext();
+	const { values, setValues } = useFormikContext();
+	// const [ locations, setLocations ] = useState([]);
+
+	const { locations } = values;
+
+	const addLocation = (location) => {
+		console.log('locations:', values.locations);
+		const lll = values.locations.concat(location);
+		console.log(lll);
+
+		setValues({ locations: lll });
+		// setLocations(locations.concat(location));
+	};
 
 	return (
-		<Field
-			name="name"
-			label="Look up address or place name"
+		<FastField
+			name="location"
+			label="Find a location or business"
 			icon="search"
 			size="large"
 			component={Places}
 			placeholder="Look up address or place name"
+			action={addLocation}
+			locations={locations}
 		/>
 	);
 }
@@ -216,17 +219,6 @@ function Summary() {
 
 const steps = [
 	{
-		id: 'locations',
-		component: Locations,
-		initialValues: {
-			name: ''
-		},
-		validationSchema: object().shape({
-			name: string().required()
-		})
-		// actionLabel: 'Next'
-	},
-	{
 		id: 'brand',
 		component: Brand,
 		initialValues: {
@@ -236,9 +228,20 @@ const steps = [
 		validationSchema: object().shape({
 			name: string().required('Please set a campaign name!')
 		})
-		// actionLabel: 'Next: Choose locations'
+		// actionLabel: 'Next: Choose location'
 	},
-
+	{
+		id: 'location',
+		component: Locations,
+		initialValues: {
+			location: '',
+			locations: []
+		},
+		validationSchema: object().shape({
+			location: string().required()
+		})
+		// actionLabel: 'Next'
+	},
 	{
 		id: 'reward',
 		component: Brand,

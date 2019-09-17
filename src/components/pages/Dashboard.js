@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 // import { useModal } from 'react-modal-hook';
+import { Link } from '@reach/router';
 
-import { Notification } from 'components/ui/bulma/elements';
+import { Button, Notification } from 'components/ui/bulma/elements';
 import Error from 'components/ui/Error';
 
 import UserContext from 'context/UserContext';
@@ -14,6 +15,9 @@ const ACCOUNT = gql`
 	query Account {
 		account {
 			id
+			campaigns {
+				id
+			}
 			posts {
 				id
 				date
@@ -56,15 +60,6 @@ const POSTS = gql`
 	}
 `;
 
-// const Modal = ({ onClose }) => (
-// 	<div className="modal">
-// 		<div className="modal-background" />
-// 		<div className="modal-content">
-// 			<div>sfsdf</div>
-// 		</div>
-// 		<button className="modal-close is-large" aria-label="close" />
-// 	</div>
-// );
 export default function Dashboard() {
 	const { headers } = useContext(UserContext);
 	const { data, loading, error } = useQuery(ACCOUNT, { context: { headers }, pollInterval: 20000 });
@@ -73,17 +68,41 @@ export default function Dashboard() {
 	if (error) return <Error error={error} />;
 
 	const { account } = data;
+
 	return (
 		<div>
 			<br />
-			{/* <KeyNumbers /> */}
 			<div className="tile is-ancestor">
-				<div className="tile is-vertical is-8">
+				<div className="tile is-vertical is-12">
+					{!account.campaigns.length > 0 && (
+						<div className="tile is-parent">
+							<article className="tile is-child notification is-white">
+								<nav className="level">
+									<div className="level-left">
+										<span>
+											<p className="title">Create your first promo campaign</p>
+											<p className="subtitle">We'll guide you through, step by step.</p>
+										</span>
+									</div>
+
+									<div className="level-right">
+										<Link to="/get-started">
+											<Button size="medium" icon="plus-circle">
+												Get Started
+											</Button>
+											{/* <Button size="medium" icon="plus-circle" action={showModal}>
+												Get Started Modal
+											</Button> */}
+										</Link>
+									</div>
+								</nav>
+							</article>
+						</div>
+					)}
 					<div className="tile">
 						<div className="tile is-parent is-vertical">
 							<article className="tile is-child notification is-primary">
 								<p className="title">Posts 0</p>
-
 								<p className="subtitle">Top tile</p>
 							</article>
 							<article className="tile is-child notification is-danger">
@@ -103,6 +122,17 @@ export default function Dashboard() {
 								<Featured post={account.posts[0]} />
 							</article>
 						</div>
+						<div className="tile is-parent">
+							<article className="tile is-child notification is-light">
+								<div className="content">
+									<p className="title">Top Promoters</p>
+									<p className="subtitle">Customers with the most posts</p>
+									<div className="content">
+										<TopPromoters consumers={account.consumers} />
+									</div>
+								</div>
+							</article>
+						</div>
 					</div>
 					<div className="tile is-parent">
 						<article className="tile is-child notification is-light">
@@ -111,17 +141,6 @@ export default function Dashboard() {
 							<PendingPosts />
 						</article>
 					</div>
-				</div>
-				<div className="tile is-parent">
-					<article className="tile is-child notification is-light">
-						<div className="content">
-							<p className="title">Top Promoters</p>
-							<p className="subtitle">Customers with the most posts</p>
-							<div className="content">
-								<TopPromoters consumers={account.consumers} />
-							</div>
-						</div>
-					</article>
 				</div>
 			</div>
 		</div>
@@ -156,36 +175,6 @@ function PendingPosts() {
 	);
 }
 
-// export function KeyNumbers() {
-// 	return (
-// 		<nav className="level">
-// 			<div className="level-item has-text-centered">
-// 				<div>
-// 					<p className="heading">Posts</p>
-// 					<p className="title">0</p>
-// 				</div>
-// 			</div>
-// 			<div className="level-item has-text-centered">
-// 				<div>
-// 					<p className="heading">Promoters</p>
-// 					<p className="title">0</p>
-// 				</div>
-// 			</div>
-// 			<div className="level-item has-text-centered">
-// 				<div>
-// 					<p className="heading">Auditory</p>
-// 					<p className="title">-</p>
-// 				</div>
-// 			</div>
-// 			<div className="level-item has-text-centered">
-// 				<div>
-// 					<p className="heading">Likes</p>
-// 					<p className="title">-</p>
-// 				</div>
-// 			</div>
-// 		</nav>
-// 	);
-// }
 const Featured = ({ post }) => (
 	<figure className="image is-square">
 		{post && post.uri ? (

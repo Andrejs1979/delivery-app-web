@@ -14,7 +14,7 @@ import { firebaseAppAuth } from 'services/firebase';
 import Layout from 'components/ui/Layout';
 
 import AccountSetup from 'components/AccountSetup';
-import CampaignSetup from 'components/CampaignSetup';
+import CampaignSetup from 'components/CampaignWizard';
 
 import Dashboard from 'components/pages/Dashboard';
 import Campaigns from 'components/pages/Campaigns';
@@ -58,11 +58,12 @@ export default function Account() {
 		<UserContext.Provider value={{ user, account, headers }}>
 			{account.status === 'new' ? (
 				<AccountSetup />
-			) : account.campaigns.length > 0 ? (
+			) : (
 				<ModalProvider>
 					<Router>
 						<Layout path="/">
 							<Dashboard path="/" />
+							<CampaignSetup path="get-started" />
 							<Campaigns path="/campaigns" />
 							<Consumers path="/consumers" />
 							<Posts path="/posts" />
@@ -72,14 +73,38 @@ export default function Account() {
 						</Layout>
 					</Router>
 				</ModalProvider>
-			) : (
-				<div>
-					<CampaignSetup />
-				</div>
 			)}
 			{/* {process.env.NODE_ENV === 'production' && (
 				<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
 			)} */}
 		</UserContext.Provider>
 	);
+	// return (
+	// 	<UserContext.Provider value={{ user, account, headers }}>
+	// 		{account.status === 'new' ? (
+	// 			<AccountSetup />
+	// 		) : account.campaigns.length > 0 ? (
+	// 			<ModalProvider>
+	// 				<Router>
+	// 					<Layout path="/">
+	// 						<Dashboard path="/" />
+	// 						<Campaigns path="/campaigns" />
+	// 						<Consumers path="/consumers" />
+	// 						<Posts path="/posts" />
+	// 						<Locations path="/locations" />
+	// 						<Ads path="/ads" />
+	// 						<Transactions path="/transactions" />
+	// 					</Layout>
+	// 				</Router>
+	// 			</ModalProvider>
+	// 		) : (
+	// 			<div>
+	// 				<CampaignSetup />
+	// 			</div>
+	// 		)}
+	// 		{/* {process.env.NODE_ENV === 'production' && (
+	// 			<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
+	// 		)} */}
+	// 	</UserContext.Provider>
+	// );
 }

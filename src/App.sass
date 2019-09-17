@@ -9,13 +9,14 @@ $pink: #fa7c91;
 $brown: #757763;
 $beige-light: #d0d1cd;
 $beige-lighter: #eff0eb;
+$white: #FFFFFF;
 
 // Update Bulma's global variables
 $family-sans-serif: 'Nunito'; //,sans-serif;
 $grey-dark: $brown;
 $grey-light: $beige-light;
 $primary: $purple;
-$link: $pink;
+$link: $purple;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
 
@@ -25,10 +26,9 @@ $control-border-width: 2px;
 $input-border-color: $beige-light;
 $input-shadow: none;
 
-
 // Import Bulma
 @import "../node_modules/bulma/bulma.sass";
-
+@import "../node_modules/bulma-addons/src/sass/navigation-view.sass"
 // or 
 // Import only what you need from Bulma
 //@import '../node_modules/bulma/sass/utilities/_all.sass';

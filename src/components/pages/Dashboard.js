@@ -166,9 +166,9 @@ function PendingPosts() {
 
 	return (
 		<div className="columns is-multiline is-mobile">
-			{data.map((item) => (
+			{data.posts.map((item) => (
 				<figure className="image is-100x100" key={item.id}>
-					<img src={`${CLOUDINARY}/c_scale,w_100/posts/${data.uri}`} alt="Post" />
+					<img src={`${CLOUDINARY}/c_scale,w_100/posts/${item.uri}`} alt="Post" />
 				</figure>
 			))}
 		</div>

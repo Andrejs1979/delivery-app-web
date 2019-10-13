@@ -25,7 +25,7 @@ const ACCOUNT = gql`
 `;
 
 export default function Navbar({ extendedMenu, extendMenu }) {
-	const { headers } = useContext(UserContext);
+	const { headers, user } = useContext(UserContext);
 
 	const { loading, data, error } = useQuery(ACCOUNT, {
 		context: { headers },
@@ -107,7 +107,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 
 								<div className="dropdown-menu" id="dropdown-menu4" role="menu">
 									<div className="dropdown-content">
-										<span className="dropdown-item">Settings</span>
+										<span className="dropdown-item">{user.email}</span>
 
 										<hr className="dropdown-divider" />
 										<span className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>

@@ -12,6 +12,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
 
 import Layout from 'components/ui/Layout';
+import Spinner from 'components/ui/Spinner';
 
 import AccountSetup from 'components/AccountSetup';
 import CampaignSetup from 'components/CampaignWizard';
@@ -49,7 +50,7 @@ export default function Account() {
 		context: { headers }
 	});
 
-	if (loading) return <div>Loading</div>;
+	if (loading) return <Spinner/>
 	if (error) return <div>{error}</div>;
 
 	const account = data.accounts[0];

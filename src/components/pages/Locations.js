@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 
 import Cards from 'components/ui/Cards';
 import Error from 'components/ui/Error';
+import Spinner from 'components/ui/Spinner';
 //import { Section } from 'components/ui/bulma/layout';
 
 import UserContext from 'context/UserContext';
@@ -42,7 +43,7 @@ export default function Campaigns() {
 		context: { headers }
 	});
 
-	if (loading) return <div>Loading</div>;
+	if (loading) return <Spinner />;
 	if (error) return <Error error={error} />;
 
 	return <Cards type="locations" data={data.locations} />;

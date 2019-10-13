@@ -1,28 +1,16 @@
 import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import { useModal } from 'react-modal-hook';
 import { Link } from '@reach/router';
 import { firebaseAppAuth } from 'services/firebase';
+
+import Error from 'components/ui/Error';
+import Spinner from 'components/ui/Spinner';
 
 import { Button } from 'components/ui/bulma/elements';
 
 import UserContext from 'context/UserContext';
-
-const ACCOUNT = gql`
-	query Account {
-		account {
-			id
-			name
-			status
-			balance
-			campaigns {
-				id
-				name
-				status
-			}
-		}
-	}
-`;
 
 export default function Navbar({ extendedMenu, extendMenu }) {
 	const { headers, user } = useContext(UserContext);
@@ -32,10 +20,39 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 		pollInterval: 10000
 	});
 
-	if (loading) return <div>Loading</div>;
+	const [ showPaymentFormModal, hidePaymentFormModal ] = useModal(() => (
+		<div className="modal is-active">
+			<div className="modal-background" />
+			<div className="modal-content">{/* <PaymentForm onClose={hidePaymentFormModal} /> */}</div>
+		</div>
+	));
+
+	const [ showCreateScheduledModal, hideCreateScheduledModal ] = useModal(() => (
+		<div className="modal is-active">
+			<div className="modal-background" />
+			<div className="modal-content">{/* <ScheduleForm onClose={hideCreateScheduledModal} /> */}</div>
+		</div>
+	));
+
+	const [ showInvoiceForm, hideInvoiceForm ] = useModal(() => (
+		<div className="modal is-active">
+			<div className="modal-background" />
+			<div className="modal-content">{/* <InvoiceForm onClose={hideInvoiceForm} /> */}</div>
+		</div>
+	));
+
+	const [ showCustomerForm, hideCustomerForm ] = useModal(() => (
+		<div className="modal is-active">
+			<div className="modal-background" />
+			<div className="modal-content">{/* <CustomerForm onClose={hideCustomerForm} /> */}</div>
+		</div>
+	));
+
+	if (loading) return <Spinner />;
 	if (error) return <div>{error}</div>;
 
-	const { account } = data;
+	const { account: { name, type, campaigns, balance } } = data;
+	console.log(type);
 
 	return (
 		<nav className="navbar" role="navigation" aria-label="main navigation">
@@ -59,14 +76,19 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 
 			<div id="navbarBasicExample" className="navbar-menu">
 				<div className="navbar-start">
-					{account.campaigns && account.campaigns.length > 2 ? (
+					<div className="navbar-item">
+						<Link to="/">
+							<p className="title is-4">{name}</p>
+						</Link>
+					</div>
+					{campaigns && campaigns.length > 2 ? (
 						<div className="navbar-item has-dropdown is-hoverable">
 							<span className="navbar-link">
 								<strong>All Campaigns</strong>
 							</span>
 
 							<div className="navbar-dropdown">
-								{account.campaigns.map((campaign) => (
+								{campaigns.map((campaign) => (
 									<span className="navbar-item" key={campaign.id}>
 										<strong>{campaign.name}</strong>
 									</span>
@@ -85,13 +107,65 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 					<div className="navbar-end">
 						<div className="navbar-item">
 							<Button icon="coins" color="white">
-								<strong>Available: ${account.balance}</strong>
+								<strong>Available: ${balance}</strong>
 							</Button>
 						</div>
-						<div className="navbar-item">
-							<Button icon="plus-circle" color="primary">
-								New Campaign
+						{/* <div className="navbar-item">
+							<Button icon="credit-card" color="danger">
+								Add funds
 							</Button>
+						</div> */}
+						<div className="navbar-item">
+							<div className="dropdown is-hoverable is-right">
+								<div className="dropdown-trigger">
+									<button
+										className="button is-primary"
+										aria-haspopup="true"
+										aria-controls="dropdown-menu"
+									>
+										<span className="icon">
+											<i className="fas fa-plus-circle" aria-hidden="true" />
+										</span>
+										<span>
+											<strong>Create</strong>
+										</span>
+										<span className="icon is-small">
+											<i className="fas fa-angle-down" aria-hidden="true" />
+										</span>
+									</button>
+								</div>
+								<div className="dropdown-menu" id="dropdown-menu" role="menu">
+									<div className="dropdown-content">
+										<a className="dropdown-item" onClick={showPaymentFormModal}>
+											<span className="icon is-large">
+												<i className="fas fa-credit-card fa-lg" />
+											</span>
+											<span className="title is-5">Manual Payment</span>
+										</a>
+										<hr className="dropdown-divider" />
+										<a className="dropdown-item" onClick={showInvoiceForm}>
+											<span className="icon is-large">
+												<i className="fas fa-paperclip fa-lg" />
+											</span>
+											<span className="title is-5">Invoice</span>
+										</a>
+										<a className="dropdown-item" onClick={showCreateScheduledModal}>
+											<span className="icon is-large">
+												<i className="fas fa-clock fa-lg" />
+											</span>
+											<span className="title is-5">Scheduled Payment</span>
+										</a>
+
+										<hr className="dropdown-divider" />
+										<a className="dropdown-item" onClick={showCustomerForm}>
+											<span className="icon is-large">
+												<i className="fas fa-address-card fa-lg" />
+											</span>
+											<span className="title is-5">Customer</span>
+										</a>
+									</div>
+								</div>
+							</div>
 						</div>
 
 						<div className="navbar-item">
@@ -110,9 +184,9 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 										<span className="dropdown-item">{user.email}</span>
 
 										<hr className="dropdown-divider" />
-										<span className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
+										<a className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>
 											<strong>Log Out</strong>
-										</span>
+										</a>
 									</div>
 								</div>
 							</div>
@@ -124,3 +198,20 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 		</nav>
 	);
 }
+
+const ACCOUNT = gql`
+	query Account {
+		account {
+			id
+			name
+			type
+			status
+			balance
+			campaigns {
+				id
+				name
+				status
+			}
+		}
+	}
+`;

@@ -10,6 +10,9 @@ import { firebaseAppAuth } from 'services/firebase';
 import Auth from 'components/pages/AuthPage';
 import Account from 'components/Account';
 
+import Error from 'components/ui/Error';
+import Spinner from 'components/ui/Spinner';
+
 const API_URL = process.env.REACT_APP_API_ROOT_URL + '/graphql';
 
 const client = new ApolloClient({
@@ -19,21 +22,8 @@ const client = new ApolloClient({
 export default function App() {
 	const [ user, loading, error ] = useAuthState(firebaseAppAuth);
 
-	if (loading) {
-		return (
-			<div>
-				<p>Please wait...</p>
-			</div>
-		);
-	}
-
-	if (error) {
-		return (
-			<div>
-				<p>Error: {error}</p>
-			</div>
-		);
-	}
+	if (loading) return <Spinner />;
+	if (error) return <Error error={error} />;
 
 	return <ApolloProvider client={client}>{user ? <Account /> : <Auth />}</ApolloProvider>;
 }

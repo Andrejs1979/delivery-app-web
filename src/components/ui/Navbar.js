@@ -52,7 +52,6 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 	if (error) return <div>{error}</div>;
 
 	const { account: { name, type, campaigns, balance } } = data;
-	console.log(type);
 
 	return (
 		<nav className="navbar" role="navigation" aria-label="main navigation">
@@ -140,29 +139,33 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 											<span className="icon is-large">
 												<i className="fas fa-credit-card fa-lg" />
 											</span>
-											<span className="title is-5">Manual Payment</span>
+											<span className="title is-5">New locations</span>
 										</a>
-										<hr className="dropdown-divider" />
+
 										<a className="dropdown-item" onClick={showInvoiceForm}>
 											<span className="icon is-large">
 												<i className="fas fa-paperclip fa-lg" />
 											</span>
-											<span className="title is-5">Invoice</span>
-										</a>
-										<a className="dropdown-item" onClick={showCreateScheduledModal}>
-											<span className="icon is-large">
-												<i className="fas fa-clock fa-lg" />
-											</span>
-											<span className="title is-5">Scheduled Payment</span>
+											<span className="title is-5">Promo</span>
 										</a>
 
-										<hr className="dropdown-divider" />
 										<a className="dropdown-item" onClick={showCustomerForm}>
 											<span className="icon is-large">
 												<i className="fas fa-address-card fa-lg" />
 											</span>
-											<span className="title is-5">Customer</span>
+											<span className="title is-5">Invite Customers</span>
 										</a>
+										{type === 'sme' || (
+											<div>
+												<hr className="dropdown-divider" />
+												<a className="dropdown-item" onClick={showCustomerForm}>
+													<span className="icon is-large">
+														<i className="fas fa-address-card fa-lg" />
+													</span>
+													<span className="title is-5">New Campaign</span>
+												</a>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>

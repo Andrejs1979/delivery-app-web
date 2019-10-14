@@ -10,6 +10,23 @@ import Spinner from 'components/ui/Spinner';
 
 import UserContext from 'context/UserContext';
 
+export default function Campaigns() {
+	const { headers } = useContext(UserContext);
+
+	const [ approvePost ] = useMutation(APPROVE_POST, { context: { headers } });
+	const [ declinePost ] = useMutation(DECLINE_POST, { context: { headers } });
+	const { loading, data, error } = useQuery(POSTS, {
+		variables: { status: 'pending' },
+		context: { headers },
+		pollInterval: 10000
+	});
+
+	if (loading) return <Spinner />;
+	if (error) return <Error error={error} />;
+
+	return <Cards type="posts" data={data.posts} actions={[ approvePost, declinePost ]} />;
+}
+
 const POSTS = gql`
 	query Posts($limit: Int, $status: PostStatus) {
 		posts(limit: $limit, status: $status) {
@@ -51,20 +68,3 @@ const DECLINE_POST = gql`
 		}
 	}
 `;
-
-export default function Campaigns() {
-	const { headers } = useContext(UserContext);
-
-	const [ approvePost ] = useMutation(APPROVE_POST, { context: { headers } });
-	const [ declinePost ] = useMutation(DECLINE_POST, { context: { headers } });
-	const { loading, data, error } = useQuery(POSTS, {
-		variables: { status: 'pending' },
-		context: { headers },
-		pollInterval: 500
-	});
-
-	if (loading) return <Spinner />;
-	if (error) return <Error error={error} />;
-
-	return <Cards type="posts" data={data.posts} actions={[ approvePost, declinePost ]} />;
-}

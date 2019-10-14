@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-// import { useModal } from 'react-modal-hook';
+import { useModal } from 'react-modal-hook';
 import { Link } from '@reach/router';
 
 import { Button, Notification } from 'components/ui/bulma/elements';
 
+import CampaignWizard from 'components/forms/CampaignWizard';
 import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
@@ -13,9 +14,18 @@ import UserContext from 'context/UserContext';
 
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
-export default function Dashboard() {
+export default function Dashboard({ navigate }) {
 	const { headers } = useContext(UserContext);
 	const { data, loading, error } = useQuery(ACCOUNT, { context: { headers }, pollInterval: 20000 });
+
+	const [ showCampaignWizard, hideCampaignWizard ] = useModal(() => (
+		<div className="modal is-active">
+			<div className="modal-background" />
+			<div className="modal-content">
+				<CampaignWizard onClose={hideCampaignWizard} />
+			</div>
+		</div>
+	));
 
 	if (loading) return <Spinner />;
 	if (error) return <Error error={error} />;
@@ -24,7 +34,6 @@ export default function Dashboard() {
 
 	return (
 		<div>
-			<br />
 			<div className="tile is-ancestor">
 				<div className="tile is-vertical is-12">
 					{!campaigns.length > 0 && (
@@ -39,11 +48,9 @@ export default function Dashboard() {
 									</div>
 
 									<div className="level-right">
-										<Link to="/get-started">
-											<Button size="medium" icon="magic">
-												Get Started
-											</Button>
-										</Link>
+										<Button size="medium" icon="magic" color="danger" action={showCampaignWizard}>
+											Get Started
+										</Button>
 									</div>
 								</nav>
 							</article>
@@ -53,15 +60,15 @@ export default function Dashboard() {
 						<div className="tile is-parent is-vertical">
 							<article className="tile is-child notification is-primary">
 								<p className="title">Posts 0</p>
-								<p className="subtitle">Top tile</p>
+								<p className="subtitle">Total posts in your promo</p>
 							</article>
 							<article className="tile is-child notification is-danger">
 								<p className="title">Promoters 0</p>
-								<p className="subtitle">Bottom tile</p>
+								<p className="subtitle">People participating in your promo</p>
 							</article>
 							<article className="tile is-child notification is-warning">
 								<p className="title">Locations 0</p>
-								<p className="subtitle">Promoted Locations</p>
+								<p className="subtitle">Locations covered by your promo</p>
 							</article>
 						</div>
 						<div className="tile is-parent">
@@ -74,7 +81,7 @@ export default function Dashboard() {
 								</article>
 							) : (
 								<article className="tile is-child notification is-light">
-									<p className="title">Example Post</p>
+									<p className="title">Example post</p>
 									<p className="subtitle">This is how you promo posts will look like</p>
 									{/* <Cards type="posts" data={[ posts[0] ]} /> */}
 									<Featured post={posts[0]} />
@@ -84,7 +91,7 @@ export default function Dashboard() {
 						<div className="tile is-parent">
 							<article className="tile is-child notification is-light">
 								<div className="content">
-									<p className="title">Top Promoters</p>
+									<p className="title">Top promoters</p>
 									<p className="subtitle">Customers with the most posts</p>
 									<div className="content">
 										<TopPromoters consumers={consumers} />
@@ -146,21 +153,29 @@ const Featured = ({ post }) => (
 	</figure>
 );
 
-const TopPromoters = ({ consumers }) => (
-	<table className="table is-hoverable">
-		<tbody>
-			{consumers.map((consumer) => {
-				return (
-					<tr key={consumer.id}>
-						{/* <th>{i++}</th> */}
-						<td>{consumer.displayName}</td>
-						<td>{consumer.postCount}</td>
-					</tr>
-				);
-			})}
-		</tbody>
-	</table>
-);
+const TopPromoters = ({ consumers }) => {
+	if (consumers.length < 1)
+		return (
+			<Notification color="dark">
+				<strong>{`Please start your first promo and see people appearing here.`}</strong>
+			</Notification>
+		);
+	return (
+		<table className="table is-hoverable">
+			<tbody>
+				{consumers.map((consumer) => {
+					return (
+						<tr key={consumer.id}>
+							{/* <th>{i++}</th> */}
+							<td>{consumer.displayName}</td>
+							<td>{consumer.postCount}</td>
+						</tr>
+					);
+				})}
+			</tbody>
+		</table>
+	);
+};
 
 const ACCOUNT = gql`
 	query Account {

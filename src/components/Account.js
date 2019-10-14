@@ -14,8 +14,8 @@ import { firebaseAppAuth } from 'services/firebase';
 import Layout from 'components/ui/Layout';
 import Spinner from 'components/ui/Spinner';
 
-import AccountSetup from 'components/AccountSetup';
-import CampaignSetup from 'components/CampaignWizard';
+import AccountSetup from 'components/forms/AccountSetup';
+import CampaignSetup from 'components/forms/CampaignWizard';
 
 import Dashboard from 'components/pages/Dashboard';
 import Campaigns from 'components/pages/Campaigns';
@@ -27,21 +27,6 @@ import Transactions from 'components/pages/Transactions';
 
 import UserContext from 'context/UserContext';
 
-const CURRENT_USER = gql`
-	query CurrentUser($email: String) {
-		accounts(email: $email) {
-			id
-			name
-			apiKey
-			status
-			isLive
-			campaigns {
-				id
-			}
-		}
-	}
-`;
-
 export default function Account() {
 	const [ user ] = useAuthState(firebaseAppAuth);
 	const headers = { Authorization: `Bearer ${user.uid}` };
@@ -50,7 +35,7 @@ export default function Account() {
 		context: { headers }
 	});
 
-	if (loading) return <Spinner/>
+	if (loading) return <Spinner />;
 	if (error) return <div>{error}</div>;
 
 	const account = data.accounts[0];
@@ -80,32 +65,19 @@ export default function Account() {
 			)} */}
 		</UserContext.Provider>
 	);
-	// return (
-	// 	<UserContext.Provider value={{ user, account, headers }}>
-	// 		{account.status === 'new' ? (
-	// 			<AccountSetup />
-	// 		) : account.campaigns.length > 0 ? (
-	// 			<ModalProvider>
-	// 				<Router>
-	// 					<Layout path="/">
-	// 						<Dashboard path="/" />
-	// 						<Campaigns path="/campaigns" />
-	// 						<Consumers path="/consumers" />
-	// 						<Posts path="/posts" />
-	// 						<Locations path="/locations" />
-	// 						<Ads path="/ads" />
-	// 						<Transactions path="/transactions" />
-	// 					</Layout>
-	// 				</Router>
-	// 			</ModalProvider>
-	// 		) : (
-	// 			<div>
-	// 				<CampaignSetup />
-	// 			</div>
-	// 		)}
-	// 		{/* {process.env.NODE_ENV === 'production' && (
-	// 			<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
-	// 		)} */}
-	// 	</UserContext.Provider>
-	// );
 }
+
+const CURRENT_USER = gql`
+	query CurrentUser($email: String) {
+		accounts(email: $email) {
+			id
+			name
+			apiKey
+			status
+			isLive
+			campaigns {
+				id
+			}
+		}
+	}
+`;

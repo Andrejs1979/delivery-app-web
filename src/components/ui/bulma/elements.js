@@ -5,6 +5,7 @@ export function Box({ children }) {
 }
 
 export function Button({ type, action, children, icon, color, size, block, disabled }) {
+	// const onClick = link ? () => navigate(`/${link}/${itemID}`) : () => action(itemID);
 	return (
 		<div className="control">
 			<button

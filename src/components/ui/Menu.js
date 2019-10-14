@@ -4,10 +4,11 @@ import { Link } from '@reach/router';
 import UserContext from 'context/UserContext';
 
 export default function SidePanel({ extendedMenu, extendMenu }) {
-	const { account: { type } } = useContext(UserContext);
+	const { account: { type, campaigns } } = useContext(UserContext);
 
 	return (
 		<div>
+			<br />
 			<Menu>
 				<MenuItem name="Dashboard" icon="tachometer-alt" route="/" />
 				{!type === 'sme' && <MenuItem name="Campaigns" icon="globe" route="/campaigns" />}

@@ -13,7 +13,10 @@ export default function Layout({ children }) {
 				<div className="column is-narrow is-hidden-mobile">
 					<Menu extendedMenu={extendedMenu} extendMenu={extendMenu} />
 				</div>
-				<div className="column">{children}</div>
+				<div className="column">
+					<br />
+					{children}
+				</div>
 				<div className="column is-narrow" />
 			</div>
 		</div>

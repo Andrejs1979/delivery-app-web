@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 import UserContext from 'context/UserContext';
 
 export default function SidePanel({ extendedMenu, extendMenu }) {
-	const { account: { type, campaigns } } = useContext(UserContext);
+	const { account: { type } } = useContext(UserContext);
 
 	return (
 		<div>

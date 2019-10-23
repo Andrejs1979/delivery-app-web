@@ -1,8 +1,6 @@
 import React from 'react';
 
-export function Input(props) {
-	const { field, form: { touched, errors }, type, placeholder, size, label, icon, loading } = props;
-
+export function Input({ field, form: { touched, errors }, type, size, label, icon, placeholder, help, loading }) {
 	return (
 		<div className="field">
 			<label className={`label is-${size}`}>{label}</label>
@@ -13,6 +11,8 @@ export function Input(props) {
 					type={type}
 					placeholder={placeholder}
 					className={`input is-${size} is-${touched[field.name] && errors[field.name] && 'danger'}`}
+					aria-haspopup="true"
+					aria-controls="suggestions"
 					{...field}
 				/>
 
@@ -36,8 +36,11 @@ export function Input(props) {
 					</span>
 				)}
 			</div>
-
-			{touched[field.name] && errors[field.name] && <p className="help is-danger">{errors[field.name]}</p>}
+			{touched[field.name] && errors[field.name] ? (
+				<p className="help is-danger">{errors[field.name]}</p>
+			) : (
+				<p className="help">{help}</p>
+			)}
 		</div>
 	);
 }

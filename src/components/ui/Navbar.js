@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { useModal } from 'react-modal-hook';
+// import { useModal } from 'react-modal-hook';
 import { Link } from '@reach/router';
 import { firebaseAppAuth } from 'services/firebase';
 
@@ -20,36 +20,15 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 		pollInterval: 10000
 	});
 
-	const [ showPaymentFormModal, hidePaymentFormModal ] = useModal(() => (
-		<div className="modal is-active">
-			<div className="modal-background" />
-			<div className="modal-content">{/* <PaymentForm onClose={hidePaymentFormModal} /> */}</div>
-		</div>
-	));
-
-	const [ showCreateScheduledModal, hideCreateScheduledModal ] = useModal(() => (
-		<div className="modal is-active">
-			<div className="modal-background" />
-			<div className="modal-content">{/* <ScheduleForm onClose={hideCreateScheduledModal} /> */}</div>
-		</div>
-	));
-
-	const [ showInvoiceForm, hideInvoiceForm ] = useModal(() => (
-		<div className="modal is-active">
-			<div className="modal-background" />
-			<div className="modal-content">{/* <InvoiceForm onClose={hideInvoiceForm} /> */}</div>
-		</div>
-	));
-
-	const [ showCustomerForm, hideCustomerForm ] = useModal(() => (
-		<div className="modal is-active">
-			<div className="modal-background" />
-			<div className="modal-content">{/* <CustomerForm onClose={hideCustomerForm} /> */}</div>
-		</div>
-	));
+	// const [ showCustomerForm, hideCustomerForm ] = useModal(() => (
+	// 	<div className="modal is-active">
+	// 		<div className="modal-background" />
+	// 		<div className="modal-content">{/* <CustomerForm onClose={hideCustomerForm} /> */}</div>
+	// 	</div>
+	// ));
 
 	if (loading) return <Spinner />;
-	if (error) return <div>{error}</div>;
+	if (error) return <Error error={error} />;
 
 	const { account: { name, type, campaigns, balance } } = data;
 
@@ -135,35 +114,35 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 								</div>
 								<div className="dropdown-menu" id="dropdown-menu" role="menu">
 									<div className="dropdown-content">
-										<a className="dropdown-item" onClick={showPaymentFormModal}>
+										{/* <a className="dropdown-item" onClick={showPaymentFormModal}>
 											<span className="icon is-large">
 												<i className="fas fa-credit-card fa-lg" />
 											</span>
 											<span className="title is-5">New locations</span>
-										</a>
+										</a> */}
 
-										<a className="dropdown-item" onClick={showInvoiceForm}>
+										{/* <a className="dropdown-item" onClick={showInvoiceForm}>
 											<span className="icon is-large">
 												<i className="fas fa-paperclip fa-lg" />
 											</span>
 											<span className="title is-5">Promo</span>
-										</a>
+										</a> */}
 
-										<a className="dropdown-item" onClick={showCustomerForm}>
+										{/* <a className="dropdown-item" onClick={showCustomerForm}>
 											<span className="icon is-large">
 												<i className="fas fa-address-card fa-lg" />
 											</span>
 											<span className="title is-5">Invite Customers</span>
-										</a>
+										</a> */}
 										{type === 'sme' || (
 											<div>
 												<hr className="dropdown-divider" />
-												<a className="dropdown-item" onClick={showCustomerForm}>
+												{/* <a className="dropdown-item" onClick={showCustomerForm}>
 													<span className="icon is-large">
 														<i className="fas fa-address-card fa-lg" />
 													</span>
 													<span className="title is-5">New Campaign</span>
-												</a>
+												</a> */}
 											</div>
 										)}
 									</div>

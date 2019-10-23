@@ -7,7 +7,7 @@ export function Columns({ children }) {
 	return <div className="columns">{children}</div>;
 }
 export function Column({ children, size, narrow }) {
-	return <div className={`column ${!narrow || 'is-narrow'}`}>{children}</div>;
+	return <div className={`column ${!narrow || 'is-narrow'} is-${size}`}>{children}</div>;
 }
 
 export function Footer({ children }) {

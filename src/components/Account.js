@@ -14,9 +14,7 @@ import { firebaseAppAuth } from 'services/firebase';
 import Layout from 'components/ui/Layout';
 import Spinner from 'components/ui/Spinner';
 
-import AccountSetup from 'components/forms/AccountSetup';
-import CampaignSetup from 'components/forms/CampaignWizard';
-
+import Welcome from 'components/pages/Welcome';
 import Dashboard from 'components/pages/Dashboard';
 import Campaigns from 'components/pages/Campaigns';
 import Consumers from 'components/pages/Consumers';
@@ -42,14 +40,13 @@ export default function Account() {
 
 	return (
 		<UserContext.Provider value={{ user, account, headers }}>
-			{account.status === 'new' ? (
-				<AccountSetup />
-			) : (
-				<ModalProvider>
-					<Router>
+			<ModalProvider>
+				<Router>
+					{account.campaigns.length < 1 ? (
+						<Welcome path="/" />
+					) : (
 						<Layout path="/">
 							<Dashboard path="/" />
-							<CampaignSetup path="get-started" />
 							<Campaigns path="/campaigns" />
 							<Consumers path="/consumers" />
 							<Posts path="/posts" />
@@ -57,9 +54,10 @@ export default function Account() {
 							<Ads path="/ads" />
 							<Transactions path="/transactions" />
 						</Layout>
-					</Router>
-				</ModalProvider>
-			)}
+					)}
+				</Router>
+			</ModalProvider>
+
 			{/* {process.env.NODE_ENV === 'production' && (
 				<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
 			)} */}

@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { useModal } from 'react-modal-hook';
-import { Link } from '@reach/router';
 
 import { Button, Notification } from 'components/ui/bulma/elements';
 

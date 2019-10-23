@@ -93,7 +93,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 								Add funds
 							</Button>
 						</div> */}
-						<div className="navbar-item">
+						{/* <div className="navbar-item">
 							<div className="dropdown is-hoverable is-right">
 								<div className="dropdown-trigger">
 									<button
@@ -114,41 +114,39 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 								</div>
 								<div className="dropdown-menu" id="dropdown-menu" role="menu">
 									<div className="dropdown-content">
-										{/* <a className="dropdown-item" onClick={showPaymentFormModal}>
+										<a className="dropdown-item" onClick={showPaymentFormModal}>
 											<span className="icon is-large">
 												<i className="fas fa-credit-card fa-lg" />
 											</span>
 											<span className="title is-5">New locations</span>
-										</a> */}
-
-										{/* <a className="dropdown-item" onClick={showInvoiceForm}>
+										</a>{' '}
+										<a className="dropdown-item" onClick={showInvoiceForm}>
 											<span className="icon is-large">
 												<i className="fas fa-paperclip fa-lg" />
 											</span>
 											<span className="title is-5">Promo</span>
-										</a> */}
-
-										{/* <a className="dropdown-item" onClick={showCustomerForm}>
+										</a>
+										<a className="dropdown-item" onClick={showCustomerForm}>
 											<span className="icon is-large">
 												<i className="fas fa-address-card fa-lg" />
 											</span>
 											<span className="title is-5">Invite Customers</span>
-										</a> */}
+										</a>
 										{type === 'sme' || (
 											<div>
 												<hr className="dropdown-divider" />
-												{/* <a className="dropdown-item" onClick={showCustomerForm}>
+												<a className="dropdown-item" onClick={showCustomerForm}>
 													<span className="icon is-large">
 														<i className="fas fa-address-card fa-lg" />
 													</span>
 													<span className="title is-5">New Campaign</span>
-												</a> */}
+												</a>
 											</div>
 										)}
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> */}
 
 						<div className="navbar-item">
 							<div

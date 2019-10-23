@@ -59,7 +59,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 							<p className="title is-4">{name}</p>
 						</Link>
 					</div>
-					{campaigns && campaigns.length > 2 ? (
+					{campaigns && campaigns.length > 1 ? (
 						<div className="navbar-item has-dropdown is-hoverable">
 							<span className="navbar-link">
 								<strong>All Campaigns</strong>

@@ -13,8 +13,13 @@ import UserContext from 'context/UserContext';
 export default function Campaigns() {
 	const { headers } = useContext(UserContext);
 
-	const [ approvePost ] = useMutation(APPROVE_POST, { context: { headers } });
-	const [ declinePost ] = useMutation(DECLINE_POST, { context: { headers } });
+	const [ approvePost ] = useMutation(APPROVE_POST, {
+		context: { headers },
+		refetchQueries: [ 'Posts' ]
+	});
+
+	const [ declinePost ] = useMutation(DECLINE_POST, { context: { headers }, refetchQueries: [ 'Posts' ] });
+
 	const { loading, data, error } = useQuery(POSTS, {
 		variables: { status: 'pending' },
 		context: { headers },
@@ -37,10 +42,10 @@ const POSTS = gql`
 			location {
 				id
 			}
-			ad {
-				id
-				creativeURI
-			}
+			# ad {
+			# 	id
+			# 	creativeURI
+			# }
 			campaign {
 				id
 			}

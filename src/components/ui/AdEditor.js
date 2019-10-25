@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Overlay from 'react-image-overlay';
 import Toolbar from 'components/ui/Toolbar';
 import example from 'assets/images/example.jpeg';
@@ -57,15 +57,21 @@ export default function AdEditor({
 	const [ width, height ] = size;
 	const [ widthLimit, heightLimit ] = getCreativeLimits(size, aspectRatio);
 
+	const [ horizontal, setHorizontal ] = useState('Left');
+	const [ vertical, setVertical ] = useState('bottom');
+
 	// TODO Incorrect aspect ratio when changing picture
 
 	useEffect(
 		() => {
-			const newSize = fitCreative(size, aspectRatio);
-			setSize(newSize);
+			setSize(fitCreative(size, aspectRatio));
 		},
 		[ aspectRatio, height, heightLimit, setSize, size, width, widthLimit ]
 	);
+
+	useEffect(() => {
+		setPosition(`${vertical}${horizontal}`);
+	});
 
 	const scale = (increment) => {
 		const newWidth = width + increment;
@@ -85,13 +91,41 @@ export default function AdEditor({
 	};
 
 	const buttons = [
-		{ icon: 'chevron-up', action: scale, args: 10 },
-		{ icon: 'chevron-down', action: scale, args: -10 },
-		{ icon: 'arrow-alt-circle-left', action: setPosition, args: 'bottomLeft' },
-		{ icon: 'arrow-alt-circle-up', action: setPosition, args: 'topLeft' },
-		{ icon: 'arrow-alt-circle-down', action: setPosition, args: 'bottomRight' },
-		{ icon: 'arrow-alt-circle-right', action: setPosition, args: 'topRight' },
-		{ icon: 'cut', action: toggleBackground }
+		{
+			icon: 'arrow-alt-circle-up',
+			text: 'move up',
+			action: setVertical,
+			args: 'top',
+			color: 'white',
+			type: 'button'
+		},
+		{
+			icon: 'arrow-alt-circle-down',
+			text: 'move down',
+			action: setVertical,
+			args: 'bottom',
+			color: 'white',
+			type: 'button'
+		},
+		{
+			icon: 'arrow-alt-circle-left',
+			text: 'move left',
+			action: setHorizontal,
+			args: 'Left',
+			color: 'white',
+			type: 'button'
+		},
+		{
+			icon: 'arrow-alt-circle-right',
+			text: 'move right',
+			action: setHorizontal,
+			args: 'Right',
+			color: 'white',
+			type: 'button'
+		},
+		{ icon: 'search-plus', text: 'increase', action: scale, args: 10, color: 'white', type: 'button' },
+		{ icon: 'search-minus', text: 'decrease', action: scale, args: -10, color: 'white', type: 'button' },
+		{ icon: 'tint-slash', text: 'remove background', action: toggleBackground, color: 'white', type: 'button' }
 	];
 
 	return (

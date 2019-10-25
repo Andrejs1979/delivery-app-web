@@ -17,7 +17,14 @@ export default function Brand() {
 	const [ position, setPosition ] = useState('bottomLeft');
 	const [ background, setBackground ] = useState(true);
 
-	const { setFieldValue } = useFormikContext();
+	const { values, errors, setFieldValue, setFieldTouched } = useFormikContext();
+
+	useEffect(
+		() => {
+			setFieldValue('hashtag', values.name.replace(/\s/g, ''));
+		},
+		[ setFieldTouched, setFieldValue, values.name ]
+	);
 
 	useEffect(
 		() => {
@@ -41,7 +48,7 @@ export default function Brand() {
 				<Box>
 					<FastField
 						name="name"
-						label="Business, brand or product"
+						label="Brand name"
 						icon="copyright"
 						size="large"
 						component={Input}
@@ -84,7 +91,7 @@ export default function Brand() {
 			<Column>
 				<Box>
 					<p className="title is-4">Preview</p>
-					<p className="subtitle">How it may look like on Instagram</p>
+					<p className="subtitle">Adjust how your ad looks like</p>
 
 					<AdEditor
 						creative={{ uri, size, aspectRatio, position, background }}

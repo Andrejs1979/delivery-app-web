@@ -58,6 +58,10 @@ export default function CampaignWizard({ onClose }) {
 						state: address_components[4].short_name,
 						zip: address_components[6].short_name,
 						country: address_components[5].long_name,
+						assets: {
+							logoURI: 'defaultLocationIcon.png',
+							defaultPictureURI: 'defaultPicture.png'
+						},
 						geometry: {
 							type: 'Point',
 							coordinates: [ lng, lat ]
@@ -221,7 +225,7 @@ const steps = [
 		},
 		validationSchema: object().shape({
 			name: string().required('What is it we promote?'),
-			hashtag: string().required('Hashtag is required!').min(5, 'Too short').max(10, 'Too long'),
+			hashtag: string().required('Hashtag is required!').min(5, 'Too short').max(20, 'Too long'),
 			message: string(),
 			creative: object({
 				uri: string().required('Please upload your file!'),
@@ -233,6 +237,7 @@ const steps = [
 		})
 		// actionLabel: 'Next: Choose location'
 	},
+
 	{
 		id: 'locations',
 		component: Locations,
@@ -245,6 +250,7 @@ const steps = [
 		})
 		// actionLabel: 'Next'
 	},
+
 	{
 		id: 'budget',
 		component: Budget,

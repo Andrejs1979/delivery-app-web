@@ -36,6 +36,7 @@ export function Input({ field, form: { touched, errors }, type, size, label, ico
 					</span>
 				)}
 			</div>
+
 			{touched[field.name] && errors[field.name] ? (
 				<p className="help is-danger">{errors[field.name]}</p>
 			) : (

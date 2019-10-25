@@ -15,7 +15,6 @@ export default function Upload({
 	help,
 	icon,
 	size,
-	// creative: { uri, size, aspectRatio, position, background },
 	actions: { setUri, setSecureURL, setSize, setAspectRatio, setPosition, setBackground }
 }) {
 	const [ uploadProgress, setUploadProgress ] = useState(0);
@@ -42,14 +41,14 @@ export default function Upload({
 				.then(({ data: { url, secure_url, public_id, height, width, format } }) => {
 					const uri = public_id.split('/');
 
+					setSize([ width, height ]);
+					setAspectRatio(width / height);
 					setUri(uri[1]);
 					setSecureURL(secure_url);
-					setAspectRatio(width / height);
-					setSize([ width, height ]);
 				})
 				.catch((err) => console.error('err', err));
 		},
-		[ setAspectRatio, setSecureURL, setSize, setUri ]
+		[setAspectRatio, setSecureURL, setSize, setUri]
 	);
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -70,7 +69,7 @@ export default function Upload({
 						</span>
 						<span className="file-label">
 							<strong>
-								<p className="title is-4 has-text-centered">
+								<p className="title is-5 has-text-centered">
 									{selectedFile ? selectedFile : placeholder}
 								</p>
 							</strong>
@@ -83,6 +82,7 @@ export default function Upload({
 					</span>
 				</div>
 			</div>
+
 			{touched[field.name] && errors[field.name] ? (
 				<p className="help is-danger">{errors[field.name].uri}</p>
 			) : (

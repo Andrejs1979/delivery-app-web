@@ -8,7 +8,7 @@ import { Hero } from 'components/ui/bulma/layout';
 import { Box, Button, Notification } from 'components/ui/bulma/elements';
 import { Input } from 'components/ui/bulma/form';
 
-export default function AuthPage({ props }) {
+export default function AuthPage() {
 	const [ isLogin, toggleLogin ] = useState(false);
 	const [ isReset, toggleReset ] = useState(false);
 

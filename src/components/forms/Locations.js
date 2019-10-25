@@ -16,14 +16,13 @@ export default function Locations() {
 	const [ selected, setSelected ] = useState(locations[0]);
 
 	const addLocation = (location) => {
-		setValues({ locations: locations.concat(location) });
+		if (!_.find(locations, [ 'formatted_address', location.formatted_address ]))
+			setValues({ locations: locations.concat(location) });
 	};
 
 	const removeLocation = (formatted_address) => {
 		setValues({ locations: _.reject(locations, { formatted_address }) });
 	};
-
-	console.log(errors);
 
 	return (
 		<div>

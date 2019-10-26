@@ -15,15 +15,13 @@ export default function Upload({
 	help,
 	icon,
 	size,
-	actions: { setUri, setSecureURL, setSize, setAspectRatio, setPosition, setBackground }
+	actions: { setUri, setSecureURL, setSize, setAspectRatio, setPosition, setBackground, setOriginalFileName }
 }) {
 	const [ uploadProgress, setUploadProgress ] = useState(0);
-	const [ selectedFile, setSelectedFile ] = useState();
 
 	const onDrop = useCallback(
 		(acceptedFiles) => {
-			setSelectedFile(acceptedFiles[0].name);
-
+			setOriginalFileName(acceptedFiles[0].name);
 			const fd = new FormData();
 			fd.append('upload_preset', 'creative');
 			fd.append('tags', [ 'browser_upload', 'creative' ]);
@@ -45,10 +43,11 @@ export default function Upload({
 					setAspectRatio(width / height);
 					setUri(uri[1]);
 					setSecureURL(secure_url);
+					setOriginalFileName(acceptedFiles[0].name);
 				})
 				.catch((err) => console.error('err', err));
 		},
-		[setAspectRatio, setSecureURL, setSize, setUri]
+		[ setAspectRatio, setOriginalFileName, setSecureURL, setSize, setUri ]
 	);
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -70,14 +69,12 @@ export default function Upload({
 						<span className="file-label">
 							<strong>
 								<p className="title is-5 has-text-centered">
-									{selectedFile ? selectedFile : placeholder}
+									{field.value.originalFileName ? field.value.originalFileName : placeholder}
 								</p>
 							</strong>
 
-							{selectedFile &&
-							(uploadProgress && uploadProgress !== 100) && (
-								<Progress value={uploadProgress} color="primary" size="small" />
-							)}
+							{uploadProgress !== 0 &&
+							uploadProgress !== 100 && <Progress value={uploadProgress} color="primary" size="small" />}
 						</span>
 					</span>
 				</div>

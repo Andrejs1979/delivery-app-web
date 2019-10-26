@@ -19,16 +19,18 @@ export default function Budget() {
 						size="large"
 						component={Input}
 						placeholder="Reward per post"
+						help="You can start as low as $1 per post"
 					/>
 					<br />
 					<FastField
 						type="number"
 						name="limit"
-						label="Campaign spending limit"
-						icon="dollar-sign"
+						label="Spending limit (optional)"
+						icon="hand-paper"
 						size="large"
 						component={Input}
-						placeholder="Campaign spending limit"
+						placeholder="Spending limit"
+						help="Your campaign will automatically pause when this limit is reached"
 					/>
 				</Box>
 			</Column>

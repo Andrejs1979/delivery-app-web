@@ -8,7 +8,7 @@
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.4.4",
     "axios": "^0.19.0",
-    "bulma": "^0.7.5",
+    "bulma": "^0.8.0",
     "bulma-addons": "^0.1.12",
     "firebase": "^6.5.0",
     "formik": "2.0.1-rc.13",
@@ -27,7 +27,7 @@
     "react-modal-hook": "^2.0.0",
     "react-places-autocomplete": "^7.2.1",
     "react-scripts": "3.2.0",
-    "react-square-payment-form": "^0.4.1",
+    "react-stripe-elements": "^5.1.0",
     "yup": "^0.27.0"
   },
   "scripts": {

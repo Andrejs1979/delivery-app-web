@@ -10,8 +10,9 @@ import { object, string, array, number, boolean } from 'yup';
 import Modal from 'components/ui/Modal';
 import Wizard from 'components/ui/Wizard';
 import Brand from 'components/forms/Brand';
-import Budget from 'components/forms/Budget';
 import Locations from 'components/forms/Locations';
+import Budget from 'components/forms/Budget';
+import Billing from 'components/forms/Billing';
 
 import { Box, Button, ButtonGroup } from 'components/ui/bulma/elements';
 import { Hero, Columns, Column } from 'components/ui/bulma/layout';
@@ -105,13 +106,18 @@ function Summary() {
 	const { values } = useFormikWizard();
 	const [ FRAME_W, FRAME_H ] = [ 400, 400 ];
 
+	console.log(values);
+
 	const {
 		brand: { name, hashtag, message, creative: { uri, size, aspectRatio, position, background } },
 		locations: { locations },
-		budget: { rate, limit }
+		budget: { rate, limit },
+		billing: { card }
 	} = values;
 
 	const [ width, height ] = size;
+
+	console.log(card);
 
 	return (
 		<Columns>
@@ -119,8 +125,8 @@ function Summary() {
 				<Box>
 					<p className="title is-4">Brand</p>
 					<p className="title is-5">{name}</p>
-					<p className="subtitle is-5">#{hashtag}</p>
-					<p className="subtitle is-5">{message ? message : 'Not set'}</p>
+					<p className="subtitle is-6">#{hashtag}</p>
+					<p className="subtitle is-5">{message ? message : 'Optional marketing message is not set'}</p>
 					<hr />
 					<p className="title is-4">Locations</p>
 					{locations.map((location) => (
@@ -135,6 +141,12 @@ function Summary() {
 					<p className="title is-4">Budget</p>
 					<p className="title is-5">${rate} per approved post </p>
 					<p className="title is-5">Budget limited at ${limit}</p>
+					<hr />
+					<p className="title is-4">Billing</p>
+					<p className="title is-5">
+						{card.brand} **** {card.last4}
+					</p>
+					<p className="title is-5">$20 refundable deposit</p>
 				</Box>
 			</Column>
 			<Column>
@@ -198,18 +210,6 @@ const FormWrapper = ({
 );
 
 const steps = [
-	// {
-	// 	id: 'billing',
-	// 	component: Billing,
-	// 	initialValues: {
-	// 		rate: ''
-	// 	},
-	// 	validationSchema: object().shape({
-	// 		rate: string().required()
-	// 	})
-	// 	// actionLabel: 'Next',
-	// },
-
 	{
 		id: 'brand',
 		component: Brand,
@@ -259,7 +259,10 @@ const steps = [
 			limit: ''
 		},
 		validationSchema: object().shape({
-			rate: number().required().min(1).max(100),
+			rate: number()
+				.required('Please set your reward amount!')
+				.min(1, 'Minimum reward is $1')
+				.max(100, 'Maximum reward is $100'),
 			limit: number().min(1).max(10000)
 		}),
 		// actionLabel: 'Next',
@@ -269,6 +272,18 @@ const steps = [
 			}
 		}
 	},
+	{
+		id: 'billing',
+		component: Billing,
+		initialValues: {
+			cardToken: '',
+			card: {}
+		},
+		validationSchema: object().shape({
+			cardToken: string().required('Please enter your card info!')
+		})
+		// actionLabel: 'Next',
+	},
 
 	{
 		id: 'summary',
@@ -277,13 +292,6 @@ const steps = [
 ];
 
 const stepProps = [
-	// {
-	// 	id: 'billing',
-	// 	icon: 'coins',
-	// 	name: 'Billing',
-	// 	title: 'Billing',
-	// 	subtitle: 'How much shall you pay for each post?'
-	// },
 	{
 		id: 'brand',
 		icon: 'ad',
@@ -303,10 +311,16 @@ const stepProps = [
 		id: 'budget',
 		icon: 'coins',
 		name: 'Budget',
-		title: 'Set your reward',
+		title: 'Set your budget',
 		subtitle: 'How much shall you pay for each post?'
 	},
-
+	{
+		id: 'billing',
+		icon: 'credit-card',
+		name: 'Billing',
+		title: 'Set up billing',
+		subtitle: 'We use your card to reward your promoters'
+	},
 	{
 		id: 'summary',
 		icon: 'clipboard-list',

@@ -5,7 +5,7 @@ import React from 'react';
 export default function Wizard({ steps, currentStep, stepProps }) {
 	return (
 		<div>
-			<nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+			<nav className="breadcrumb is-medium has-succeeds-separator" aria-label="breadcrumbs">
 				<ul>
 					{steps.map((step) => (
 						<li

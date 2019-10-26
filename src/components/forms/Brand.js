@@ -16,8 +16,17 @@ export default function Brand() {
 	const [ aspectRatio, setAspectRatio ] = useState(size[0] / size[1]);
 	const [ position, setPosition ] = useState('bottomLeft');
 	const [ background, setBackground ] = useState(true);
+	const [ originalFileName, setOriginalFileName ] = useState();
 
-	const { values, errors, setFieldValue, setFieldTouched } = useFormikContext();
+	const { values, setFieldValue, setFieldTouched } = useFormikContext();
+
+	let creative;
+
+	if (values.creative.uri) {
+		creative = values.creative;
+	} else creative = { uri, size, aspectRatio, position, background, originalFileName };
+
+	const actions = { setUri, setSize, setAspectRatio, setPosition, setBackground };
 
 	useEffect(
 		() => {
@@ -35,11 +44,12 @@ export default function Brand() {
 					aspectRatio,
 					position,
 					background,
-					secureURL
+					secureURL,
+					originalFileName
 				});
 			}
 		},
-		[ aspectRatio, background, position, secureURL, setFieldValue, size, uri ]
+		[ aspectRatio, background, originalFileName, position, secureURL, setFieldValue, size, uri ]
 	);
 
 	return (
@@ -84,7 +94,15 @@ export default function Brand() {
 						component={Upload}
 						placeholder="Upload your artwork"
 						help="A logo or any other graphics to appear in the posts. Drag &amp; drop or select a file"
-						actions={{ setUri, setSecureURL, setSize, setAspectRatio, setPosition, setBackground }}
+						actions={{
+							setUri,
+							setSecureURL,
+							setSize,
+							setAspectRatio,
+							setPosition,
+							setBackground,
+							setOriginalFileName
+						}}
 					/>
 				</Box>
 			</Column>
@@ -92,11 +110,7 @@ export default function Brand() {
 				<Box>
 					<p className="title is-4">Preview</p>
 					<p className="subtitle">Adjust how your ad looks like</p>
-
-					<AdEditor
-						creative={{ uri, size, aspectRatio, position, background }}
-						actions={{ setUri, setSize, setAspectRatio, setPosition, setBackground }}
-					/>
+					<AdEditor creative={creative} actions={actions} />
 					<br />
 					<article className="message is-dark is-small">
 						<div className="message-body">If you are not happy how it looks like, talk to us!</div>

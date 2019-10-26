@@ -123,8 +123,8 @@ export default function AdEditor({
 			color: 'white',
 			type: 'button'
 		},
-		{ icon: 'search-plus', text: 'increase', action: scale, args: 10, color: 'white', type: 'button' },
-		{ icon: 'search-minus', text: 'decrease', action: scale, args: -10, color: 'white', type: 'button' },
+		{ icon: 'search-plus', text: 'larger', action: scale, args: 10, color: 'white', type: 'button' },
+		{ icon: 'search-minus', text: 'smaller', action: scale, args: -10, color: 'white', type: 'button' },
 		{ icon: 'tint-slash', text: 'remove background', action: toggleBackground, color: 'white', type: 'button' }
 	];
 

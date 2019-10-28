@@ -1,13 +1,12 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
 import Overlay from 'react-image-overlay';
-import { FastField, useFormikContext } from 'formik';
 import { FormikWizard, useFormikWizard } from 'formik-wizard';
 import { object, string, array, number, boolean } from 'yup';
 
-import Modal from 'components/ui/Modal';
+// import Modal from 'components/ui/Modal';
 import Wizard from 'components/ui/Wizard';
 import Brand from 'components/forms/Brand';
 import Locations from 'components/forms/Locations';
@@ -26,19 +25,49 @@ const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 export default function CampaignWizard({ onClose }) {
 	const { headers } = useContext(UserContext);
 	const [ spinner, setSpinner ] = useState(false);
+
 	const [ createCampaign, { data, loading, error } ] = useMutation(CREATE_CAMPAIGN, {
+		context: { headers }
+	});
+
+	const [ createAd ] = useMutation(CREATE_AD, {
+		context: { headers }
+	});
+
+	const [ createLocations ] = useMutation(CREATE_LOCATIONS, {
+		context: { headers }
+	});
+
+	const [ createCard ] = useMutation(CREATE_CARD, {
 		context: { headers },
 		refetchQueries: [ 'CurrentUser' ]
 	});
 
 	const handleSubmit = useCallback(
-		({
+		async ({
 			brand: { name, hashtag, message, creative: { uri, size, aspectRatio, position, background, secureURL } },
 			locations: { locations },
-			budget: { rate, limit }
+			budget: { rate, limit },
+			billing: {
+				card: {
+					id: providerID,
+					name: providerName,
+					brand,
+					last4,
+					funding,
+					exp_month,
+					exp_year,
+					country,
+					address_line1,
+					address_city,
+					address_state,
+					address_zip,
+					address_country
+				},
+				cardToken
+			}
 		}) => {
 			setSpinner(true);
-			let locationProps = [];
 
 			const campaignProps = {
 				name,
@@ -46,30 +75,49 @@ export default function CampaignWizard({ onClose }) {
 				limit
 			};
 
-			locations.map(
-				({ address_components, lat, lng, place_id, types }) =>
-					(locationProps = locationProps.concat({
+			const newLocations = locations.map(
+				({
+					address_components,
+					geometry: { bounds, viewport, location_type },
+					formatted_address,
+					lat,
+					lng,
+					place_id,
+					types
+				}) => {
+					return {
 						name: '',
 						verified: false,
 						active: false,
 						category: '',
 						status: 'pending',
+						fullAddress: formatted_address,
 						address: `${address_components[0].short_name} ${address_components[1].short_name}`,
 						city: address_components[2].short_name,
 						state: address_components[4].short_name,
 						zip: address_components[6].short_name,
 						country: address_components[5].long_name,
-						assets: {
-							logoURI: 'defaultLocationIcon.png',
-							defaultPictureURI: 'defaultPicture.png'
-						},
 						geometry: {
-							type: 'Point',
+							// type: location_type,
 							coordinates: [ lng, lat ]
+							// bounds: {
+							// 	north: bounds.north,
+							// 	east: bounds.east,
+							// 	south: bounds.south,
+							// 	west: bounds.west
+							// },
+							// viewport: {
+							// 	north: viewport.north,
+							// 	east: viewport.east,
+							// 	south: viewport.south,
+							// 	west: viewport.west
+							// }
 						},
 						source: 'google',
 						sourceID: place_id
-					}))
+						// types
+					};
+				}
 			);
 
 			const adProps = {
@@ -86,11 +134,37 @@ export default function CampaignWizard({ onClose }) {
 				status: 'pending'
 			};
 
-			createCampaign({ variables: { campaignProps, locationProps, adProps } });
+			const cardProps = {
+				provider: 'stripe',
+				providerID,
+				providerName,
+				token: cardToken,
+
+				billingAddress: address_line1,
+				billingCity: address_city,
+				billingState: address_state,
+				billingZip: address_zip,
+				billingCountry: address_country,
+
+				brand,
+				last4,
+				expMM: exp_month,
+				expYYYY: exp_year,
+				type: funding,
+				method: object,
+				country
+			};
+
+			const { data } = await createCampaign({ variables: { campaignProps } });
+			const campaignID = data.createCampaign.id;
+
+			await createAd({ variables: { adProps, campaignID } });
+			await createLocations({ variables: { locations: newLocations, campaignID } });
+			await createCard({ variables: { cardProps, campaignID } });
 
 			setSpinner(false);
 		},
-		[ createCampaign ]
+		[ createAd, createCampaign, createCard, createLocations ]
 	);
 
 	return (
@@ -106,18 +180,14 @@ function Summary() {
 	const { values } = useFormikWizard();
 	const [ FRAME_W, FRAME_H ] = [ 400, 400 ];
 
-	console.log(values);
-
 	const {
-		brand: { name, hashtag, message, creative: { uri, size, aspectRatio, position, background } },
+		brand: { name, hashtag, message, creative: { uri, size, position, background } },
 		locations: { locations },
 		budget: { rate, limit },
 		billing: { card }
 	} = values;
 
 	const [ width, height ] = size;
-
-	console.log(card);
 
 	return (
 		<Columns>
@@ -331,8 +401,32 @@ const stepProps = [
 ];
 
 const CREATE_CAMPAIGN = gql`
-	mutation CreateCampaign($campaignProps: CampaignProps, $locationProps: [LocationProps], $adProps: [AdProps]) {
-		createCampaignWithWizard(campaignProps: $campaignProps, locationProps: $locationProps, adProps: $adProps) {
+	mutation CreateCampaign($campaignProps: CampaignProps) {
+		createCampaign(campaignProps: $campaignProps) {
+			id
+		}
+	}
+`;
+
+const CREATE_AD = gql`
+	mutation CreateAd($adProps: AdProps, $campaignID: ID!) {
+		createAd(adProps: $adProps, campaignID: $campaignID) {
+			id
+		}
+	}
+`;
+
+const CREATE_LOCATIONS = gql`
+	mutation CreateLocations($locations: [LocationProps], $campaignID: ID) {
+		createLocations(locations: $locations, campaignID: $campaignID) {
+			id
+		}
+	}
+`;
+
+const CREATE_CARD = gql`
+	mutation CreateCard($cardProps: CardProps) {
+		createCard(cardProps: $cardProps) {
 			id
 		}
 	}

@@ -9,10 +9,8 @@ import Places from 'components/ui/Places';
 import { Box } from 'components/ui/bulma/elements';
 import { Columns, Column } from 'components/ui/bulma/layout';
 
-// TODO Prevent double locations
-
 export default function Locations() {
-	const { errors, values: { locations }, setValues } = useFormikContext();
+	const { values: { locations }, setValues } = useFormikContext();
 	const [ selected, setSelected ] = useState(locations[0]);
 
 	const addLocation = (location) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FastField, useFormikContext } from 'formik';
+import { FastField } from 'formik';
 
 import { Box } from 'components/ui/bulma/elements';
 import { Columns, Column } from 'components/ui/bulma/layout';

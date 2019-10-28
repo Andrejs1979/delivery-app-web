@@ -98,7 +98,7 @@ const _PaymentForm = ({ stripe }) => {
 		setLoading(true);
 		const { token, error } = await stripe.createToken();
 
-		// if (error) console.log(error);
+		if (error) console.log(error);
 
 		if (token) {
 			setFieldValue('cardToken', token.id);

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Overlay from 'react-image-overlay';
 import Toolbar from 'components/ui/Toolbar';
-import example from 'assets/images/example.jpeg';
 
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
@@ -9,6 +8,8 @@ const [ FRAME_W, FRAME_H ] = [ 400, 400 ];
 const AD_RATIO = 1.5;
 const MIN_SIZE = 50;
 const INIT_SIZE_RATIO = 2;
+
+const example = 'https://res.cloudinary.com/hqsczucpx/image/upload/assets/example.jpg';
 
 const getCreativeLimits = (size, aspectRatio) => {
 	const [ width, height ] = size;

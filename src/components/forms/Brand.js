@@ -10,9 +10,9 @@ import { Columns, Column } from 'components/ui/bulma/layout';
 import { Input } from 'components/ui/bulma/form';
 
 export default function Brand() {
-	const [ uri, setUri ] = useState('ihop-breakfast.png');
+	const [ uri, setUri ] = useState('SampleLogo.png');
 	const [ secureURL, setSecureURL ] = useState();
-	const [ size, setSize ] = useState([ 240, 169 ]);
+	const [ size, setSize ] = useState([ 120, 140 ]);
 	const [ aspectRatio, setAspectRatio ] = useState(size[0] / size[1]);
 	const [ position, setPosition ] = useState('bottomLeft');
 	const [ background, setBackground ] = useState(true);

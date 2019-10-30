@@ -49,7 +49,7 @@ export default function Upload({
 		},
 		[ setAspectRatio, setOriginalFileName, setSecureURL, setSize, setUri ]
 	);
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+	const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
 	return (
 		<div className="field">

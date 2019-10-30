@@ -2,31 +2,27 @@ import React, { useCallback, useContext, useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
-import Overlay from 'react-image-overlay';
-import { FormikWizard, useFormikWizard } from 'formik-wizard';
-import { object, string, array, number, boolean } from 'yup';
+import { FormikWizard } from 'formik-wizard';
+import { object, string, array, number } from 'yup';
 
 // import Modal from 'components/ui/Modal';
 import Wizard from 'components/ui/Wizard';
 import Brand from 'components/forms/Brand';
+import Ad from 'components/forms/Ad';
 import Locations from 'components/forms/Locations';
 import Budget from 'components/forms/Budget';
 import Billing from 'components/forms/Billing';
+import Summary from 'components/forms/Summary';
 
-import { Box, Button, ButtonGroup } from 'components/ui/bulma/elements';
-import { Hero, Columns, Column } from 'components/ui/bulma/layout';
+import { Button, ButtonGroup } from 'components/ui/bulma/elements';
 
 import UserContext from 'context/UserContext';
-
-import example from 'assets/images/example.jpeg';
-
-const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
 export default function CampaignWizard({ onClose }) {
 	const { headers } = useContext(UserContext);
 	const [ spinner, setSpinner ] = useState(false);
 
-	const [ createCampaign, { data, loading, error } ] = useMutation(CREATE_CAMPAIGN, {
+	const [ createCampaign ] = useMutation(CREATE_CAMPAIGN, {
 		context: { headers }
 	});
 
@@ -45,7 +41,8 @@ export default function CampaignWizard({ onClose }) {
 
 	const handleSubmit = useCallback(
 		async ({
-			brand: { name, hashtag, message, creative: { uri, size, aspectRatio, position, background, secureURL } },
+			brand: { name, hashtag, message },
+			ad: { creative: { uri, size, position, background, secureURL } },
 			locations: { locations },
 			budget: { rate, limit },
 			billing: {
@@ -123,7 +120,6 @@ export default function CampaignWizard({ onClose }) {
 			const adProps = {
 				creativeURI: uri,
 				size,
-				aspectRatio,
 				position,
 				background,
 				secureURL,
@@ -169,80 +165,10 @@ export default function CampaignWizard({ onClose }) {
 
 	return (
 		// <Modal icon="magic" title="New campaign" onClose={onClose}>
-		<Hero color="white" bold>
-			<FormikWizard steps={steps} onSubmit={handleSubmit} render={FormWrapper} />
-		</Hero>
+		// <Hero color="white" bold>
+		<FormikWizard steps={steps} onSubmit={handleSubmit} render={FormWrapper} />
+		// </Hero>
 		// </Modal>
-	);
-}
-
-function Summary() {
-	const { values } = useFormikWizard();
-	const [ FRAME_W, FRAME_H ] = [ 400, 400 ];
-
-	const {
-		brand: { name, hashtag, message, creative: { uri, size, position, background } },
-		locations: { locations },
-		budget: { rate, limit },
-		billing: { card }
-	} = values;
-
-	const [ width, height ] = size;
-
-	return (
-		<Columns>
-			<Column>
-				<Box>
-					<p className="title is-4">Brand</p>
-					<p className="title is-5">{name}</p>
-					<p className="subtitle is-6">#{hashtag}</p>
-					<p className="subtitle is-5">{message ? message : 'Optional marketing message is not set'}</p>
-					<hr />
-					<p className="title is-4">Locations</p>
-					{locations.map((location) => (
-						<a key={location.formatted_address}>
-							<div className="notification">
-								<p className="title is-7">{location.formatted_address}</p>
-							</div>
-							<small />
-						</a>
-					))}
-					<hr />
-					<p className="title is-4">Budget</p>
-					<p className="title is-5">${rate} per approved post </p>
-					<p className="title is-5">Budget limited at ${limit}</p>
-					<hr />
-					<p className="title is-4">Billing</p>
-					<p className="title is-5">
-						{card.brand} **** {card.last4}
-					</p>
-					<p className="title is-5">$20 refundable deposit</p>
-				</Box>
-			</Column>
-			<Column>
-				<Box>
-					<p className="title is-4">Preview</p>
-					<p className="subtitle">How it may look like on Instagram</p>
-					<Overlay
-						url={example}
-						overlayUrl={`${CLOUDINARY}/c_scale,${!background
-							? 'e_bgremoval,'
-							: ''}h_${height},w_${width}/creative/${uri}`}
-						imageHeight={FRAME_H}
-						imageWidth={FRAME_W}
-						position={position}
-						overlayWidth={width}
-						overlayHeight={height}
-						overlayPadding={10}
-						watermark={false}
-					/>
-					<br />
-					<p className="subtitle is-6">
-						This is a preview. We review every campaign and will make sure it looks good before going live.
-					</p>
-				</Box>
-			</Column>
-		</Columns>
 	);
 }
 
@@ -260,14 +186,14 @@ const FormWrapper = ({
 		<Wizard steps={steps} currentStep={currentStep} stepProps={stepProps} />
 
 		{children}
-		{status && (
+		{/* {status && (
 			<div>
 				{status.message}
 				<hr />
 			</div>
-		)}
+		)} */}
 
-		<hr />
+		<hr className="is-hidden-mobile" />
 		<ButtonGroup right>
 			<Button size="medium" icon="angle-left" color="white" action={goToPreviousStep} disabled={!canGoBack}>
 				Back
@@ -290,24 +216,32 @@ const steps = [
 		initialValues: {
 			name: '',
 			hashtag: '',
-			message: '',
-			creative: {}
+			message: ''
 		},
 		validationSchema: object().shape({
 			name: string().required('What is it we promote?'),
 			hashtag: string().required('Hashtag is required!').min(5, 'Too short').max(20, 'Too long'),
-			message: string(),
+			message: string()
+		})
+		// actionLabel: 'Next: Choose location'
+	},
+	{
+		id: 'ad',
+		component: Ad,
+		icon: 'ad',
+		name: 'Ad',
+		title: 'Your brand',
+		subtitle: 'Please set a name corresponding to a brand, product or business you are promoting',
+		initialValues: {
+			creative: {}
+		},
+		validationSchema: object().shape({
 			creative: object({
-				uri: string().required('Please upload your file!'),
-				size: array().required('Size'),
-				aspectRatio: number().required('Ratio'),
-				position: string().required('position'),
-				background: boolean().required('background')
+				uri: string().required('Please upload your file!')
 			}).required('Please upload your graphics!')
 		})
 		// actionLabel: 'Next: Choose location'
 	},
-
 	{
 		id: 'locations',
 		component: Locations,
@@ -320,7 +254,6 @@ const steps = [
 		})
 		// actionLabel: 'Next'
 	},
-
 	{
 		id: 'budget',
 		component: Budget,
@@ -354,7 +287,6 @@ const steps = [
 		})
 		// actionLabel: 'Next',
 	},
-
 	{
 		id: 'summary',
 		component: Summary
@@ -368,6 +300,13 @@ const stepProps = [
 		name: 'Brand',
 		title: 'Your brand',
 		subtitle: 'Marketing assets in relation to a brand, product or business you are promoting'
+	},
+	{
+		id: 'ad',
+		icon: 'ad',
+		name: 'Ad',
+		title: 'Your promo post',
+		subtitle: 'Please upload your logo and adjust how the post will look like'
 	},
 
 	{

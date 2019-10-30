@@ -1,11 +1,11 @@
 import React from 'react';
 
-// import { Progress } from 'components/ui/bulma/elements';
+import { Progress } from 'components/ui/bulma/elements';
 
 export default function Wizard({ steps, currentStep, stepProps }) {
 	return (
 		<div>
-			<nav className="breadcrumb is-medium has-succeeds-separator" aria-label="breadcrumbs">
+			<nav className="breadcrumb is-hidden-mobile is-small has-succeeds-separator" aria-label="breadcrumbs">
 				<ul>
 					{steps.map((step) => (
 						<li
@@ -27,12 +27,11 @@ export default function Wizard({ steps, currentStep, stepProps }) {
 						</li>
 					))}
 				</ul>
-
-				{/* <Progress value={(steps.indexOf(currentStep) + 1) / steps.length * 100} color="primary" size="small" /> */}
 			</nav>
+			<Progress value={(steps.indexOf(currentStep) + 1) / steps.length * 100} color="primary" size="small" />
 			<h1 className="title">{`${stepProps[steps.indexOf(currentStep)].title}`}</h1>
-			<h2 className="subtitle">{stepProps[steps.indexOf(currentStep)].subtitle}</h2>
-			<hr />
+			<h2 className="subtitle is-hidden-mobile">{stepProps[steps.indexOf(currentStep)].subtitle}</h2>
+			<hr className="is-hidden-mobile" />
 		</div>
 	);
 }

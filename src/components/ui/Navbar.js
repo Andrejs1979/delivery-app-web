@@ -8,7 +8,7 @@ import { firebaseAppAuth } from 'services/firebase';
 import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
-import { Button } from 'components/ui/bulma/elements';
+// import { Button } from 'components/ui/bulma/elements';
 
 import UserContext from 'context/UserContext';
 
@@ -30,7 +30,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 	if (loading) return <Spinner />;
 	if (error) return <Error error={error} />;
 
-	const { account: { name, type, campaigns, balance } } = data;
+	const { account: { name, campaigns } } = data;
 
 	return (
 		<nav className="navbar" role="navigation" aria-label="main navigation">
@@ -83,16 +83,6 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 
 				<div id="navbarBasicExample" className="navbar-menu">
 					<div className="navbar-end">
-						<div className="navbar-item">
-							<Button icon="coins" color="white">
-								<strong>Available: ${balance}</strong>
-							</Button>
-						</div>
-						{/* <div className="navbar-item">
-							<Button icon="credit-card" color="danger">
-								Add funds
-							</Button>
-						</div> */}
 						{/* <div className="navbar-item">
 							<div className="dropdown is-hoverable is-right">
 								<div className="dropdown-trigger">
@@ -184,9 +174,7 @@ const ACCOUNT = gql`
 		account {
 			id
 			name
-			type
 			status
-			balance
 			campaigns {
 				id
 				name

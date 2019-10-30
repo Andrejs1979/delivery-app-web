@@ -3,8 +3,8 @@ import React from 'react';
 export function Container({ children }) {
 	return <div className="container">{children}</div>;
 }
-export function Columns({ children }) {
-	return <div className="columns">{children}</div>;
+export function Columns({ children, centered, mobile }) {
+	return <div className={`columns ${!centered || 'is-centered'} ${!mobile || 'is-mobile'}`}>{children}</div>;
 }
 export function Column({ children, size, narrow }) {
 	return <div className={`column ${!narrow || 'is-narrow'} is-${size}`}>{children}</div>;
@@ -30,8 +30,8 @@ export function Hero({ children, color, size, bold, title, subtitle }) {
 		</section>
 	);
 }
-export function Level({ children }) {
-	return <nav className="level">{children}</nav>;
+export function Level({ children, mobile }) {
+	return <nav className={`level ${!mobile || 'is-mobile'}`}>{children}</nav>;
 }
 export function Left({ children }) {
 	return <div className="level-left">{children}</div>;

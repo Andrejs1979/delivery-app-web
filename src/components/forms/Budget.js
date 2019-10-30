@@ -18,36 +18,36 @@ export default function Budget() {
 						icon="dollar-sign"
 						size="large"
 						component={Input}
-						placeholder="Reward per post"
+						placeholder="Reward"
 						help="You can start as low as $1 per post"
 					/>
 					<br />
 					<FastField
 						type="number"
 						name="limit"
-						label="Spending limit (optional)"
+						label="Campaign limit"
 						icon="hand-paper"
 						size="large"
 						component={Input}
-						placeholder="Spending limit"
-						help="Your campaign will automatically pause when this limit is reached"
+						placeholder="Limit"
+						help="Optional. If you want to stop campaign automatically"
 					/>
 				</Box>
 			</Column>
 			<Column>
 				<Box>
-					<article className="message">
+					<article className="message is-small">
 						<div className="message-body">
 							<p className="title is-5">Cash reward per post</p>
-							<p className="subtitle is-5">
+							<p className="subtitle is-6">
 								Amount you pay for each promo post made by your visitors on Instagram.
 							</p>
 							<small> </small>
-							<p className="title is-5">Campaign spending limit</p>
-							<p className="subtitle is-5">
-								Total budget for this promo campaign. Once it's reached, the campaign automatically
-								stops.
+							<p className="title is-5">Campaign limit</p>
+							<p className="subtitle is-6">
+								Total budget for this campaign. Once it's reached, the campaign automatically stops.
 							</p>
+							<p className="subtitle is-6">If you don't set it, the campaign will run continuously.</p>
 						</div>
 					</article>
 				</Box>

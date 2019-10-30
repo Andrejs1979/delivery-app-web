@@ -4,7 +4,7 @@ import { navigate } from '@reach/router';
 import { Button, ButtonGroup } from 'components/ui/bulma/elements';
 export default function Toolbar({ itemID, buttons, size, color }) {
 	return (
-		<ButtonGroup attached>
+		<ButtonGroup>
 			{buttons.map(({ type, action, args, icon, text, color, link, loading, disabled }) => {
 				let onClick;
 				if (!action && !link) {
@@ -30,6 +30,34 @@ export default function Toolbar({ itemID, buttons, size, color }) {
 									<i className={`fas fa-${icon}`} aria-hidden="true" />
 								</span>
 							</a>
+						);
+
+					case 'medium':
+						return (
+							<div key={icon}>
+								{/* MOBILE */}
+								<span className="has-text-centered is-hidden-desktop">
+									<span
+										className={`button is-large is-${color} ${!loading || 'is-loading'}`}
+										onClick={onClick}
+										aria-label="reply"
+										disabled={disabled}
+									>
+										<span className="has-text-centered">
+											<span className="icon">
+												<i className={`fas fa-${icon}`} aria-hidden="true" />
+											</span>
+										</span>
+									</span>
+								</span>
+
+								{/* DESKTOP */}
+								<span className="has-text-centered is-hidden-mobile">
+									<Button type={type} icon={icon} color={color} size="small" action={onClick}>
+										<p className="is-size-7 has-text-weight-semibold">{text}</p>
+									</Button>
+								</span>
+							</div>
 						);
 
 					default:

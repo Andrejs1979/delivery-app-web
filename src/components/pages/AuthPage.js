@@ -4,7 +4,7 @@ import { firebaseAppAuth } from 'services/firebase';
 
 import { Formik, Form, Field } from 'formik';
 
-import { Hero } from 'components/ui/bulma/layout';
+import { Columns, Column, Container } from 'components/ui/bulma/layout';
 import { Box, Button, Notification } from 'components/ui/bulma/elements';
 import { Input } from 'components/ui/bulma/form';
 
@@ -13,30 +13,29 @@ export default function AuthPage() {
 	const [ isReset, toggleReset ] = useState(false);
 
 	return (
-		<Hero>
-			<div className="columns is-mobile is-centered">
-				<div className="column is-half">
+		<Container>
+			<Columns centered>
+				<Column size="half">
+					<br />
 					<h1 className="title">{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create Account'}</h1>
-					{/* <h2 className="subtitle">Fullheight subtitle</h2> */}
 
 					<Box>
 						{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
 						<br />
-						<div className="field is-grouped">
-							{isReset || (
-								<Button color="text" action={() => toggleLogin(!isLogin)}>
-									<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
-								</Button>
-							)}
-							<Button color="text" action={() => toggleReset(!isReset)}>
-								<strong>{isReset ? 'Back' : 'Reset Password'}</strong>
+
+						{isReset || (
+							<Button color="text" action={() => toggleLogin(!isLogin)}>
+								<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
 							</Button>
-						</div>
+						)}
+						<Button color="text" action={() => toggleReset(!isReset)}>
+							<strong>{isReset ? 'Back' : 'Reset Password'}</strong>
+						</Button>
 					</Box>
 					<p>© 2019 Cashmark</p>
-				</div>
-			</div>
-		</Hero>
+				</Column>
+			</Columns>
+		</Container>
 	);
 }
 

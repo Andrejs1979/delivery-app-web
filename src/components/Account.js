@@ -7,9 +7,11 @@ import { Router } from '@reach/router';
 
 // import Drift from 'react-driftjs';
 
-import { ModalProvider } from 'react-modal-hook';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
+
+import { ModalProvider } from 'react-modal-hook';
+import { CloudinaryContext } from 'cloudinary-react';
 
 import Layout from 'components/ui/Layout';
 import Spinner from 'components/ui/Spinner';
@@ -40,27 +42,29 @@ export default function Account() {
 
 	return (
 		<UserContext.Provider value={{ user, account, headers }}>
-			<ModalProvider>
-				<Router>
-					{account.campaigns.length < 1 ? (
-						<Welcome path="/" />
-					) : (
-						<Layout path="/">
-							<Dashboard path="/" />
-							<Campaigns path="/campaigns" />
-							<Consumers path="/consumers" />
-							<Posts path="/posts" />
-							<Locations path="/locations" />
-							<Ads path="/ads" />
-							<Transactions path="/transactions" />
-						</Layout>
-					)}
-				</Router>
-			</ModalProvider>
+			<CloudinaryContext cloudName="hqsczucpx">
+				<ModalProvider>
+					<Router>
+						{account.campaigns.length < 1 ? (
+							<Welcome path="/" />
+						) : (
+							<Layout path="/">
+								<Dashboard path="/" />
+								<Campaigns path="/campaigns" />
+								<Consumers path="/consumers" />
+								<Posts path="/posts" />
+								<Locations path="/locations" />
+								<Ads path="/ads" />
+								<Transactions path="/transactions" />
+							</Layout>
+						)}
+					</Router>
+				</ModalProvider>
 
-			{/* {process.env.NODE_ENV === 'production' && (
+				{/* {process.env.NODE_ENV === 'production' && (
 				<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
 			)} */}
+			</CloudinaryContext>
 		</UserContext.Provider>
 	);
 }

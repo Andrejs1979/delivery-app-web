@@ -1,150 +1,149 @@
-import React, { useEffect, useState } from 'react';
-import Overlay from 'react-image-overlay';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import axios from 'axios';
+import { useDropzone } from 'react-dropzone';
+import { Image, Transformation } from 'cloudinary-react';
+
 import Toolbar from 'components/ui/Toolbar';
+import { Progress } from 'components/ui/bulma/elements';
 
-const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
-
-const [ FRAME_W, FRAME_H ] = [ 400, 400 ];
-const AD_RATIO = 1.5;
-const MIN_SIZE = 50;
-const INIT_SIZE_RATIO = 2;
-
-const example = 'https://res.cloudinary.com/hqsczucpx/image/upload/assets/example.jpg';
-
-const getCreativeLimits = (size, aspectRatio) => {
-	const [ width, height ] = size;
-
-	if (width > height) {
-		const widthLimit = Math.round(FRAME_W / AD_RATIO);
-		const heightLimit = Math.round(widthLimit / aspectRatio);
-		return [ widthLimit, heightLimit ];
-	} else {
-		const heightLimit = Math.round(FRAME_H / AD_RATIO);
-		const widthLimit = Math.round(heightLimit * aspectRatio);
-		return [ widthLimit, heightLimit ];
-	}
-};
-
-const fitCreative = (size, aspectRatio) => {
-	let newWidth, newHeight;
-	const [ width, height ] = size;
-	const [ widthLimit, heightLimit ] = getCreativeLimits(size, aspectRatio);
-
-	if (width > widthLimit) {
-		newWidth = Math.round(widthLimit / INIT_SIZE_RATIO);
-		newHeight = Math.round(newWidth / aspectRatio);
-		return [ widthLimit, heightLimit ];
-	} else if (height > heightLimit) {
-		newHeight = Math.round(heightLimit / INIT_SIZE_RATIO);
-		newWidth = Math.round(newHeight / aspectRatio);
-		return [ widthLimit, heightLimit ];
-	} else if (width < MIN_SIZE) {
-		newWidth = Math.round(MIN_SIZE * INIT_SIZE_RATIO);
-		newHeight = Math.round(newWidth / aspectRatio);
-		return [ widthLimit, heightLimit ];
-	} else if (height < MIN_SIZE) {
-		newHeight = Math.round(MIN_SIZE * INIT_SIZE_RATIO);
-		newWidth = Math.round(newHeight / aspectRatio);
-		return [ widthLimit, heightLimit ];
-	} else {
-		return size;
-	}
-};
+const CLOUDINARY_UPLOAD = process.env.REACT_APP_CLOUDINARY_UPLOAD_URI;
 
 export default function AdEditor({
-	creative: { uri, size, aspectRatio, position, background },
-	actions: { setUri, setSecureURL, setSize, setPosition, setBackground }
+	field,
+	form: { touched, errors },
+	creative: { uri, size, position, background },
+	actions: { setUri, setSecureURL, setSize, setPosition, setBackground, setOriginalFileName }
 }) {
-	const [ width, height ] = size;
-	const [ widthLimit, heightLimit ] = getCreativeLimits(size, aspectRatio);
-
-	const [ horizontal, setHorizontal ] = useState('Left');
-	const [ vertical, setVertical ] = useState('bottom');
-
-	// TODO Incorrect aspect ratio when changing picture
+	const [ horizontal, setHorizontal ] = useState('west');
+	const [ vertical, setVertical ] = useState('south');
+	const [ uploadProgress, setUploadProgress ] = useState(0);
 
 	useEffect(
 		() => {
-			setSize(fitCreative(size, aspectRatio));
+			setPosition(`${vertical}_${horizontal}`);
 		},
-		[ aspectRatio, height, heightLimit, setSize, size, width, widthLimit ]
+		[ horizontal, setPosition, vertical ]
 	);
 
-	useEffect(() => {
-		setPosition(`${vertical}${horizontal}`);
-	});
+	const onDrop = useCallback(
+		(acceptedFiles) => {
+			setOriginalFileName(acceptedFiles[0].name);
+			const fd = new FormData();
+			fd.append('upload_preset', 'creative');
+			fd.append('tags', [ 'browser_upload', 'creative' ]);
+			fd.append('file', acceptedFiles[0]);
 
-	const scale = (increment) => {
-		const newWidth = width + increment;
-		const newHeight = Math.round(newWidth / aspectRatio);
+			const config = {
+				headers: { 'X-Requested-With': 'XMLHttpRequest' },
+				onUploadProgress: (progressEvent) => {
+					const progress = Math.round(progressEvent.loaded * 100.0 / progressEvent.total);
+					setUploadProgress(progress);
+				}
+			};
+			axios
+				.post(CLOUDINARY_UPLOAD, fd, config)
+				.then(({ data: { url, secure_url, public_id, height, width, format } }) => {
+					const uri = public_id.split('/');
 
-		if (increment > 0) {
-			if (newWidth < widthLimit && newHeight < heightLimit) setSize([ newWidth, newHeight ]);
-		}
+					setUri(uri[1]);
+					setSecureURL(secure_url);
+					setOriginalFileName(acceptedFiles[0].name);
+				})
+				.catch((err) => console.error('err', err));
+		},
+		[ setOriginalFileName, setSecureURL, setUri ]
+	);
+	const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-		if (increment < 0) {
-			if (newWidth > MIN_SIZE && newHeight > MIN_SIZE) setSize([ newWidth, newHeight ]);
-		}
-	};
+	// const scale = (increment) => {
+	// 	const newWidth = width + increment;
+	// 	const newHeight = Math.round(newWidth / aspectRatio);
 
-	const toggleBackground = () => {
-		setBackground(!background);
-	};
+	// 	if (increment > 0) {
+	// 		if (newWidth < widthLimit && newHeight < heightLimit) setSize([ newWidth, newHeight ]);
+	// 	}
+
+	// 	if (increment < 0) {
+	// 		if (newWidth > MIN_SIZE && newHeight > MIN_SIZE) setSize([ newWidth, newHeight ]);
+	// 	}
+	// };
+
+	// const toggleBackground = () => {
+	// 	setBackground(!background);
+	// };
 
 	const buttons = [
 		{
 			icon: 'arrow-alt-circle-up',
 			text: 'move up',
 			action: setVertical,
-			args: 'top',
-			color: 'white',
+			args: 'north',
+			color: 'light',
 			type: 'button'
 		},
 		{
 			icon: 'arrow-alt-circle-down',
 			text: 'move down',
 			action: setVertical,
-			args: 'bottom',
-			color: 'white',
+			args: 'south',
+			color: 'light',
 			type: 'button'
 		},
 		{
 			icon: 'arrow-alt-circle-left',
 			text: 'move left',
 			action: setHorizontal,
-			args: 'Left',
-			color: 'white',
+			args: 'west',
+			color: 'light',
 			type: 'button'
 		},
 		{
 			icon: 'arrow-alt-circle-right',
 			text: 'move right',
 			action: setHorizontal,
-			args: 'Right',
-			color: 'white',
+			args: 'east',
+			color: 'light',
 			type: 'button'
-		},
-		{ icon: 'search-plus', text: 'larger', action: scale, args: 10, color: 'white', type: 'button' },
-		{ icon: 'search-minus', text: 'smaller', action: scale, args: -10, color: 'white', type: 'button' },
-		{ icon: 'tint-slash', text: 'remove background', action: toggleBackground, color: 'white', type: 'button' }
+		}
+		// { icon: 'search-plus', text: 'larger', action: scale, args: 10, color: 'light', type: 'button' },
+		// { icon: 'search-minus', text: 'smaller', action: scale, args: -10, color: 'light', type: 'button' }
+		// { icon: 'tint-slash', text: 'background', action: toggleBackground, color: 'light', type: 'button' }
 	];
+
+	const help = 'Click on the picture to upload your logo';
 
 	return (
 		<div>
-			<Overlay
-				url={example}
-				overlayUrl={`${CLOUDINARY}/c_scale,${!background
-					? 'e_bgremoval,'
-					: ''}h_${height},w_${width}/creative/${uri}`}
-				imageHeight={FRAME_H}
-				imageWidth={FRAME_W}
-				position={position}
-				overlayWidth={width}
-				overlayHeight={height}
-				overlayPadding={10}
-				watermark={false}
-			/>
-			<Toolbar buttons={buttons} color="primary" />
+			<div
+				className={`file is-white is-boxed is-${touched[field.name] && errors[field.name] && 'danger'}`}
+				{...getRootProps()}
+			>
+				<input type="file" name="creative" {...getInputProps()} />
+
+				<Image publicId="assets/example.jpg" dpr="auto" responsive width="auto" crop="scale">
+					<Transformation quality="auto" />
+					<Transformation
+						overlay={`creative:${uri}`}
+						gravity={position}
+						x="10"
+						y="10"
+						width={size}
+						flags="relative"
+						// effect="screen"
+					/>
+				</Image>
+			</div>
+
+			<span>
+				{uploadProgress !== 0 && uploadProgress !== 100 ? (
+					<Progress value={uploadProgress} color="primary" size="small" />
+				) : (
+					<p className="title is-7">{field.value.originalFileName ? field.value.originalFileName : help}</p>
+				)}
+			</span>
+			<br />
+			<Toolbar buttons={buttons} color="primary" size="medium" />
 		</div>
 	);
 }

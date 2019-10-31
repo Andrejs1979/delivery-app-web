@@ -120,19 +120,20 @@ export default function AdEditor({
 				{...getRootProps()}
 			>
 				<input type="file" name="creative" {...getInputProps()} />
-
-				<Image publicId="assets/example.jpg" dpr="auto" responsive width="auto" crop="scale">
-					<Transformation quality="auto" />
-					<Transformation
-						overlay={`creative:${uri}`}
-						gravity={position}
-						x="10"
-						y="10"
-						width={size}
-						flags="relative"
-						// effect="screen"
-					/>
-				</Image>
+				<figure className="image">
+					<Image publicId="assets/example.jpg" dpr="auto" responsive width="auto" crop="fit">
+						<Transformation quality="auto" />
+						<Transformation
+							overlay={`creative:${uri}`}
+							gravity={position}
+							x="10"
+							y="10"
+							width={size}
+							flags="relative"
+							// effect="screen"
+						/>
+					</Image>
+				</figure>
 			</div>
 
 			<span>

@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 import { Router } from '@reach/router';
-
-// import Drift from 'react-driftjs';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
@@ -35,10 +33,28 @@ export default function Account() {
 		context: { headers }
 	});
 
+	useEffect(
+		() => {
+			if (user && data && data.accounts[0])
+				window.analytics.identify(user.uid, {
+					name: user.displayName,
+					email: user.email,
+					company: {
+						id: data.accounts[0].id,
+						name: data.accounts[0].name
+					},
+					createdAt: user.metadata.creationTime
+				});
+
+			// window.analytics.page('account');
+		},
+		[ user, data ]
+	);
+
 	if (loading) return <Spinner />;
 	if (error) return <div>{error}</div>;
 
-	const account = data.accounts[0];
+	const [ account ] = data.accounts;
 
 	return (
 		<UserContext.Provider value={{ user, account, headers }}>

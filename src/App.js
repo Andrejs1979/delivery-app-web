@@ -1,10 +1,12 @@
 import './App.sass';
 import React from 'react';
+
+import analytics from 'react-segment';
+
 import ApolloClient from 'apollo-boost';
-
 import { ApolloProvider } from '@apollo/react-hooks';
-import { useAuthState } from 'react-firebase-hooks/auth';
 
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
 
 import Auth from 'components/pages/AuthPage';
@@ -14,6 +16,9 @@ import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
 const API_URL = process.env.REACT_APP_API_ROOT_URL + '/graphql';
+const SEGMENT_KEY = process.env.REACT_APP_SEGMENT_KEY
+
+analytics.default.load(SEGMENT_KEY);
 
 const client = new ApolloClient({
 	uri: API_URL

@@ -28,6 +28,7 @@
     "react-modal-hook": "^2.0.0",
     "react-places-autocomplete": "^7.2.1",
     "react-scripts": "3.2.0",
+    "react-segment": "^0.1.8",
     "react-stripe-elements": "^5.1.0",
     "yup": "^0.27.0"
   },

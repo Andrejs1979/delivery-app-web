@@ -2,36 +2,45 @@ import React from 'react';
 
 import CampaignWizard from 'components/forms/CampaignWizard';
 
+import { Columns, Container } from 'components/ui/bulma/layout';
 import { Box } from 'components/ui/bulma/elements';
+
+import logo from 'assets/mark-logo.png';
 
 export default function Welcome() {
 	return (
-		<div className="columns is-centered">
-			<div className="column is-half-desktop is-full-mobile">
-				<div className="is-hidden-mobile">
-					<br />
-					<br />
-					<br />
-					{/* <nav className="navbar is-transparent is-light is-hidden-mobile">
-							<div className="navbar-brand">
-								<span className="icon is-large has-text-primary">
-									<span className="fa-stack fa-lg">
-										<i className="fas fa-square fa-stack-2x" />
-										<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
-									</span>
-								</span>
-								<div className="navbar-item">
-									<h1 className="title">Your campaign</h1>
-									<br />
-								</div>
-							</div>
-						</nav> */}
-				</div>
-				<Box>
-					<CampaignWizard />
-				</Box>
-				<p>© 2019 Cashmark</p>
+		<section className="hero is-fullheight">
+			<div className="hero-head">
+				<nav className="navbar">
+					<div className="container">
+						<div className="navbar-brand">
+							<a className="navbar-item">
+								<img src={logo} alt="Mark" />
+							</a>
+						</div>
+					</div>
+				</nav>
 			</div>
-		</div>
+
+			<div className="hero-body">
+				<Container>
+					<Columns centered>
+						<div className="column is-two-thirds-desktop is-full-mobile">
+							<Box>
+								<CampaignWizard />
+							</Box>
+						</div>
+					</Columns>
+				</Container>
+			</div>
+
+			<div className="hero-foot">
+				<nav className="is-fullwidth">
+					<div className="container">
+						<p>© 2019 Mark</p>
+					</div>
+				</nav>
+			</div>
+		</section>
 	);
 }

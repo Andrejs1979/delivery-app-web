@@ -193,7 +193,6 @@ const FormWrapper = ({
 			</div>
 		)} */}
 
-		<hr className="is-hidden-mobile" />
 		<ButtonGroup right>
 			<Button size="medium" icon="angle-left" color="white" action={goToPreviousStep} disabled={!canGoBack}>
 				Back
@@ -209,7 +208,7 @@ const steps = [
 	{
 		id: 'brand',
 		component: Brand,
-		icon: 'ad',
+		icon: 'copyright',
 		name: 'Brand',
 		title: 'Your brand',
 		subtitle: 'Please set a name corresponding to a brand, product or business you are promoting',
@@ -228,7 +227,7 @@ const steps = [
 	{
 		id: 'ad',
 		component: Ad,
-		icon: 'ad',
+		icon: 'camera',
 		name: 'Ad',
 		title: 'Your brand',
 		subtitle: 'Please set a name corresponding to a brand, product or business you are promoting',
@@ -299,7 +298,7 @@ const stepProps = [
 		icon: 'ad',
 		name: 'Brand',
 		title: 'Your brand',
-		subtitle: 'Marketing assets in relation to a brand, product or business you are promoting'
+		subtitle: 'Business or product name, a hashtag and marketing message'
 	},
 	{
 		id: 'ad',

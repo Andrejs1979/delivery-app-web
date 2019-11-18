@@ -42,7 +42,6 @@ export default function Ad() {
 				name="creative"
 				label="Upload an artwork"
 				icon="image"
-				size="large"
 				component={AdEditor}
 				creative={creative}
 				actions={actions}

@@ -28,7 +28,6 @@ export default function Locations() {
 				name="location"
 				label="Add locations, as many as you like"
 				icon="search"
-				size="large"
 				component={Places}
 				placeholder="Look up by address or business name"
 				action={addLocation}

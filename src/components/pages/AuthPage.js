@@ -3,39 +3,131 @@ import React, { useState } from 'react';
 import { firebaseAppAuth } from 'services/firebase';
 
 import { Formik, Form, Field } from 'formik';
+import { Image, Transformation } from 'cloudinary-react';
 
 import { Columns, Column, Container } from 'components/ui/bulma/layout';
 import { Box, Button, Notification } from 'components/ui/bulma/elements';
 import { Input } from 'components/ui/bulma/form';
 
+import logo from 'assets/mark-logo.png';
+
 export default function AuthPage() {
 	const [ isLogin, toggleLogin ] = useState(false);
 	const [ isReset, toggleReset ] = useState(false);
 
+	// useEffect(
+	// 	() => {
+	// 		if (user && data && data.accounts[0])
+	// 			window.analytics.identify(user.uid, {
+	// 				name: user.displayName,
+	// 				email: user.email,
+	// 				company: {
+	// 					id: data.accounts[0].id,
+	// 					name: data.accounts[0].name
+	// 				},
+	// 				createdAt: user.metadata.creationTime
+	// 			});
+
+	// 		// window.analytics.page('account');
+	// 	},
+	// 	[ user, data ]
+	// );
+
 	return (
-		<Container>
-			<Columns centered>
-				<Column size="half">
-					<br />
-					<h1 className="title">{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create Account'}</h1>
+		<section className="hero is-fullheight">
+			<div className="hero-head">
+				<nav className="navbar">
+					<div className="container">
+						<div className="navbar-brand">
+							<a className="navbar-item">
+								<img src={logo} alt="Mark" />
+							</a>
+							{/* <span className="navbar-burger burger" data-target="navbarMenuHeroB">
+									<span />
+									<span />
+									<span />
+								</span> */}
+						</div>
+						{/* <div id="navbarMenuHeroB" className="navbar-menu">
+								<div className="navbar-end">
+									<a className="navbar-item is-active">Home</a>
+									<a className="navbar-item">Examples</a>
+									<a className="navbar-item">Documentation</a>
+									<span className="navbar-item">
+										<a className="button is-info is-inverted">
+											<span className="icon">
+												<i className="fab fa-github" />
+											</span>
+											<span>Download</span>
+										</a>
+									</span>
+								</div>
+							</div> */}
+					</div>
+				</nav>
+			</div>
 
-					<Box>
-						{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
-						<br />
+			<div className="hero-body">
+				<Container>
+					<Columns centered>
+						<Column size="half">
+							<h1 className="title is-4">
+								{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create free account'}
+							</h1>
 
-						{isReset || (
-							<Button color="text" action={() => toggleLogin(!isLogin)}>
-								<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
-							</Button>
-						)}
-						<Button color="text" action={() => toggleReset(!isReset)}>
-							<strong>{isReset ? 'Back' : 'Reset Password'}</strong>
-						</Button>
-					</Box>
-					<p>© 2019 Cashmark</p>
-				</Column>
-			</Columns>
-		</Container>
+							<Box>
+								{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
+								<br />
+
+								{isReset || (
+									<Button color="text" action={() => toggleLogin(!isLogin)}>
+										<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
+									</Button>
+								)}
+								<Button color="text" action={() => toggleReset(!isReset)}>
+									<strong>{isReset ? 'Back' : 'Reset password'}</strong>
+								</Button>
+							</Box>
+						</Column>
+						<Column size="half">
+							<Box>
+								<h1 className="title is-4">Promote your business on Instagram</h1>
+								<h2 className="subtitle">This is how it would look like</h2>
+								<figure className="image">
+									<Image
+										cloudName="hqsczucpx"
+										publicId="assets/example.jpg"
+										dpr="auto"
+										responsive
+										width="auto"
+										crop="fit"
+									>
+										<Transformation quality="auto" />
+										<Transformation
+											overlay="creative:SampleLogo.png"
+											gravity="north_west"
+											x="10"
+											y="10"
+											width="0.25"
+											flags="relative"
+											// effect="screen"
+										/>
+									</Image>
+								</figure>
+							</Box>
+						</Column>
+					</Columns>
+				</Container>
+			</div>
+
+			<div className="hero-foot">
+				<nav className="is-fullwidth">
+					<div className="container">
+						<p>© 2019 Mark</p>
+					</div>
+				</nav>
+			</div>
+		</section>
 	);
 }
 
@@ -90,7 +182,6 @@ const SignUp = () => (
 				<Field
 					name="email"
 					label="Business Email"
-					size="large"
 					icon="at"
 					component={Input}
 					placeholder="Email"
@@ -101,7 +192,6 @@ const SignUp = () => (
 					name="password"
 					type="password"
 					label="Set your password"
-					size="large"
 					icon="lock"
 					component={Input}
 					placeholder="Password"
@@ -109,13 +199,14 @@ const SignUp = () => (
 				/>
 				<br />
 				{status && <Notification>{status}</Notification>}
-				<Button full type="submit" color="primary" size="large" icon="check-circle">
+				<Button full type="submit" color="primary" icon="check-circle">
 					Create Account
 				</Button>
 			</Form>
 		)}
 	</Formik>
 );
+
 const Login = () => (
 	<Formik
 		initialValues={{
@@ -131,7 +222,6 @@ const Login = () => (
 					label="Email"
 					name="email"
 					icon="at"
-					size="large"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
@@ -142,14 +232,13 @@ const Login = () => (
 					name="password"
 					type="password"
 					icon="lock"
-					size="large"
 					component={Input}
 					placeholder="Password"
 					autoComplete="current-password"
 				/>
 				<br />
 				{status && <Notification color="danger">{status}</Notification>}
-				<Button full type="submit" color="primary" size="large" icon="key">
+				<Button full type="submit" color="primary" icon="key">
 					Sign In
 				</Button>
 			</Form>
@@ -190,14 +279,13 @@ const Reset = () => (
 					name="email"
 					label="Account Email"
 					icon="at"
-					size="large"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
 				/>
 				<br />
 				{status && <Notification>{status}</Notification>}
-				<Button full type="submit" color="primary" size="large" icon="envelope" disabled={isSubmitting}>
+				<Button full type="submit" color="primary" icon="envelope" disabled={isSubmitting}>
 					Reset Password
 				</Button>
 			</Form>

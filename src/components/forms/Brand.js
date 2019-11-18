@@ -21,7 +21,6 @@ export default function Brand() {
 				name="name"
 				label="Brand name"
 				icon="copyright"
-				size="large"
 				component={Input}
 				placeholder="Super Coffee Place"
 				help="Which brand, product or business will we promote?"
@@ -31,7 +30,6 @@ export default function Brand() {
 				name="hashtag"
 				label="Hashtag"
 				icon="hashtag"
-				size="large"
 				component={Input}
 				placeholder="BestCoffee"
 				help="A hashtag for your promo posts on Instagram"
@@ -41,7 +39,6 @@ export default function Brand() {
 				name="message"
 				label="Promo message (optional)"
 				icon="bullhorn"
-				size="large"
 				component={Input}
 				placeholder="Best coffee in town!"
 				help="A short marketing message to appear in the promo posts"

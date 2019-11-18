@@ -16,7 +16,7 @@ export default function Budget() {
 						name="rate"
 						label="Reward per post"
 						icon="dollar-sign"
-						size="large"
+
 						component={Input}
 						placeholder="Reward"
 						help="You can start as low as $1 per post"
@@ -27,7 +27,7 @@ export default function Budget() {
 						name="limit"
 						label="Campaign limit"
 						icon="hand-paper"
-						size="large"
+
 						component={Input}
 						placeholder="Limit"
 						help="Optional. If you want to stop campaign automatically"

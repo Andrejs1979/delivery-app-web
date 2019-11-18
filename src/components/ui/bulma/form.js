@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Input({ field, form: { touched, errors }, type, size, label, icon, placeholder, help, loading }) {
+export function Input({ field, form: { touched, errors }, type, size = '', label, icon, placeholder, help, loading }) {
 	return (
 		<div className="field">
 			<label className={`label is-hidden-mobile is-${size}`}>{label}</label>

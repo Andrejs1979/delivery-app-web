@@ -164,7 +164,7 @@ export default function AccountSetup() {
 																'building'
 															)
 														}
-														size="large"
+
 														component={Input}
 														placeholder={
 															type === 'owner' ? (
@@ -181,7 +181,7 @@ export default function AccountSetup() {
 														name="fullName"
 														label="Your full name"
 														icon="user"
-														size="large"
+
 														component={Input}
 														placeholder="Full Name"
 													/>
@@ -190,7 +190,7 @@ export default function AccountSetup() {
 														name="phone"
 														label="Phone Number"
 														icon="phone"
-														size="large"
+
 														component={Input}
 														placeholder="Phone Number"
 													/>

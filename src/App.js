@@ -16,12 +16,13 @@ import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
 const API_URL = process.env.REACT_APP_API_ROOT_URL + '/graphql';
-const SEGMENT_KEY = process.env.REACT_APP_SEGMENT_KEY
+const SEGMENT_KEY = process.env.REACT_APP_SEGMENT_KEY;
 
 analytics.default.load(SEGMENT_KEY);
 
 const client = new ApolloClient({
-	uri: API_URL
+	// uri: API_URL
+	uri: '/.netlify/functions/graphql'
 });
 
 export default function App() {

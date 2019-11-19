@@ -15,7 +15,7 @@ const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
 export default function Dashboard({ navigate }) {
 	const { headers } = useContext(UserContext);
-	const { data, loading, error } = useQuery(ACCOUNT, { context: { headers }, pollInterval: 20000 });
+	const { data, loading, error } = useQuery(ACCOUNT, { context: { headers } });
 
 	const [ showCampaignWizard, hideCampaignWizard ] = useModal(() => (
 		<div className="modal is-active">

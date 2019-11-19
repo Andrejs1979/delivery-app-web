@@ -16,8 +16,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
 	const { headers, user } = useContext(UserContext);
 
 	const { loading, data, error } = useQuery(ACCOUNT, {
-		context: { headers },
-		pollInterval: 10000
+		context: { headers }
 	});
 
 	// const [ showCustomerForm, hideCustomerForm ] = useModal(() => (

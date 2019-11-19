@@ -21,8 +21,7 @@ export default function Campaigns() {
 
 	const { loading, data, error } = useQuery(POSTS, {
 		variables: { status: 'pending' },
-		context: { headers },
-		pollInterval: 10000
+		context: { headers }
 	});
 
 	if (loading) return <Spinner />;

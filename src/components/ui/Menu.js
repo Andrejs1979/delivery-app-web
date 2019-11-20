@@ -57,9 +57,9 @@ function ExtendedMenu({ extendedMenu, extendMenu }) {
 						{!type === 'sme' && <MenuItem extended name="Campaigns" icon="globe" route="/campaigns" />}
 						<MenuItem extended name="Posts" icon="images" route="/posts" />
 						<MenuItem extended name="Locations" icon="map-marker-alt" route="/locations" />
-						<MenuItem extended name="Ads" icon="ad" route="/ads" />
-						<MenuItem extended name="Consumers" icon="user-friends" route="/consumers" />
-						<MenuItem extended name="Transactions" icon="dollar-sign" route="/transactions" />
+						{/* <MenuItem extended name="Ads" icon="ad" route="/ads" /> */}
+						<MenuItem extended name="Promoters" icon="user-friends" route="/consumers" />
+						<MenuItem extended name="Rewards" icon="dollar-sign" route="/transactions" />
 					</Menu>
 				</div>
 			</div>

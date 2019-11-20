@@ -11,7 +11,7 @@ import Brand from 'components/forms/Brand';
 import Ad from 'components/forms/Ad';
 import Locations from 'components/forms/Locations';
 import Budget from 'components/forms/Budget';
-// import Billing from 'components/forms/Billing';
+import Billing from 'components/forms/Billing';
 import Summary from 'components/forms/Summary';
 
 import { Button, ButtonGroup } from 'components/ui/bulma/elements';
@@ -31,39 +31,38 @@ export default function CampaignWizard({ onClose }) {
 	});
 
 	const [ createLocations ] = useMutation(CREATE_LOCATIONS, {
+		context: { headers }
+	});
+
+	const [ createCard ] = useMutation(CREATE_CARD, {
 		context: { headers },
 		refetchQueries: [ 'CurrentUser' ]
 	});
-
-	// const [ createCard ] = useMutation(CREATE_CARD, {
-	// 	context: { headers },
-	// 	refetchQueries: [ 'CurrentUser' ]
-	// });
 
 	const handleSubmit = useCallback(
 		async ({
 			brand: { name, hashtag, message },
 			ad: { creative: { uri, size, position, background, secureURL } },
 			locations: { locations },
-			budget: { rate, limit }
-			// billing: {
-			// 	card: {
-			// 		id: providerID,
-			// 		name: providerName,
-			// 		brand,
-			// 		last4,
-			// 		funding,
-			// 		exp_month,
-			// 		exp_year,
-			// 		country,
-			// 		address_line1,
-			// 		address_city,
-			// 		address_state,
-			// 		address_zip,
-			// 		address_country
-			// 	},
-			// 	cardToken
-			// }
+			budget: { rate, limit },
+			billing: {
+				card: {
+					id: providerID,
+					name: providerName,
+					brand,
+					last4,
+					funding,
+					exp_month,
+					exp_year,
+					country,
+					address_line1,
+					address_city,
+					address_state,
+					address_zip,
+					address_country
+				},
+				cardToken
+			}
 		}) => {
 			setSpinner(true);
 
@@ -131,37 +130,37 @@ export default function CampaignWizard({ onClose }) {
 				status: 'pending'
 			};
 
-			// const cardProps = {
-			// 	provider: 'stripe',
-			// 	providerID,
-			// 	providerName,
-			// 	token: cardToken,
+			const cardProps = {
+				provider: 'stripe',
+				providerID,
+				providerName,
+				token: cardToken,
 
-			// 	billingAddress: address_line1,
-			// 	billingCity: address_city,
-			// 	billingState: address_state,
-			// 	billingZip: address_zip,
-			// 	billingCountry: address_country,
+				billingAddress: address_line1,
+				billingCity: address_city,
+				billingState: address_state,
+				billingZip: address_zip,
+				billingCountry: address_country,
 
-			// 	brand,
-			// 	last4,
-			// 	expMM: exp_month,
-			// 	expYYYY: exp_year,
-			// 	type: funding,
-			// 	method: object,
-			// 	country
-			// };
+				brand,
+				last4,
+				expMM: exp_month,
+				expYYYY: exp_year,
+				type: funding,
+				method: object,
+				country
+			};
 
 			const { data } = await createCampaign({ variables: { campaignProps } });
 			const campaignID = data.createCampaign.id;
 
 			await createAd({ variables: { adProps, campaignID } });
 			await createLocations({ variables: { locations: newLocations, campaignID } });
-			// await createCard({ variables: { cardProps, campaignID } });
+			await createCard({ variables: { cardProps, campaignID } });
 
 			setSpinner(false);
 		},
-		[ createAd, createCampaign, createLocations ]
+		[ createAd, createCampaign, createCard, createLocations ]
 	);
 
 	return (
@@ -250,7 +249,7 @@ const steps = [
 			locations: []
 		},
 		validationSchema: object().shape({
-			locations: array().required('Please add your locations').min(1, 'Min. 1 location required')
+			locations: array().required('Please add some locations').min(1, 'Min. 1 location required')
 		})
 		// actionLabel: 'Next'
 	},
@@ -275,18 +274,18 @@ const steps = [
 			}
 		}
 	},
-	// {
-	// 	id: 'billing',
-	// 	component: Billing,
-	// 	initialValues: {
-	// 		cardToken: '',
-	// 		card: {}
-	// 	},
-	// 	validationSchema: object().shape({
-	// 		cardToken: string().required('Please enter your card info!')
-	// 	})
-	// 	// actionLabel: 'Next',
-	// },
+	{
+		id: 'billing',
+		component: Billing,
+		initialValues: {
+			cardToken: '',
+			card: {}
+		},
+		validationSchema: object().shape({
+			cardToken: string().required('Please enter your card info!')
+		})
+		// actionLabel: 'Next',
+	},
 	{
 		id: 'summary',
 		component: Summary
@@ -323,13 +322,13 @@ const stepProps = [
 		title: 'Set your budget',
 		subtitle: 'How much shall you pay for each post?'
 	},
-	// {
-	// 	id: 'billing',
-	// 	icon: 'credit-card',
-	// 	name: 'Billing',
-	// 	title: 'Set up billing',
-	// 	subtitle: 'We use your card to reward your promoters'
-	// },
+	{
+		id: 'billing',
+		icon: 'credit-card',
+		name: 'Billing',
+		title: 'Set up billing',
+		subtitle: 'We use your card to reward your promoters'
+	},
 	{
 		id: 'summary',
 		icon: 'clipboard-list',
@@ -363,10 +362,10 @@ const CREATE_LOCATIONS = gql`
 	}
 `;
 
-// const CREATE_CARD = gql`
-// 	mutation CreateCard($cardProps: CardProps) {
-// 		createCard(cardProps: $cardProps) {
-// 			id
-// 		}
-// 	}
-// `;
+const CREATE_CARD = gql`
+	mutation CreateCard($cardProps: CardProps) {
+		createCard(cardProps: $cardProps) {
+			id
+		}
+	}
+`;

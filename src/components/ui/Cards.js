@@ -67,7 +67,13 @@ const Item = ({ type, data, actions }) => {
 						<div className="media">
 							<div className="media-left">
 								<figure className="image is-48x48">
-									<img src={`${LOGO_URI}${data.assets.logoURI}`} alt="Post" />
+									{/* <img src={`${LOGO_URI}${data.assets.logoURI}`} alt="Post" /> */}
+									<span className="icon is-large has-text-light">
+										<span className="fa-stack fa-lg">
+											<i className="fas fa-square fa-stack-2x" />
+											<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
+										</span>
+									</span>
 								</figure>
 							</div>
 							<div className="media-content">

@@ -14,8 +14,8 @@ export default function Summary() {
 		brand: { name, hashtag, message },
 		ad: { creative: { uri, size, position, background } },
 		locations: { locations },
-		budget: { rate, limit }
-		// billing: { card }
+		budget: { rate, limit },
+		billing: { card }
 	} = values;
 
 	return (
@@ -41,11 +41,11 @@ export default function Summary() {
 					<p className="title is-5">${rate} per approved post </p>
 					<p className="title is-5">Budget limited at ${limit}</p>
 					<hr />
-					{/* <p className="title is-4">Billing</p>
+					<p className="title is-4">Billing</p>
 					<p className="title is-5">
 						{card.brand} **** {card.last4}
-					</p> */}
-					<p className="title is-4">You recieved a $10 ad bonus</p>
+					</p>
+					<p className="title is-5">$20 refundable deposit</p>
 				</Box>
 			</Column>
 			<Column>

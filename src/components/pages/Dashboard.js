@@ -156,7 +156,7 @@ const TopPromoters = ({ consumers }) => {
 	if (consumers.length < 1)
 		return (
 			<Notification color="dark">
-				<strong>{`Please start your first promo and see people appearing here.`}</strong>
+				<strong>{`Waiting for your first posts to appear.`}</strong>
 			</Notification>
 		);
 	return (

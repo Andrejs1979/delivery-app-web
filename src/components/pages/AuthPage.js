@@ -72,8 +72,14 @@ export default function AuthPage() {
 					<Columns centered>
 						<Column size="half">
 							<h1 className="title is-4">
-								{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create free account'}
+								{isReset ? 'Reset password' : isLogin ? 'Sign In' : 'Create account, get $10 free!'}
 							</h1>
+							{!isReset &&
+							!isLogin && (
+								<h2 className="subtitle">
+									No credit card required.<br />We'll give you $10 for your ads.
+								</h2>
+							)}
 
 							<Box>
 								{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
@@ -92,7 +98,7 @@ export default function AuthPage() {
 						<Column size="half">
 							<Box>
 								<h1 className="title is-4">Promote your business on Instagram</h1>
-								<h2 className="subtitle">This is how it would look like</h2>
+								<h2 className="subtitle">Just $1 buys a post like this one</h2>
 								<figure className="image">
 									<Image
 										cloudName="hqsczucpx"
@@ -181,7 +187,7 @@ const SignUp = () => (
 			<Form>
 				<Field
 					name="email"
-					label="Business Email"
+					label="Business email"
 					icon="at"
 					component={Input}
 					placeholder="Email"

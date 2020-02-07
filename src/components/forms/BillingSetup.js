@@ -27,7 +27,7 @@ export default function BillingSetup({ onClose }) {
             <Box>
               <p className="title is-4">Please enter your card details</p>
               <p className="subtitle">
-                We will take a refundable $20 deposit and setup an automatic
+                We will take a refundable $100 deposit and setup an automatic
                 billing for the future.
               </p>
               <br />

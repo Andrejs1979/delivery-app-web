@@ -27,6 +27,8 @@ export default function App() {
   if (loading) return <Spinner />;
   if (error) return <Error error={error} />;
 
+  console.log(user.uid);
+
   return (
     <ApolloProvider client={client}>
       {user ? <Account /> : <Auth />}

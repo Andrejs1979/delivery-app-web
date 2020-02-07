@@ -18,7 +18,8 @@ import Spinner from "components/ui/Spinner";
 analytics.default.load(process.env.REACT_APP_SEGMENT_KEY);
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_API_ROOT_URL
+  // uri: process.env.REACT_APP_API_ROOT_URL
+  uri: "https://9o07qpvqn6.execute-api.us-east-1.amazonaws.com/prod/graphql"
 });
 
 export default function App() {
@@ -26,8 +27,6 @@ export default function App() {
 
   if (loading) return <Spinner />;
   if (error) return <Error error={error} />;
-
-  console.log(user.uid);
 
   return (
     <ApolloProvider client={client}>

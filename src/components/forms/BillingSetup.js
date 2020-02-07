@@ -78,7 +78,7 @@ export default function BillingSetup({ onClose }) {
                 </Left>
               </Level>
               <br />
-              <StripeProvider apiKey="pk_test_HBIhZrPHQdlwv18IxhN5CIW200t5RZNUPd">
+              <StripeProvider apiKey="pk_live_B2FsiYxmA4o1cuvUVrctbOre009yyl1NlF">
                 <Elements>
                   <PaymentForm />
                 </Elements>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 import useScript from "@charlietango/use-script";
 
-import { useFormikContext } from "formik";
 import {
   StripeProvider,
   Elements,
@@ -13,6 +14,8 @@ import Modal from "components/ui/Modal";
 import { Box, Button, Icon } from "components/ui/bulma/elements";
 import { Columns, Column } from "components/ui/bulma";
 import { Left, Level, Item } from "components/ui/bulma/layout";
+
+import UserContext from "context/UserContext";
 
 const STRIPE = "https://js.stripe.com/v3/";
 
@@ -129,15 +132,62 @@ export default function BillingSetup({ onClose }) {
 }
 
 const _PaymentForm = ({ stripe }) => {
+  const { headers } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState();
   const [error, setError] = useState();
+
+  const [createCard] = useMutation(CREATE_CARD, {
+    context: { headers },
+    refetchQueries: ["CurrentUser", "Account"]
+  });
 
   const tokenize = async () => {
     setLoading(true);
     const { token, error } = await stripe.createToken();
     if (error) setError(error);
-    if (token) setToken(token);
+    if (token) {
+      setToken(token);
+
+      const {
+        id: providerID,
+        name: providerName,
+        brand,
+        last4,
+        funding,
+        exp_month,
+        exp_year,
+        country,
+        address_line1,
+        address_city,
+        address_state,
+        address_zip,
+        address_country
+      } = token.card;
+
+      const cardProps = {
+        provider: "stripe",
+        providerID,
+        providerName,
+        token: token.id,
+
+        billingAddress: address_line1,
+        billingCity: address_city,
+        billingState: address_state,
+        billingZip: address_zip,
+        billingCountry: address_country,
+
+        brand,
+        last4,
+        expMM: exp_month,
+        expYYYY: exp_year,
+        type: funding,
+        method: token.object,
+        country
+      };
+
+      await createCard({ variables: { cardProps } });
+    }
     setLoading(false);
   };
 
@@ -182,3 +232,11 @@ const _PaymentForm = ({ stripe }) => {
 };
 
 const PaymentForm = injectStripe(_PaymentForm);
+
+const CREATE_CARD = gql`
+  mutation CreateCard($cardProps: CardProps) {
+    createCard(cardProps: $cardProps) {
+      id
+    }
+  }
+`;

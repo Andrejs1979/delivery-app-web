@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+
+import { gql, useQuery } from "@apollo/client";
 // import { useModal } from 'react-modal-hook';
 import { Link } from "@reach/router";
 import { firebaseAppAuth } from "services/firebase";
@@ -26,7 +26,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
   // 	</div>
   // ));
 
-  if (loading) return <Spinner />;
+  if (loading) return <div />;
   if (error) return <Error error={error} />;
 
   const {
@@ -60,7 +60,7 @@ export default function Navbar({ extendedMenu, extendMenu }) {
         <div className="navbar-start">
           <div className="navbar-item">
             <Link to="/">
-              <p className="title is-4">{campaigns[0].name}</p>
+              <p className="title is-4">{name}</p>
             </Link>
           </div>
           {campaigns && campaigns.length > 1 ? (

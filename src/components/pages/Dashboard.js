@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+
+import { gql, useQuery } from "@apollo/client";
 import { useModal } from "react-modal-hook";
 
 import { Button, Notification } from "components/ui/bulma/elements";
@@ -15,8 +15,7 @@ import UserContext from "context/UserContext";
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
 export default function Dashboard({ navigate }) {
-  const { headers } = useContext(UserContext);
-  const { data, loading, error } = useQuery(ACCOUNT, { context: { headers } });
+  const { data, loading, error } = useQuery(ACCOUNT);
 
   const [showCampaignWizard, hideCampaignWizard] = useModal(() => (
     <div className="modal is-active">
@@ -40,7 +39,18 @@ export default function Dashboard({ navigate }) {
   if (error) return <Error error={error} />;
 
   const {
-    account: { campaigns, posts, consumers, billing, status, isLive }
+    account: {
+      campaigns,
+      postCount,
+      posts,
+      consumers,
+      consumerCount,
+      locationCount,
+      billing,
+      spent,
+      status,
+      isLive
+    }
   } = data;
 
   return (
@@ -107,25 +117,29 @@ export default function Dashboard({ navigate }) {
           <div className="tile">
             <div className="tile is-parent is-vertical">
               <article className="tile is-child notification is-primary">
-                <p className="title">Posts 0</p>
-                <p className="subtitle">Total posts in your promo</p>
+                <p className="title">Posts {postCount}</p>
+                {/* <p className="subtitle">Total posts in your promo</p> */}
               </article>
               <article className="tile is-child notification is-danger">
-                <p className="title">Promoters 0</p>
-                <p className="subtitle">People participating in your promo</p>
+                <p className="title">Customers {consumerCount}</p>
+                {/* <p className="subtitle">People participating in your promo</p> */}
               </article>
               <article className="tile is-child notification is-warning">
-                <p className="title">Locations 0</p>
-                <p className="subtitle">Locations covered by your promo</p>
+                <p className="title">Locations {locationCount}</p>
+                {/* <p className="subtitle">Locations covered by your promo</p> */}
+              </article>
+              <article className="tile is-child notification is-dark">
+                <p className="title">Total Spent ${spent}</p>
+                {/* <p className="subtitle">Locations covered by your promo</p> */}
               </article>
             </div>
             <div className="tile is-parent">
               {posts.length > 1 ? (
                 <article className="tile is-child notification is-light">
-                  <p className="title">Featured Post</p>
+                  <p className="title">Latest Post</p>
                   {/* <p className="subtitle">With an image</p> */}
                   {/* <Cards type="posts" data={[ posts[0] ]} /> */}
-                  <Featured post={posts[0]} />
+                  <Featured post={posts[2]} />
                 </article>
               ) : (
                 <article className="tile is-child notification is-light">
@@ -134,7 +148,7 @@ export default function Dashboard({ navigate }) {
                     This is how you promo posts will look like
                   </p>
                   {/* <Cards type="posts" data={[ posts[0] ]} /> */}
-                  <Featured post={posts[0]} />
+                  <Featured post={posts.reverse().pop()} />
                 </article>
               )}
             </div>
@@ -150,7 +164,7 @@ export default function Dashboard({ navigate }) {
               </article>
             </div>
           </div>
-          {posts.length > 0 && (
+          {/* {posts.length > 0 && (
             <div className="tile is-parent">
               <article className="tile is-child notification is-light">
                 <p className="title">Waiting for Review</p>
@@ -158,7 +172,7 @@ export default function Dashboard({ navigate }) {
                 <PendingPosts />
               </article>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
@@ -166,10 +180,8 @@ export default function Dashboard({ navigate }) {
 }
 
 function PendingPosts() {
-  const { headers } = useContext(UserContext);
   const { data, loading, error } = useQuery(POSTS, {
-    variables: { limit: 10, status: "pending" },
-    context: { headers }
+    variables: { limit: 10, status: "pending" }
   });
 
   if (loading) return <Spinner />;
@@ -238,7 +250,10 @@ const ACCOUNT = gql`
       isLive
       balance
       billing
-
+      consumerCount
+      locationCount
+      postCount
+      spent
       campaigns {
         id
       }

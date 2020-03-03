@@ -1,36 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from "@apollo/client";
 
-import Cards from 'components/ui/Cards';
-import Error from 'components/ui/Error';
-import Spinner from 'components/ui/Spinner';
+import Cards from "components/ui/Cards";
+import Error from "components/ui/Error";
+import Spinner from "components/ui/Spinner";
 
-import UserContext from 'context/UserContext';
+import UserContext from "context/UserContext";
 
 const CONSUMERS = gql`
-	query Consumers {
-		consumers {
-			id
-			email
-			avatar
-			displayName
-			postCount
-		}
-	}
+  query Consumers {
+    consumers {
+      id
+      email
+      avatar
+      displayName
+      postCount
+    }
+  }
 `;
 
 export default function Consumers() {
-	const { headers } = useContext(UserContext);
+  const { headers } = useContext(UserContext);
 
-	const { loading, data, error } = useQuery(CONSUMERS, {
-		// variables: { email: user.email },
-		context: { headers }
-	});
+  const { loading, data, error } = useQuery(CONSUMERS, {
+    // variables: { email: user.email },
+    context: { headers }
+  });
 
-	if (loading) return <Spinner />;
-	if (error) return <Error error={error} />;
+  if (loading) return <Spinner />;
+  if (error) return <Error error={error} />;
 
-	return <Cards type="consumers" data={data.consumers} />;
+  return <Cards type="consumers" data={data.consumers} />;
 }

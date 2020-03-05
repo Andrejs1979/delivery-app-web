@@ -1,5 +1,6 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 
+import { Link } from "@reach/router";
 import { gql, useMutation } from "@apollo/client";
 
 import { FormikWizard } from "formik-wizard";
@@ -14,29 +15,27 @@ import Budget from "components/forms/Budget";
 // import Billing from 'components/forms/Billing';
 import Summary from "components/forms/Summary";
 
-import { Button, ButtonGroup } from "components/ui/bulma/elements";
-
-import UserContext from "context/UserContext";
+import {
+  Button,
+  ButtonGroup,
+  Level,
+  Left,
+  Right
+} from "components/ui/bulma/elements";
 
 export default function CampaignWizard({ onClose }) {
-  const { headers } = useContext(UserContext);
   const [spinner, setSpinner] = useState(false);
 
-  const [createCampaign] = useMutation(CREATE_CAMPAIGN, {
-    context: { headers }
-  });
+  const [createCampaign] = useMutation(CREATE_CAMPAIGN);
 
-  const [createAd] = useMutation(CREATE_AD, {
-    context: { headers }
-  });
+  const [createAd] = useMutation(CREATE_AD);
 
   const [createLocations] = useMutation(CREATE_LOCATIONS, {
-    context: { headers },
     refetchQueries: ["CurrentUser"]
   });
 
   // const [ createCard ] = useMutation(CREATE_CARD, {
-  // 	context: { headers },
+  //
   // 	refetchQueries: [ 'CurrentUser' ]
   // });
 
@@ -199,6 +198,16 @@ const FormWrapper = ({
 		)} */}
 
     <ButtonGroup right>
+      {/* <Link to="/dashboard">
+        <Button
+          size="medium"
+          icon="angle-left"
+          color="white"
+          action={goToPreviousStep}
+        >
+          Skip to Dashboard
+        </Button>
+      </Link> */}
       <Button
         size="medium"
         icon="angle-left"

@@ -13,14 +13,19 @@ import { CloudinaryContext } from "cloudinary-react";
 import Layout from "components/ui/Layout";
 import Spinner from "components/ui/Spinner";
 
-import Welcome from "components/pages/Welcome";
-import Dashboard from "components/pages/Dashboard";
-import Campaigns from "components/pages/Campaigns";
-import Consumers from "components/pages/Consumers";
-import Posts from "components/pages/Posts";
-import Locations from "components/pages/Locations";
-import Ads from "components/pages/Ads";
-import Transactions from "components/pages/Transactions";
+// **** Pages ****
+import Welcome from "pages/Welcome";
+import Dashboard from "pages/Dashboard";
+import Campaigns from "pages/Campaigns";
+import Consumers from "pages/Consumers";
+import Posts from "pages/Posts";
+import Locations from "pages/Locations";
+import Ads from "pages/Ads";
+import Transactions from "pages/Transactions";
+
+// **** Profiles ****
+import CustomerProfile from "components/profiles/Customer";
+// import TransactionProfile from "components/profiles/Activity";
 
 import UserContext from "context/UserContext";
 
@@ -62,7 +67,10 @@ export default function Account() {
               <Layout path="/">
                 <Dashboard path="/" />
                 <Campaigns path="/campaigns" />
+
                 <Consumers path="/consumers" />
+                <CustomerProfile path="customers/:itemID" />
+
                 <Posts path="/posts" />
                 <Locations path="/locations" />
                 <Ads path="/ads" />
@@ -71,10 +79,6 @@ export default function Account() {
             )}
           </Router>
         </ModalProvider>
-
-        {/* {process.env.NODE_ENV === 'production' && (
-				<Drift appId="1034943" userId="1234" attributes={{ email: 'user@example.com', company: 'Acme Inc' }} />
-			)} */}
       </CloudinaryContext>
     </UserContext.Provider>
   );

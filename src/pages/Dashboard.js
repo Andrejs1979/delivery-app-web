@@ -139,7 +139,7 @@ export default function Dashboard({ navigate }) {
                   <p className="title">Latest Post</p>
                   {/* <p className="subtitle">With an image</p> */}
                   {/* <Cards type="posts" data={[ posts[0] ]} /> */}
-                  <Featured post={posts[2]} />
+                  <Featured post={posts[0]} />
                 </article>
               ) : (
                 <article className="tile is-child notification is-light">
@@ -158,7 +158,7 @@ export default function Dashboard({ navigate }) {
                   <p className="title">Top promoters</p>
                   <p className="subtitle">Customers with the most posts</p>
                   <div className="content">
-                    <TopPromoters consumers={consumers} />
+                    <TopPromoters consumers={consumers.slice(0, 10)} />
                   </div>
                 </div>
               </article>

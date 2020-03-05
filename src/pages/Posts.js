@@ -1,12 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { gql, useQuery, useMutation } from "@apollo/client";
 
 import Cards from "components/ui/Cards";
 import Error from "components/ui/Error";
 import Spinner from "components/ui/Spinner";
-
-import UserContext from "context/UserContext";
 
 export default function Campaigns() {
   const [approvePost] = useMutation(APPROVE_POST, {
@@ -18,7 +16,7 @@ export default function Campaigns() {
   });
 
   const { loading, data, error } = useQuery(POSTS, {
-    variables: { status: "approved", limit: 10 }
+    variables: { status: "approved", limit: 100 }
   });
 
   if (loading) return <Spinner />;

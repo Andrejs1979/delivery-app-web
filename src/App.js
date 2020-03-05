@@ -13,11 +13,48 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firebaseAppAuth } from "services/firebase";
 
-import Auth from "components/pages/AuthPage";
+import Auth from "pages/AuthPage";
 import Account from "components/Account";
 
 import Error from "components/ui/Error";
 import Spinner from "components/ui/Spinner";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faTachometerAlt,
+  faImages,
+  faAd,
+  faDollarSign,
+  faGlobe,
+  faUserFriends,
+  faMapMarkedAlt,
+  faMoneyCheckAlt,
+  faSquare,
+  faBars,
+  faAddressCard,
+  faThLarge,
+  faTh,
+  faUserCircle,
+  faAngleDown
+} from "@fortawesome/free-solid-svg-icons";
+
+library.add(
+  faTachometerAlt,
+  faImages,
+  faAd,
+  faDollarSign,
+  faGlobe,
+  faUserFriends,
+  faMapMarkedAlt,
+  faMoneyCheckAlt,
+  faSquare,
+  faBars,
+  faAddressCard,
+  faThLarge,
+  faTh,
+  faUserCircle,
+  faAngleDown
+);
 
 analytics.default.load(process.env.REACT_APP_SEGMENT_KEY);
 

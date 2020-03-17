@@ -1,74 +1,88 @@
-import React from "react";
+import React, { useState } from 'react';
 
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { gql, useQuery, useMutation } from '@apollo/client';
 
-import Cards from "components/ui/Cards";
-import Error from "components/ui/Error";
-import Spinner from "components/ui/Spinner";
+import Hero from 'components/ui/Hero';
+import Cards from 'components/ui/Cards';
+import Error from 'components/ui/Error';
+import Spinner from 'components/ui/Spinner';
 
-export default function Campaigns() {
-  const [approvePost] = useMutation(APPROVE_POST, {
-    refetchQueries: ["Posts"]
-  });
+export default function Posts({ itemID }) {
+	const [ tab, setTab ] = useState('active');
+	const [ view, setView ] = useState('large');
+	const [ item, setItem ] = useState(itemID);
 
-  const [declinePost] = useMutation(DECLINE_POST, {
-    refetchQueries: ["Posts"]
-  });
+	const [ approvePost ] = useMutation(APPROVE_POST, {
+		refetchQueries: [ 'Posts' ]
+	});
 
-  const { loading, data, error } = useQuery(POSTS, {
-    variables: { status: "approved", limit: 100 }
-  });
+	const [ declinePost ] = useMutation(DECLINE_POST, {
+		refetchQueries: [ 'Posts' ]
+	});
 
-  if (loading) return <Spinner />;
-  if (error) return <Error error={error} />;
+	const { loading, data, error } = useQuery(POSTS, {
+		variables: { status: 'approved', limit: 100 }
+	});
 
-  return (
-    <Cards
-      type="posts"
-      data={data.posts}
-      //   actions={[approvePost, declinePost]}
-    />
-  );
+	if (loading) return <Spinner />;
+	if (error) return <Error error={error} />;
+
+	return (
+		<div>
+			<Hero
+				color="primary"
+				icon="images"
+				title="Posts"
+				subtitle="Approved branded posts at your locations"
+				// tabs={tabs}
+				// activeTab={tab}
+				setTab={setTab}
+				view={view}
+				setView={setView}
+			/>
+			<Cards type="posts" data={data.posts} />
+		</div>
+	);
 }
 
 const POSTS = gql`
-  query Posts($limit: Int, $status: PostStatus) {
-    posts(limit: $limit, status: $status) {
-      id
-      date
-      status
-      uri
-      location {
-        id
-      }
-      ad {
-        id
-        creativeURI
-      }
-      campaign {
-        id
-      }
-      consumer {
-        id
-        avatar
-        displayName
-      }
-    }
-  }
+	query Posts($limit: Int, $status: PostStatus) {
+		posts(limit: $limit, status: $status) {
+			id
+			date
+			status
+			uri
+			location {
+				id
+			}
+			ad {
+				id
+				creativeURI
+			}
+			campaign {
+				id
+			}
+			consumer {
+				id
+				avatar
+				displayName
+			}
+		}
+	}
 `;
 
 const APPROVE_POST = gql`
-  mutation ApprovePost($postID: ID!) {
-    approvePost(postID: $postID) {
-      id
-    }
-  }
+	mutation ApprovePost($postID: ID!) {
+		approvePost(postID: $postID) {
+			id
+		}
+	}
 `;
 
 const DECLINE_POST = gql`
-  mutation DeclinePost($postID: ID!, $statusText: String!) {
-    declinePost(postID: $postID, statusText: $statusText) {
-      id
-    }
-  }
+	mutation DeclinePost($postID: ID!, $statusText: String!) {
+		declinePost(postID: $postID, statusText: $statusText) {
+			id
+		}
+	}
 `;

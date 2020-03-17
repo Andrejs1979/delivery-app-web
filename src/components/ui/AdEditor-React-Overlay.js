@@ -7,8 +7,8 @@ import { Image, Transformation } from 'cloudinary-react';
 import Overlay from 'react-image-overlay';
 
 import Toolbar from 'components/ui/Toolbar';
-import { Level, Left, Right, Item } from 'components/ui/bulma/layout';
-import { Progress, Box } from 'components/ui/bulma/elements';
+import { Level, Left, Right, Item } from 'components/ui/bulma';
+import { Progress, Box } from 'components/ui/bulma';
 
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 const CLOUDINARY_UPLOAD = process.env.REACT_APP_CLOUDINARY_UPLOAD_URI;

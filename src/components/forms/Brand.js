@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 
 import { FastField, useFormikContext } from 'formik';
 
-import { Box } from 'components/ui/bulma/elements';
-import { Input } from 'components/ui/bulma/form';
+import { Box, Input } from 'components/ui/bulma';
 
 export default function Brand() {
 	const { values, setFieldValue, setFieldTouched } = useFormikContext();
@@ -19,6 +18,7 @@ export default function Brand() {
 		<Box>
 			<FastField
 				name="name"
+				size="medium"
 				label="Brand name"
 				icon="copyright"
 				component={Input}
@@ -28,6 +28,7 @@ export default function Brand() {
 
 			<FastField
 				name="hashtag"
+				size="medium"
 				label="Hashtag"
 				icon="hashtag"
 				component={Input}
@@ -37,6 +38,7 @@ export default function Brand() {
 
 			<FastField
 				name="message"
+				size="medium"
 				label="Promo message (optional)"
 				icon="bullhorn"
 				component={Input}

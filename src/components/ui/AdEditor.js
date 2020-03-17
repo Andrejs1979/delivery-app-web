@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { Image, Transformation } from 'cloudinary-react';
 
 import Toolbar from 'components/ui/Toolbar';
-import { Progress } from 'components/ui/bulma/elements';
+import { Progress } from 'components/ui/bulma';
 
 const CLOUDINARY_UPLOAD = process.env.REACT_APP_CLOUDINARY_UPLOAD_URI;
 

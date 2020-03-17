@@ -2,9 +2,9 @@ import React from 'react';
 
 import { FastField } from 'formik';
 
-import { Box } from 'components/ui/bulma/elements';
-import { Columns, Column } from 'components/ui/bulma/layout';
-import { Input } from 'components/ui/bulma/form';
+import { Box } from 'components/ui/bulma';
+import { Columns, Column } from 'components/ui/bulma';
+import { Input } from 'components/ui/bulma';
 
 export default function Budget() {
 	return (
@@ -16,7 +16,6 @@ export default function Budget() {
 						name="rate"
 						label="Reward per post"
 						icon="dollar-sign"
-
 						component={Input}
 						placeholder="Reward"
 						help="You can start as low as $1 per post"
@@ -27,7 +26,6 @@ export default function Budget() {
 						name="limit"
 						label="Campaign limit"
 						icon="hand-paper"
-
 						component={Input}
 						placeholder="Limit"
 						help="Optional. If you want to stop campaign automatically"

@@ -5,7 +5,7 @@ import { FastField, useFormikContext } from 'formik';
 import AdEditor from 'components/ui/AdEditor';
 // import Upload from 'components/ui/Upload';
 
-import { Box } from 'components/ui/bulma/elements';
+import { Box } from 'components/ui/bulma';
 
 export default function Ad() {
 	const [ uri, setUri ] = useState('SampleLogo.png');

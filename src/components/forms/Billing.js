@@ -4,8 +4,8 @@ import useScript from '@charlietango/use-script';
 import { useFormikContext } from 'formik';
 import { StripeProvider, Elements, CardElement, injectStripe } from 'react-stripe-elements';
 
-import { Box, Button, Icon } from 'components/ui/bulma/elements';
-import { Left, Level, Item } from 'components/ui/bulma/layout';
+import { Box, Button, Icon } from 'components/ui/bulma';
+import { Left, Level, Item } from 'components/ui/bulma';
 
 const STRIPE = 'https://js.stripe.com/v3/';
 

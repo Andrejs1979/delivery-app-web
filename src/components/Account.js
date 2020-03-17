@@ -65,22 +65,22 @@ export default function Account() {
 			<CloudinaryContext cloudName="hqsczucpx">
 				<ModalProvider>
 					<Router>
-						{account.campaigns.length < 1 ? (
+						{/* {account.campaigns.length < 1 ? (
 							<Welcome path="/" />
-						) : (
-							<Layout path="/">
-								<Dashboard path="/" />
-								<Campaigns path="/campaigns" />
+						) : ( */}
+						<Layout path="/">
+							<Dashboard path="/" />
+							<Campaigns path="/campaigns" />
 
-								<Consumers path="/consumers" />
-								<CustomerProfile path="customers/:itemID" />
+							<Consumers path="/consumers" />
+							<CustomerProfile path="customers/:itemID" />
 
-								<Posts path="/posts" />
-								<Locations path="/locations" />
-								<Ads path="/ads" />
-								<Transactions path="/transactions" />
-							</Layout>
-						)}
+							<Posts path="/posts" />
+							<Locations path="/locations" />
+							<Ads path="/ads" />
+							<Transactions path="/transactions" />
+						</Layout>
+						{/* )} */}
 					</Router>
 				</ModalProvider>
 			</CloudinaryContext>

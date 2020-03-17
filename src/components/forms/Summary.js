@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useFormikWizard } from 'formik-wizard';
 
-import { Box } from 'components/ui/bulma/elements';
-import { Columns, Column } from 'components/ui/bulma/layout';
+import { Box } from 'components/ui/bulma';
+import { Columns, Column } from 'components/ui/bulma';
 
 import { Image, Transformation } from 'cloudinary-react';
 

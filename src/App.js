@@ -30,7 +30,12 @@ import {
 	faThLarge,
 	faTh,
 	faUserCircle,
-	faAngleDown
+	faAngleDown,
+	faCopyright,
+	faBullhorn,
+	faHashtag,
+	faMagic,
+	faCoins
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -48,7 +53,12 @@ library.add(
 	faThLarge,
 	faTh,
 	faUserCircle,
-	faAngleDown
+	faAngleDown,
+	faCopyright,
+	faBullhorn,
+	faHashtag,
+	faMagic,
+	faCoins
 );
 
 analytics.default.load(process.env.REACT_APP_SEGMENT_KEY);
@@ -68,8 +78,8 @@ export default function App() {
 			headers: {
 				authorization: user ? user.uid : null
 			},
-			uri: process.env.REACT_APP_API_ROOT_URL
-			// uri: PROD
+			// uri: process.env.REACT_APP_API_ROOT_URL
+			uri: PROD
 		})
 	});
 

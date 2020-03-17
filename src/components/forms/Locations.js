@@ -6,8 +6,8 @@ import { FastField, useFormikContext } from 'formik';
 import Map from 'components/ui/Map';
 import Places from 'components/ui/Places';
 
-import { Box } from 'components/ui/bulma/elements';
-import { Columns, Column } from 'components/ui/bulma/layout';
+import { Box } from 'components/ui/bulma';
+import { Columns, Column } from 'components/ui/bulma';
 
 export default function Locations() {
 	const { values: { locations }, setValues } = useFormikContext();

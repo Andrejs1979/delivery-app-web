@@ -3,8 +3,9 @@ import React, { useContext } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useModal } from 'react-modal-hook';
 
-import { Button, Notification } from 'components/ui/bulma/elements';
+import { Button, Columns, Column, Hero, Notification } from 'components/ui/bulma';
 
+import Modal from 'components/ui/Modal';
 import CampaignWizard from 'components/forms/CampaignWizard';
 import BillingSetup from 'components/forms/BillingSetup';
 import Error from 'components/ui/Error';
@@ -18,12 +19,9 @@ export default function Dashboard({ navigate }) {
 	const { data, loading, error } = useQuery(ACCOUNT);
 
 	const [ showCampaignWizard, hideCampaignWizard ] = useModal(() => (
-		<div className="modal is-active">
-			<div className="modal-background" />
-			<div className="modal-content">
-				<CampaignWizard onClose={hideCampaignWizard} />
-			</div>
-		</div>
+		<Modal narrow icon="magic" title="New campaign" onClose={hideCampaignWizard}>
+			<CampaignWizard onClose={hideCampaignWizard} />
+		</Modal>
 	));
 
 	const [ showBilling, hideBilling ] = useModal(() => (

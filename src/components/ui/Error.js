@@ -1,5 +1,5 @@
 import React from 'react';
-import { Notification } from 'components/ui/bulma/elements';
+import { Notification } from 'components/ui/bulma';
 
 export default function Error({ error }) {
 	return (

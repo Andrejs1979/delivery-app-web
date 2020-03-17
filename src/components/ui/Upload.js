@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 
-import { Progress } from 'components/ui/bulma/elements';
+import { Progress } from 'components/ui/bulma';
 
 const CLOUDINARY_UPLOAD = process.env.REACT_APP_CLOUDINARY_UPLOAD_URI;
 export default function Upload({

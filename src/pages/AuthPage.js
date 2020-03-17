@@ -76,17 +76,12 @@ export default function AuthPage() {
 							</h1>
 							{!isReset &&
 							!isLogin && (
-								<h2 className="subtitle">
-									No credit card required.
-									<br />
-									We'll give you $10 for your ads.
-								</h2>
+								<h2 className="subtitle">No credit card required. We'll give you $10 for your ads.</h2>
 							)}
 
 							<Box>
 								{isReset ? <Reset /> : isLogin ? <Login /> : <SignUp />}
 								<br />
-
 								{isReset || (
 									<Button color="text" action={() => toggleLogin(!isLogin)}>
 										<strong>{isLogin ? 'No account? Sign up' : 'Have an account? Sign in'} </strong>
@@ -189,15 +184,17 @@ const SignUp = () => (
 			<Form>
 				<Field
 					name="email"
+					size="medium"
 					label="Business email"
 					icon="at"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
 				/>
-				<br />
+
 				<Field
 					name="password"
+					size="medium"
 					type="password"
 					label="Set your password"
 					icon="lock"
@@ -205,9 +202,9 @@ const SignUp = () => (
 					placeholder="Password"
 					autoComplete="current-password"
 				/>
-				<br />
+
 				{status && <Notification>{status}</Notification>}
-				<Button full type="submit" color="primary" icon="check-circle">
+				<Button full size="medium" type="submit" color="primary" icon="check-circle">
 					Create Account
 				</Button>
 			</Form>
@@ -228,15 +225,17 @@ const Login = () => (
 			<Form>
 				<Field
 					label="Email"
+					size="medium"
 					name="email"
 					icon="at"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
 				/>
-				<br />
+
 				<Field
 					label="Password"
+					size="medium"
 					name="password"
 					type="password"
 					icon="lock"
@@ -244,9 +243,10 @@ const Login = () => (
 					placeholder="Password"
 					autoComplete="current-password"
 				/>
-				<br />
+
 				{status && <Notification color="danger">{status}</Notification>}
-				<Button full type="submit" color="primary" icon="key">
+
+				<Button full type="submit" size="medium" color="primary" icon="check-circle">
 					Sign In
 				</Button>
 			</Form>
@@ -285,15 +285,16 @@ const Reset = () => (
 			<Form>
 				<Field
 					name="email"
+					size="medium"
 					label="Account Email"
 					icon="at"
 					component={Input}
 					placeholder="Email"
 					autoComplete="username"
 				/>
-				<br />
+
 				{status && <Notification>{status}</Notification>}
-				<Button full type="submit" color="primary" icon="envelope" disabled={isSubmitting}>
+				<Button full type="submit" size="medium" color="danger" icon="envelope" disabled={isSubmitting}>
 					Reset Password
 				</Button>
 			</Form>

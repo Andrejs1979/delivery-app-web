@@ -35,7 +35,11 @@ import {
 	faBullhorn,
 	faHashtag,
 	faMagic,
-	faCoins
+	faCoins,
+	faLock,
+	faAt,
+	faCheckCircle,
+	faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -58,7 +62,11 @@ library.add(
 	faBullhorn,
 	faHashtag,
 	faMagic,
-	faCoins
+	faCoins,
+	faLock,
+	faAt,
+	faCheckCircle,
+	faEnvelope
 );
 
 analytics.default.load(process.env.REACT_APP_SEGMENT_KEY);

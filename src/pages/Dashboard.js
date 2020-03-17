@@ -11,7 +11,7 @@ import BillingSetup from 'components/forms/BillingSetup';
 import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
-import UserContext from 'context/UserContext';
+import example from 'assets/example.jpg';
 
 const CLOUDINARY = process.env.REACT_APP_CLOUDINARY_URI;
 
@@ -193,7 +193,7 @@ const Featured = ({ post }) => (
 		{post && post.uri ? (
 			<img src={`${CLOUDINARY}/c_scale,w_300/posts/${post.uri}`} alt="Post" />
 		) : (
-			<img alt="" src="https://bulma.io/images/placeholders/256x256.png" />
+			<img alt="" src={example} />
 		)}
 	</figure>
 );

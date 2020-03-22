@@ -15,18 +15,18 @@ export default function SidePanel({ extendedMenu, extendMenu }) {
       <Menu>
         <MenuItem name="Dashboard" icon="tachometer-alt" route="/" />
         <br />
-        <MenuItem name="Posts" icon="images" route="/posts" />
-        <MenuItem name="Promoters" icon="user-friends" route="/consumers" />
-        {/* <br />
-        <MenuItem name="Campaigns" icon="globe" route="/campaigns" />
+        {/* <MenuItem name="Posts" icon="images" route="/posts" /> */}
+        <MenuItem name="Customers" icon="user-friends" route="/consumers" />
+        <br />
+        {/* <MenuItem name="Campaigns" icon="globe" route="/campaigns" /> */}
         <MenuItem name="Locations" icon="map-marked-alt" route="/locations" />
-        <MenuItem name="Ads" icon="ad" route="/ads" />
+        {/* <MenuItem name="Ads" icon="ad" route="/ads" /> */}
         <br />
         <MenuItem
           name="Payments"
           icon="money-check-alt"
           route="/transactions"
-        /> */}
+        />
       </Menu>
       <ExtendedMenu extendedMenu={extendedMenu} extendMenu={extendMenu} />
     </div>

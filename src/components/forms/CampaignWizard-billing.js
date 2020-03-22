@@ -7,10 +7,10 @@ import { object, string, array, number } from 'yup';
 
 // import Modal from 'components/ui/Modal';
 import Wizard from 'components/ui/Wizard';
-import Brand from 'components/forms/Brand';
+import Brand from 'components/forms/Contact';
 import Ad from 'components/forms/Ad';
 import Locations from 'components/forms/Locations';
-import Budget from 'components/forms/Budget';
+import Budget from 'components/forms/Funding';
 import Billing from 'components/forms/Billing';
 import Summary from 'components/forms/Summary';
 

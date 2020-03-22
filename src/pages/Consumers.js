@@ -28,7 +28,7 @@ export default function Consumers({ itemID }) {
       <Hero
         color="primary"
         icon="user-friends"
-        title="Promoters"
+        title="Customers"
         subtitle="All you need to know about your customers"
         // tabs={tabs}
         // activeTab={tab}

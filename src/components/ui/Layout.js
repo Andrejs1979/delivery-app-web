@@ -8,10 +8,10 @@ export default function Layout({ children }) {
 	const [ extendedMenu, extendMenu ] = useState(false);
 	return (
 		<div>
-			<Navbar extendedMenu={extendedMenu} extendMenu={extendMenu} />
+			{/* <Navbar extendedMenu={extendedMenu} extendMenu={extendMenu} /> */}
 			<div className="columns">
 				<div className="column is-narrow is-hidden-mobile">
-					<Menu extendedMenu={extendedMenu} extendMenu={extendMenu} />
+					{/* <Menu extendedMenu={extendedMenu} extendMenu={extendMenu} /> */}
 				</div>
 				<div className="column">
 					<br />

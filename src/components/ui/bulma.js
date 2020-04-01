@@ -178,7 +178,9 @@ export function Input({ field, form: { touched, errors }, type, size, label, ico
 				<input
 					type={type}
 					placeholder={placeholder}
-					className={`input is-hidden-desktop is-${touched[field.name] && errors[field.name] && 'danger'}`}
+					className={`input is-hidden-desktop is-hidden-tablet is-${touched[field.name] &&
+						errors[field.name] &&
+						'danger'}`}
 					aria-haspopup="true"
 					aria-controls="suggestions"
 					{...field}

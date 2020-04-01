@@ -52,9 +52,7 @@ export default function Places({ action, field, form, icon, label, placeholder, 
 										aria-haspopup="true"
 										aria-controls="suggestions"
 										placeholder={placeholder}
-										className={`input is-${size} is-${form.touched[field.name] &&
-											form.errors[field.name] &&
-											'danger'}`}
+										className={`input is-${size}`}
 										{...getInputProps({
 											field,
 											form,
@@ -70,24 +68,7 @@ export default function Places({ action, field, form, icon, label, placeholder, 
 											<i className={`fas fa-${icon}`} />
 										</span>
 									)}
-
-									{form.touched[field.name] &&
-									!form.errors[field.name] && (
-										<span className={`icon is-${size} is-right`}>
-											<i className={`fas fa-check`} />
-										</span>
-									)}
-
-									{form.touched[field.name] &&
-									form.errors[field.name] && (
-										<span className={`icon is-${size} is-right`}>
-											<i className={`fas fa-times`} />
-										</span>
-									)}
 								</div>
-
-								{form.touched[field.name] &&
-								form.errors[field.name] && <p className="help is-danger">{form.errors[field.name]}</p>}
 							</div>
 							{/* TODO END */}
 						</div>

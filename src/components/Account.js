@@ -39,7 +39,7 @@ export default function Account() {
 		() => {
 			if (user && data && data.user) {
 				const userProps = { id: data.user.id, phone: user.phoneNumber, email: user.email };
-				console.log(userProps);
+
 				updateUser({ variables: { userProps } });
 			}
 		},

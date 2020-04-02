@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
-
 import { gql, useMutation } from '@apollo/client';
+import { format, isThisMonth, setHours, getDate, getMonth, getYear, differenceInHours, startOfHour } from 'date-fns';
 
-import { Formik, Form, Field } from 'formik';
+// import { Formik, Form, Field } from 'formik';
 
 import { Hero } from 'components/ui/bulma';
 import { Box, Button, ButtonGroup } from 'components/ui/bulma';
-import { Input } from 'components/ui/bulma';
+// import { Input } from 'components/ui/bulma';
 
 import UserContext from 'context/UserContext';
 
@@ -30,11 +30,12 @@ const items = [
 		price: '$70'
 	}
 ];
+
 const slots = [
-	{ id: '1', title: 'Morning', slot: '9am - 12pm' },
-	{ id: '2', title: 'Midday', slot: '12am - 3pm' },
-	{ id: '3', title: 'Afternoon', slot: '3pm - 6pm' },
-	{ id: '4', title: 'Evening', slot: '6am - 9pm' }
+	{ title: 'Morning', start: setHours(Date.now(), 9), slot: '9am - 12pm' },
+	{ title: 'Midday', start: setHours(Date.now(), 12), slot: '12pm - 3pm' },
+	{ title: 'Afternoon', start: setHours(Date.now(), 15), slot: '3pm - 6pm' },
+	{ title: 'Evening', start: setHours(Date.now(), 18), slot: '6pm - 9pm' }
 ];
 
 export default function Order({ address, onClose }) {
@@ -48,8 +49,6 @@ export default function Order({ address, onClose }) {
 	useEffect(
 		() => {
 			if (finish) {
-				console.log(address, item, deliverySlot, finish);
-
 				const orderProps = { address, item, deliverySlot };
 
 				try {
@@ -92,7 +91,12 @@ export default function Order({ address, onClose }) {
 											<img src={item.image} />
 											<p className="title">{item.title}</p>
 											<p className="subtitle">{item.price}</p>
-											<Button size="medium" icon="check-circle" action={() => setItem(item.id)}>
+											<Button
+												color="danger"
+												size="medium"
+												icon="check-circle"
+												action={() => setItem(item.id)}
+											>
 												Order now
 											</Button>
 										</div>
@@ -109,26 +113,37 @@ export default function Order({ address, onClose }) {
 						<Box>
 							<h1 className="title">Select your delivery slot</h1>
 							<div className="tile is-ancestor">
-								{slots.map((slot) => (
-									<div className="tile is-parent" key={slot.id}>
-										<div className="tile is-child box">
-											<span className="icon is-large">
-												<i className="fas fa-3x fa-store" />
-											</span>
+								{slots.map((slot) => {
+									let available;
 
-											<p className="title">{slot.title}</p>
-											<p className="subtitle">{slot.slot}</p>
-											<Button
-												size="medium"
-												icon="check-circle"
-												action={() => setDelivery(slot.id)}
-											>
-												Book delivery
-											</Button>
+									differenceInHours(slot.start, Date.now()) > 0
+										? (available = true)
+										: (available = false);
+
+									return (
+										<div className="tile is-parent" key={slot.start}>
+											<div className="tile is-child box">
+												<span className="icon is-large">
+													<i className="fas fa-3x fa-store" />
+												</span>
+
+												<p className="title">{slot.title}</p>
+												<p className="subtitle">{slot.slot}</p>
+												<Button
+													color="danger"
+													size="medium"
+													icon="check-circle"
+													action={() => setDelivery(slot.start)}
+													disabled={available ? false : true}
+												>
+													{available ? 'Book delivery' : 'Not available'}
+												</Button>
+											</div>
 										</div>
-									</div>
-								))}
+									);
+								})}
 							</div>
+							<Button color="light">back</Button>
 						</Box>
 					</div>
 				)}
@@ -148,10 +163,17 @@ export default function Order({ address, onClose }) {
 											<img src={image} />
 										</figure>
 										<p className="title">Thank you!</p>
+
 										<p className="subtitle">
-											Your item will be delivered at {address} between {slots[deliverySlot].slot}.
+											Your item will be delivered at {address} at or after{' '}
+											{format(deliverySlot, 'MM/dd/yyyy hh:mm a')}.
 										</p>
-										<Button size="medium" icon="check-circle" action={() => setFinish(true)}>
+										<Button
+											color="danger"
+											size="medium"
+											icon="check-circle"
+											action={() => setFinish(true)}
+										>
 											Finish
 										</Button>
 									</div>

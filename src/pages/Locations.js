@@ -1,46 +1,264 @@
-import React, { useContext, useState } from 'react';
-import _ from 'lodash';
-import { gql, useQuery } from '@apollo/client';
-import { FastField, Formik } from 'formik';
-// import Map from 'components/ui/Map';
-// import Places from 'components/ui/Places';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-import MapLocations from 'components/forms/Locations';
+import React, { useState, useRef } from 'react';
+import { useModal } from 'react-modal-hook';
+import MapGL, { GeolocateControl, Popup, Marker } from 'react-map-gl';
+import DeckGL, { GeoJsonLayer } from 'deck.gl';
+import Geocoder from 'react-map-gl-geocoder';
 
-import Cards from 'components/ui/Cards';
-import Error from 'components/ui/Error';
-import Spinner from 'components/ui/Spinner';
-import { Container, Hero, Box, Columns, Column, Section } from 'components/ui/bulma';
+import { Box, Button } from 'components/ui/bulma';
+
+import OrderForm from 'components/forms/Order';
+
+const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZGNkMCJ9.lfRQSV9ls7UYOQgG4zJSSg';
+
+const geolocateStyle = {
+	float: 'right',
+	margin: '10px',
+	padding: '10px'
+};
 
 export default function Locations() {
+	const mapRef = useRef();
 	const [ location, setLocation ] = useState();
+	const [ viewport, setViewport ] = useState({
+		latitude: 38.9,
+		longitude: -77.02,
+		zoom: 12
+	});
 
-	return <MapLocations />;
+	const [ showOrderForm, hideOrderForm ] = useModal(
+		() => (
+			<div className="modal is-active">
+				<div className="modal-background" />
+				<div className="modal-content">
+					<OrderForm address={`${location.address} ${location.text}`} onClose={hideOrderForm} />
+				</div>
+			</div>
+		),
+		[ location ]
+	);
+
+	const [ searchResultLayer, setSearchResultLayer ] = useState(null);
+
+	// const handleOnResult = (event) => {
+	// 	setLocation(event.result);
+	// 	setSearchResultLayer(
+	// 		new GeoJsonLayer({
+	// 			id: 'search-result',
+	// 			data: event.result.geometry,
+	// 			getFillColor: [ 0, 0, 0, 255 ],
+	// 			getRadius: 1000,
+	// 			pointRadiusMinPixels: 10,
+	// 			pointRadiusMaxPixels: 10
+	// 		})
+	// 	);
+	// };
+
+	const handleGeocoderViewportChange = (viewport) => {
+		const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+		return handleViewportChange({
+			...viewport,
+			...geocoderDefaultOverrides
+		});
+	};
+
+	const handleViewportChange = (viewport) => {
+		setViewport({ ...viewport });
+	};
+
+	const _onViewportChange = (viewport) => setViewport({ ...viewport });
+
+	const geoFilter = (item) =>
+		item &&
+		item.context &&
+		item.context
+			.map((i) => i.id.split('.').shift() === 'region' && i.text === 'District of Columbia')
+			.reduce((acc, cur) => acc || cur);
+
+	const handleOnResult = ({ result }) => {
+		setLocation(result);
+	};
+
+	return (
+		<Box>
+			<div style={{ height: '70vh' }}>
+				<MapGL
+					ref={mapRef}
+					{...viewport}
+					mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
+					width="100%"
+					height="100%"
+					onViewportChange={_onViewportChange}
+					mapboxApiAccessToken={token}
+				>
+					<GeolocateControl
+						style={geolocateStyle}
+						positionOptions={{ enableHighAccuracy: true }}
+						trackUserLocation={true}
+					/>
+
+					<Geocoder
+						mapRef={mapRef}
+						onResult={handleOnResult}
+						onViewportChange={handleGeocoderViewportChange}
+						mapboxApiAccessToken={token}
+						position="bottom-left"
+						countries="us"
+						filter={geoFilter}
+						marker={{
+							color: 'orange'
+						}}
+
+						// bbox={[ 38.791, -77.119, 38.995, -76.909 ]}
+					/>
+
+					{location && (
+						<Popup
+							latitude={location.center[1]}
+							longitude={location.center[0]}
+							closeButton={true}
+							closeOnClick={false}
+							// onClose={() => this.setState({ showPopup: false })}
+							anchor="top"
+						>
+							<div>
+								<p className="title">{location.text}</p>
+								<Button size="medium" color="danger" action={() => showOrderForm(location)}>
+									Order now
+								</Button>
+							</div>
+						</Popup>
+					)}
+				</MapGL>
+				{/* <DeckGL {...viewport} layers={[ searchResultLayer ]} /> */}
+			</div>
+		</Box>
+	);
 }
 
-// { "campaignID": "5cdb2c9f6ac4730411eb29ba" }
+// export default function Locations() {
+// 	const [ locations, setLocations ] = useState([]);
+// 	const [ result, setResult ] = useState();
 
-const LOCATIONS = gql`
-	query Locations($campaignID: ID) {
-		locations(campaignID: $campaignID) {
-			id
-			name
-			category
-			address
-			city
-			state
-			zip
-			country
-			active
-			verified
-			campaigns {
-				id
-			}
-			assets {
-				id
-				logoURI
-				defaultPictureURI
-			}
-		}
-	}
-`;
+// 	const addLocation = (location) => {
+// 		if (!_.find(locations, [ 'formatted_address', location.formatted_address ]))
+// 			setLocations({ locations: locations.concat(location) });
+// 	};
+
+// 	const removeLocation = (formatted_address) => {
+// 		setLocations({ locations: _.reject(locations, { formatted_address }) });
+// 	};
+
+// 	const [ viewport, setViewPort ] = useState({
+// 		width: '100%',
+// 		height: '100%',
+// 		latitude: 38.9,
+// 		longitude: -77.02,
+// 		zoom: 12
+// 	});
+
+// 	const geolocateStyle = {
+// 		float: 'left',
+// 		margin: '50px',
+// 		padding: '10px'
+// 	};
+
+// 	const _onViewportChange = (viewport) => setViewPort({ ...viewport, transitionDuration: 500 });
+// 	const mapRef = useRef();
+
+// 	// if you are happy with Geocoder default settings, you can just use handleViewportChange directly
+// 	const handleGeocoderViewportChange = (viewport) => {
+// 		const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+// 		return _onViewportChange({
+// 			...viewport,
+// 			...geocoderDefaultOverrides
+// 		});
+// 	};
+
+// 	const handleOnResult = (event) => {
+// 		setResult({
+// 			searchResultLayer: new GeoJsonLayer({
+// 				id: 'search-result',
+// 				data: event.result.geometry,
+// 				getFillColor: [ 255, 0, 0, 128 ],
+// 				getRadius: 1000,
+// 				pointRadiusMinPixels: 10,
+// 				pointRadiusMaxPixels: 10
+// 			})
+// 		});
+// 	};
+
+// 	return (
+// 		<div>
+// 			<Formik
+// 				initialValues={{ location: '' }}
+// 				onSubmit={(values, { setSubmitting }) => {
+// 					setTimeout(() => {
+// 						alert(JSON.stringify(values, null, 2));
+// 						setSubmitting(false);
+// 					}, 400);
+// 				}}
+// 			>
+// 				{({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+// 					<Form>
+// 						<Box>
+// 							<div className="field is-horizontal">
+// 								<div className="field-body">
+// 									<FastField
+// 										name="location"
+// 										icon="search"
+// 										component={Places}
+// 										placeholder="Look up by address or business name"
+// 										action={addLocation}
+// 									/>
+// 								</div>
+// 							</div>
+// 						</Box>
+// 					</Form>
+// 				)}
+// 			</Formik>
+// 			<div style={{ height: '85vh' }}>
+// 				<MapGL
+// 					mapboxApiAccessToken={MAPBOX_KEY}
+// 					{...viewport}
+// 					onViewportChange={_onViewportChange}
+// 					// mapStyle="mapbox://styles/mapbox/streets-v9"
+// 				>
+// 					<GeolocateControl
+// 						style={geolocateStyle}
+// 						positionOptions={{ enableHighAccuracy: true }}
+// 						trackUserLocation={true}
+// 					/>
+// 					<Geocoder
+// 						mapRef={mapRef}
+// 						onResult={handleOnResult}
+// 						onViewportChange={handleGeocoderViewportChange}
+// 						mapboxApiAccessToken={MAPBOX_KEY}
+// 						position="top-left"
+// 					/>
+// 				</MapGL>
+// 				<DeckGL {...viewport} layers={[ result ]} />
+// 			</div>
+
+// 			{/* <Box>
+// 				{locations.map((location) => (
+// 					<a key={location.formatted_address} onClick={() => setSelected(location)}>
+// 						<div className="notification">
+// 							<span className="delete" onClick={() => removeLocation(location.formatted_address)} />
+// 							<p className="title is-6">{location.formatted_address}</p>
+// 						</div>
+// 						<small />
+// 					</a>
+// 				))}
+// 			</Box> */}
+
+// 			{/* <Box>
+// 				<Map locations={locations} selected={selected} />
+// 			</Box> */}
+// 		</div>
+// 	);
+// }

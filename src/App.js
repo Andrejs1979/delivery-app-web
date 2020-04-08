@@ -1,5 +1,5 @@
 import './App.sass';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import analytics from 'react-segment';
 
@@ -7,6 +7,7 @@ import { ApolloProvider, ApolloClient, HttpLink, InMemoryCache } from '@apollo/c
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { firebaseAppAuth } from 'services/firebase';
+// import firebase from 'services/firebase';
 
 import Auth from 'pages/AuthPage';
 import Account from 'components/Account';
@@ -14,76 +15,22 @@ import Account from 'components/Account';
 import Error from 'components/ui/Error';
 import Spinner from 'components/ui/Spinner';
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-	faTachometerAlt,
-	faImages,
-	faAd,
-	faDollarSign,
-	faGlobe,
-	faUserFriends,
-	faMapMarkedAlt,
-	faMoneyCheckAlt,
-	faSquare,
-	faBars,
-	faAddressCard,
-	faThLarge,
-	faTh,
-	faUserCircle,
-	faAngleDown,
-	faCopyright,
-	faBullhorn,
-	faHashtag,
-	faMagic,
-	faCoins,
-	faLock,
-	faAt,
-	faCheckCircle,
-	faEnvelope,
-	faBuilding,
-	faPhoneAlt,
-	faUserTie,
-	faStore
-} from '@fortawesome/free-solid-svg-icons';
+import Icons from 'utils/icons';
 
-library.add(
-	faTachometerAlt,
-	faImages,
-	faAd,
-	faDollarSign,
-	faGlobe,
-	faUserFriends,
-	faMapMarkedAlt,
-	faMoneyCheckAlt,
-	faSquare,
-	faBars,
-	faAddressCard,
-	faThLarge,
-	faTh,
-	faUserCircle,
-	faAngleDown,
-	faCopyright,
-	faBullhorn,
-	faHashtag,
-	faMagic,
-	faCoins,
-	faLock,
-	faAt,
-	faCheckCircle,
-	faEnvelope,
-	faBuilding,
-	faPhoneAlt,
-	faUserTie,
-	faStore
-);
-
+Icons();
 analytics.default.load(process.env.REACT_APP_SEGMENT_KEY);
 
 const PROD = 'https://cloud9-app-api.herokuapp.com/';
 // const DEV = 'https://g5m8o3plv8.execute-api.us-east-1.amazonaws.com/dev/graphql';
 
+const auth = firebaseAppAuth;
+
 export default function App() {
 	const [ user, loading, error ] = useAuthState(firebaseAppAuth);
+
+	useEffect(() => {
+		auth.signInAnonymously();
+	}, []);
 
 	if (loading) return <Spinner />;
 	if (error) return <Error error={error} />;
@@ -94,10 +41,14 @@ export default function App() {
 			headers: {
 				authorization: user ? user.uid : null
 			},
-			// uri: process.env.REACT_APP_API_ROOT_URL
-			uri: PROD
+			uri: process.env.REACT_APP_API_ROOT_URL
+			// uri: PROD
 		})
 	});
 
-	return <ApolloProvider client={client}>{user ? <Account /> : <Auth />}</ApolloProvider>;
+	return (
+		<ApolloProvider client={client}>
+			<Account />
+		</ApolloProvider>
+	);
 }

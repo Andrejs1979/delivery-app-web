@@ -3,7 +3,7 @@ import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 import React, { useState, useRef } from 'react';
 
-import MapGL, { GeolocateControl } from 'react-map-gl';
+import MapGL, { GeolocateControl, Marker, Popup } from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from 'deck.gl';
 import Geocoder from 'react-map-gl-geocoder';
 
@@ -20,7 +20,9 @@ const geolocateStyle = {
 
 export default function SearchableMap() {
 	const mapRef = useRef();
+
 	const [ location, setLocation ] = useState();
+
 	const [ viewport, setViewport ] = useState({
 		latitude: 38.9,
 		longitude: -77.02,
@@ -56,35 +58,69 @@ export default function SearchableMap() {
 		setViewport({ ...viewport });
 	};
 
-	const _onViewportChange = (viewport) => setViewport({ ...viewport, transitionDuration: 3000 });
+	const _onViewportChange = (viewport) => setViewport({ ...viewport });
+
+	const geoFilter = (item) =>
+		item &&
+		item.context &&
+		item.context
+			.map((i) => i.id.split('.').shift() === 'region' && i.text === 'District of Columbia')
+			.reduce((acc, cur) => acc || cur);
+
+	const handleOnResult = (event) => {
+		setLocation(event);
+	};
+
+	console.log(location.center);
 
 	return (
-		<div style={{ height: '100vh' }}>
-			<Navbar location={location} />
-			<MapGL
-				ref={mapRef}
-				{...viewport}
-				// mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
-				width="100%"
-				height="80%"
-				onViewportChange={_onViewportChange}
-				mapboxApiAccessToken={token}
-			>
-				<GeolocateControl
-					style={geolocateStyle}
-					positionOptions={{ enableHighAccuracy: true }}
-					trackUserLocation={true}
-				/>
-				<Geocoder
-					mapRef={mapRef}
-					onResult={handleOnResult}
-					onViewportChange={handleGeocoderViewportChange}
+		<Box>
+			<div style={{ height: '70vh' }}>
+				<MapGL
+					ref={mapRef}
+					{...viewport}
+					mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
+					width="100%"
+					height="100%"
+					onViewportChange={_onViewportChange}
 					mapboxApiAccessToken={token}
-					position="top-left"
-				/>
-			</MapGL>
-			{/* <DeckGL {...viewport} layers={[ searchResultLayer ]} /> */}
-		</div>
+				>
+					<Popup
+						coordinates={location.center}
+						offset={{
+							'bottom-left': [ 12, -38 ],
+							bottom: [ 0, -38 ],
+							'bottom-right': [ -12, -38 ]
+						}}
+					>
+						<Box>
+							<h1>Popup</h1>
+						</Box>
+					</Popup>
+					<GeolocateControl
+						style={geolocateStyle}
+						positionOptions={{ enableHighAccuracy: true }}
+						trackUserLocation={true}
+					/>
+
+					<Geocoder
+						mapRef={mapRef}
+						onResult={handleOnResult}
+						onViewportChange={handleGeocoderViewportChange}
+						mapboxApiAccessToken={token}
+						position="bottom-left"
+						countries="us"
+						filter={geoFilter}
+						marker={{
+							color: 'orange'
+						}}
+
+						// bbox={[ 38.791, -77.119, 38.995, -76.909 ]}
+					/>
+				</MapGL>
+				{/* <DeckGL {...viewport} layers={[ searchResultLayer ]} /> */}
+			</div>
+		</Box>
 	);
 }
 

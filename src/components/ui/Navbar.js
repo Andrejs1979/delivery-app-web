@@ -33,31 +33,24 @@ export default function Navbar({ extendedMenu, extendMenu, location }) {
 	);
 
 	return (
-		<nav className="navbar box is-light" role="navigation" aria-label="main navigation">
+		<nav className="navbar box is-info" role="navigation" aria-label="main navigation">
 			<div className="navbar-brand">
 				<div className="navbar-item">
-					<img src={logo} />
+					<span className="fa-layers fa-fw fa-lg" onClick={() => extendMenu(true)}>
+						<FontAwesomeIcon icon="square" color="white" size="lg" />
+						<FontAwesomeIcon icon="bars" color="black" />
+					</span>
 				</div>
+				{/* <div className="navbar-item">
+					<img src={logo} />
+				</div> */}
 			</div>
 
 			<div className="navbar-start">
 				<div className="navbar-item">
-					{location ? (
-						<h1 style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bolder' }}>
-							{location.address} {location.text}
-						</h1>
-					) : (
-						<h1 style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bolder' }}>
-							Please look up your address to get started
-						</h1>
-					)}
-				</div>
-				<div className="navbar-item">
-					{location && (
-						<Button size="medium" color="danger" action={() => showOrderForm(location)}>
-							Continue
-						</Button>
-					)}
+					<p style={{ textAlign: 'center', color: 'white', fontSize: '25px', fontWeight: 'bolder' }}>
+						Please look up your address to get started
+					</p>
 				</div>
 			</div>
 
@@ -137,8 +130,8 @@ export default function Navbar({ extendedMenu, extendMenu, location }) {
 
 								<div className="dropdown-menu" id="dropdown-menu4" role="menu">
 									<div className="dropdown-content">
-										<span className="dropdown-item">{user.email}</span>
-										<span className="dropdown-item">{user.phoneNumber}</span>
+										{/* <span className="dropdown-item">{user.email}</span> */}
+										{/* <span className="dropdown-item">{user.phoneNumber}</span> */}
 
 										<hr className="dropdown-divider" />
 										<a className="dropdown-item" onClick={() => firebaseAppAuth.signOut()}>

@@ -12,6 +12,7 @@ export function Button({
 	action,
 	children,
 	icon,
+	active,
 	iconColor,
 	color,
 	size,
@@ -29,7 +30,7 @@ export function Button({
 				onClick={action}
 				disabled={disabled}
 				className={`button is-${color || 'primary'} is-${size || 'normal'} ${!block ||
-					'is-fullwidth'} ${!rounded || 'is-rounded'} ${!loading || 'is-loading'}`}
+					'is-fullwidth'} ${!active || 'is-active'} ${!rounded || 'is-rounded'} ${!loading || 'is-loading'}`}
 			>
 				{icon && (
 					<span className="icon">

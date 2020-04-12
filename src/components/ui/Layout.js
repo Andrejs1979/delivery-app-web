@@ -8,7 +8,7 @@ export default function Layout({ children, location }) {
 	const [ extendedMenu, extendMenu ] = useState(false);
 	return (
 		<div>
-			<Navbar extendedMenu={extendedMenu} extendMenu={extendMenu} location={location} />
+			{/* <Navbar extendedMenu={extendedMenu} extendMenu={extendMenu} location={location} /> */}
 
 			<Menu extendedMenu={extendedMenu} extendMenu={extendMenu} />
 			{children}

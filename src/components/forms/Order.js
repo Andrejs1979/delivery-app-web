@@ -80,9 +80,11 @@ var settings = {
 export default function Order({ address, onClose }) {
 	const [ item, setItem ] = useState();
 	const [ image, setImage ] = useState();
-	const [ payment, setPayment ] = useState();
+	// const [ payment, setPayment ] = useState();
+	const [ day, setDay ] = useState();
 	const [ deliverySlot, setDelivery ] = useState();
 	const [ accept, setAccept ] = useState();
+	const [ confirm, setConfirm ] = useState();
 	const [ finish, setFinish ] = useState();
 
 	const [ createOrder ] = useMutation(CREATE_ORDER);
@@ -114,128 +116,129 @@ export default function Order({ address, onClose }) {
 	);
 
 	return (
-		<Hero>
-			<div className="columns is-mobile is-centered">
-				{!item &&
-				!deliverySlot && (
-					<div className="column is-half-desktop is-12-mobile">
-						<Box>
-							<p className="title is-size-4-mobile">Choose your artwork</p>
-
-							<Slider {...settings}>
-								{items.map((item) => (
-									<div className="box" key={item.id}>
+		<div>
+			{!item &&
+			!deliverySlot &&
+			!confirm && (
+				<Box>
+					<p className="title is-size-4-mobile">Choose your artwork</p>
+					{items.map((item) => (
+						<div className="box" key={item.id}>
+							<article className="media">
+								<figure className="media-left">
+									<p className="image is-64x64">
 										<img src={item.image} />
-										<p className="title">{item.title}</p>
-										<p className="subtitle">${item.price}</p>
-										<Button
-											block
-											color="danger"
-											size="medium"
-											icon="check-circle"
-											action={() => setItem(item.id)}
-										>
-											Buy now
-										</Button>
-									</div>
-								))}
-							</Slider>
-						</Box>
-					</div>
-				)}
-
-				{item &&
-				!deliverySlot && (
-					<div className="column is-half-desktop is-12-mobile">
-						<Box>
-							<p className="title is-size-4-mobile">Select your delivery slot</p>
-							<Slider {...settings}>
-								{slots.map((slot) => {
-									let available;
-
-									differenceInHours(slot.start, Date.now()) > 0
-										? (available = true)
-										: (available = false);
-
-									if (available)
-										return (
-											<div className="tile is-parent" key={slot.start}>
-												<div className="tile is-child box">
-													<span className="icon is-large">
-														<i className="fas fa-3x fa-store" />
-													</span>
-
-													<p className="title">{slot.title}</p>
-													<p className="subtitle">{slot.slot}</p>
-													<Button
-														color="danger"
-														size="medium"
-														icon="check-circle"
-														action={() => setDelivery(slot.start)}
-														disabled={available ? false : true}
-													>
-														{available ? 'Book delivery' : 'Not available'}
-													</Button>
-												</div>
-											</div>
-										);
-								})}
-							</Slider>
-							<Button color="text" action={() => setItem(null)}>
-								Back
+									</p>
+								</figure>
+								<div className="media-content">
+									<p className="title">${item.price}</p>
+									<p className="subtitle">{item.title}</p>
+								</div>
+							</article>
+							<Button block color="danger" icon="check-circle" action={() => setItem(item.id)}>
+								Continue
 							</Button>
-						</Box>
-					</div>
-				)}
+						</div>
+					))}
+				</Box>
+			)}
 
-				{item &&
-				deliverySlot &&
-				!payment && (
-					<div className="column is-half-desktop is-12-mobile">
-						{console.log(item)}
-						<Box>
-							<p className="title is-size-4-mobile">Please enter your card</p>
-							<Elements stripe={stripePromise}>
-								<CheckoutForm
-									item={items.find((inventory) => inventory.id === item)}
-									setPayment={setPayment}
-								/>
-							</Elements>
-						</Box>
+			{item &&
+			!confirm && (
+				<Box>
+					<p className="title is-size-4-mobile">Choose your delivery</p>
+					<Button
+						color={day === 'Today' ? 'info' : 'light'}
+						size="medium"
+						block
+						active={day === 'Today'}
+						action={() => setDay('Today')}
+					>
+						Today
+					</Button>
+					<br />
+					<Button
+						color={day === 'Tomorrow' ? 'info' : 'light'}
+						size="medium"
+						block
+						active={day === 'Tomorrow'}
+						action={() => setDay('Tomorrow')}
+					>
+						Tomorrow
+					</Button>
+					<br />
+					<div className="select is-medium is-fullwidth">
+						<select onChange={({ target }) => setDelivery(target.value)}>
+							{slots.filter((slot) => slot.title === day).map(
+								(slot) =>
+									differenceInHours(slot.start, Date.now()) > 0 && (
+										<option value={slot.start} key={slot.start}>
+											{slot.slot}
+										</option>
+									)
+							)}
+						</select>
 					</div>
-				)}
+					<br />
+					<br />
+					<Button
+						block
+						color="danger"
+						size="medium"
+						icon="check-circle"
+						action={() => setConfirm(true)}
+						disabled={!deliverySlot}
+					>
+						Continue
+					</Button>
+					<Button color="text" action={() => setItem(null)}>
+						Back
+					</Button>
+				</Box>
+			)}
 
-				{item &&
-				deliverySlot &&
-				payment && (
-					<div className="column is-half-desktop is-12-mobile">
-						<Box>
-							{/* <p className="title">Thank you!</p> */}
-							<img src={image} />
+			{/* {item &&
+			deliverySlot &&
+			!payment && (
+				<div>
+					{console.log(item)}
 
-							<p className="title is-size-5">
-								Your item will be delivered at {address} at or after{' '}
-								{format(deliverySlot, 'MM/dd/yyyy hh a')}.
-							</p>
-							<p className="subtitle is-size-6">Please check your text messages for your gift code!</p>
-							<label className="checkbox">
-								<input type="checkbox" onChange={() => setAccept(true)} />
-								I agree with the Terms&amp;Conditions and Privacy Policy.
-							</label>
-							<Button
-								color="danger"
-								size="medium"
-								icon="check-circle"
-								disabled={!accept}
-								action={() => setFinish(true)}
-							>
-								Finish
-							</Button>
-						</Box>
-					</div>
-				)}
-			</div>
-		</Hero>
+					<p className="title is-size-4-mobile">Please enter your card</p>
+					<Elements stripe={stripePromise}>
+						<CheckoutForm item={items.find((inventory) => inventory.id === item)} setPayment={setPayment} />
+					</Elements>
+				</div>
+			)} */}
+
+			{confirm && (
+				<Box>
+					<p className="title">Order Confirmed</p>
+					<p className="subtitle">Please check your text messages for the gift code!</p>
+					<br />
+					<p className="title is-size-5">Address: {address}</p>
+					<p className="title is-size-5">
+						When: {day}, {format(new Date(deliverySlot), 'MM/dd/yyyy hh a')}
+					</p>
+
+					<label className="checkbox">
+						<input type="checkbox" onChange={() => setAccept(true)} />
+						I agree with the Terms&amp;Conditions and Privacy Policy.
+					</label>
+					<br />
+					<br />
+					<Button
+						block
+						color="danger"
+						size="medium"
+						icon="check-circle"
+						disabled={!accept}
+						action={() => setFinish(true)}
+					>
+						Finish
+					</Button>
+				</Box>
+			)}
+		</div>
 	);
 }
 

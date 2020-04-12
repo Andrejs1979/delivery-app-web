@@ -1,27 +1,37 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useModal } from 'react-modal-hook';
-import MapGL, { GeolocateControl, Popup, Marker } from 'react-map-gl';
+import MapGL, { GeolocateControl, Marker } from 'react-map-gl';
+import { BaseControl } from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from 'deck.gl';
 import Geocoder from 'react-map-gl-geocoder';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Box, Button } from 'components/ui/bulma';
+import Menu from 'components/ui/Menu';
+import { Container, Box, Button } from 'components/ui/bulma';
 
 import OrderForm from 'components/forms/Order';
+
+import logo from 'assets/logo.png';
 
 const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZGNkMCJ9.lfRQSV9ls7UYOQgG4zJSSg';
 
 const geolocateStyle = {
-	float: 'right',
-	margin: '10px',
-	padding: '10px'
+	position: 'absolute',
+	bottom: 252,
+	right: 55,
+	zIndex: 100
 };
 
 export default function Locations() {
 	const mapRef = useRef();
+	const geoCoder = useRef();
+
+	const [ extended, setExtended ] = useState(false);
 	const [ location, setLocation ] = useState();
+	const [ order, setOrder ] = useState();
 	const [ viewport, setViewport ] = useState({
 		latitude: 38.9,
 		longitude: -77.02,
@@ -40,21 +50,12 @@ export default function Locations() {
 		[ location ]
 	);
 
-	const [ searchResultLayer, setSearchResultLayer ] = useState(null);
-
-	// const handleOnResult = (event) => {
-	// 	setLocation(event.result);
-	// 	setSearchResultLayer(
-	// 		new GeoJsonLayer({
-	// 			id: 'search-result',
-	// 			data: event.result.geometry,
-	// 			getFillColor: [ 0, 0, 0, 255 ],
-	// 			getRadius: 1000,
-	// 			pointRadiusMinPixels: 10,
-	// 			pointRadiusMaxPixels: 10
-	// 		})
-	// 	);
-	// };
+	useEffect(
+		() => {
+			if (location && order) showOrderForm();
+		},
+		[ location, order ]
+	);
 
 	const handleGeocoderViewportChange = (viewport) => {
 		const geocoderDefaultOverrides = { transitionDuration: 1000 };
@@ -83,8 +84,23 @@ export default function Locations() {
 	};
 
 	return (
-		<Box>
-			<div style={{ height: '70vh' }}>
+		<div className="has-text-centered">
+			<Menu extendedMenu={extended} extendMenu={setExtended} />
+			<nav className="level is-mobile">
+				<p className="level-item has-text-left">
+					<FontAwesomeIcon icon="bars" size="lg" color="#black" />
+				</p>
+
+				<p className="level-item has-text-left">
+					<img src={logo} width="120" />
+				</p>
+
+				<p className="level-item has-text-centered">
+					<br />
+				</p>
+			</nav>
+
+			<div style={{ height: '100vh' }}>
 				<MapGL
 					ref={mapRef}
 					{...viewport}
@@ -94,171 +110,59 @@ export default function Locations() {
 					onViewportChange={_onViewportChange}
 					mapboxApiAccessToken={token}
 				>
-					<GeolocateControl
-						style={geolocateStyle}
-						positionOptions={{ enableHighAccuracy: true }}
-						trackUserLocation={true}
-					/>
+					{!location &&
+					!order && (
+						<GeolocateControl
+							style={geolocateStyle}
+							positionOptions={{ enableHighAccuracy: true }}
+							trackUserLocation={true}
+						/>
+					)}
 
 					<Geocoder
 						mapRef={mapRef}
+						containerRef={geoCoder}
 						onResult={handleOnResult}
 						onViewportChange={handleGeocoderViewportChange}
 						mapboxApiAccessToken={token}
-						position="bottom-left"
 						countries="us"
 						filter={geoFilter}
-						marker={{
-							color: 'orange'
-						}}
-
-						// bbox={[ 38.791, -77.119, 38.995, -76.909 ]}
 					/>
 
 					{location && (
-						<Popup
-							latitude={location.center[1]}
-							longitude={location.center[0]}
-							closeButton={true}
-							closeOnClick={false}
-							// onClose={() => this.setState({ showPopup: false })}
-							anchor="top"
-						>
-							<div>
-								<p className="title">{location.text}</p>
-								<Button size="medium" color="danger" action={() => showOrderForm(location)}>
-									Order now
-								</Button>
-							</div>
-						</Popup>
+						<Marker latitude={location.center[1]} longitude={location.center[0]}>
+							<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
+						</Marker>
 					)}
 				</MapGL>
-				{/* <DeckGL {...viewport} layers={[ searchResultLayer ]} /> */}
 			</div>
-		</Box>
+
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					position: 'absolute',
+					bottom: 50,
+					width: '100%'
+				}}
+			>
+				<div className="box has-background-light">
+					<div>
+						<p className="title is-size-4">Look up your address</p>
+						<div
+							ref={geoCoder}
+							style={{
+								alignItems: 'center'
+							}}
+						/>
+						<br />
+						<Button block size="medium" color="danger" action={() => setOrder(true)}>
+							Continue
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
-
-// export default function Locations() {
-// 	const [ locations, setLocations ] = useState([]);
-// 	const [ result, setResult ] = useState();
-
-// 	const addLocation = (location) => {
-// 		if (!_.find(locations, [ 'formatted_address', location.formatted_address ]))
-// 			setLocations({ locations: locations.concat(location) });
-// 	};
-
-// 	const removeLocation = (formatted_address) => {
-// 		setLocations({ locations: _.reject(locations, { formatted_address }) });
-// 	};
-
-// 	const [ viewport, setViewPort ] = useState({
-// 		width: '100%',
-// 		height: '100%',
-// 		latitude: 38.9,
-// 		longitude: -77.02,
-// 		zoom: 12
-// 	});
-
-// 	const geolocateStyle = {
-// 		float: 'left',
-// 		margin: '50px',
-// 		padding: '10px'
-// 	};
-
-// 	const _onViewportChange = (viewport) => setViewPort({ ...viewport, transitionDuration: 500 });
-// 	const mapRef = useRef();
-
-// 	// if you are happy with Geocoder default settings, you can just use handleViewportChange directly
-// 	const handleGeocoderViewportChange = (viewport) => {
-// 		const geocoderDefaultOverrides = { transitionDuration: 1000 };
-
-// 		return _onViewportChange({
-// 			...viewport,
-// 			...geocoderDefaultOverrides
-// 		});
-// 	};
-
-// 	const handleOnResult = (event) => {
-// 		setResult({
-// 			searchResultLayer: new GeoJsonLayer({
-// 				id: 'search-result',
-// 				data: event.result.geometry,
-// 				getFillColor: [ 255, 0, 0, 128 ],
-// 				getRadius: 1000,
-// 				pointRadiusMinPixels: 10,
-// 				pointRadiusMaxPixels: 10
-// 			})
-// 		});
-// 	};
-
-// 	return (
-// 		<div>
-// 			<Formik
-// 				initialValues={{ location: '' }}
-// 				onSubmit={(values, { setSubmitting }) => {
-// 					setTimeout(() => {
-// 						alert(JSON.stringify(values, null, 2));
-// 						setSubmitting(false);
-// 					}, 400);
-// 				}}
-// 			>
-// 				{({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-// 					<Form>
-// 						<Box>
-// 							<div className="field is-horizontal">
-// 								<div className="field-body">
-// 									<FastField
-// 										name="location"
-// 										icon="search"
-// 										component={Places}
-// 										placeholder="Look up by address or business name"
-// 										action={addLocation}
-// 									/>
-// 								</div>
-// 							</div>
-// 						</Box>
-// 					</Form>
-// 				)}
-// 			</Formik>
-// 			<div style={{ height: '85vh' }}>
-// 				<MapGL
-// 					mapboxApiAccessToken={MAPBOX_KEY}
-// 					{...viewport}
-// 					onViewportChange={_onViewportChange}
-// 					// mapStyle="mapbox://styles/mapbox/streets-v9"
-// 				>
-// 					<GeolocateControl
-// 						style={geolocateStyle}
-// 						positionOptions={{ enableHighAccuracy: true }}
-// 						trackUserLocation={true}
-// 					/>
-// 					<Geocoder
-// 						mapRef={mapRef}
-// 						onResult={handleOnResult}
-// 						onViewportChange={handleGeocoderViewportChange}
-// 						mapboxApiAccessToken={MAPBOX_KEY}
-// 						position="top-left"
-// 					/>
-// 				</MapGL>
-// 				<DeckGL {...viewport} layers={[ result ]} />
-// 			</div>
-
-// 			{/* <Box>
-// 				{locations.map((location) => (
-// 					<a key={location.formatted_address} onClick={() => setSelected(location)}>
-// 						<div className="notification">
-// 							<span className="delete" onClick={() => removeLocation(location.formatted_address)} />
-// 							<p className="title is-6">{location.formatted_address}</p>
-// 						</div>
-// 						<small />
-// 					</a>
-// 				))}
-// 			</Box> */}
-
-// 			{/* <Box>
-// 				<Map locations={locations} selected={selected} />
-// 			</Box> */}
-// 		</div>
-// 	);
-// }

@@ -44,9 +44,7 @@ export default function Account() {
 					{!code ? (
 						<Welcome path="/" code={code} setCode={setCode} />
 					) : (
-						<Layout path="/">
-							<Locations path="/" location={location} setLocation={setLocation} />
-						</Layout>
+						<Locations path="/" location={location} setLocation={setLocation} />
 					)}
 				</Router>
 			</ModalProvider>

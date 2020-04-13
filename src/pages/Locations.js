@@ -18,10 +18,17 @@ import logo from 'assets/logo.png';
 
 const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZGNkMCJ9.lfRQSV9ls7UYOQgG4zJSSg';
 
-const geolocateStyle = {
+const geolocateStyleMobile = {
 	position: 'absolute',
-	bottom: 252,
-	right: 55,
+	bottom: '33%',
+	right: '17%',
+	zIndex: 100
+};
+
+const geolocateStyleDesktop = {
+	position: 'absolute',
+	bottom: '32%',
+	right: '42%',
 	zIndex: 100
 };
 
@@ -38,24 +45,17 @@ export default function Locations() {
 		zoom: 12
 	});
 
-	const [ showOrderForm, hideOrderForm ] = useModal(
-		() => (
-			<div className="modal is-active">
-				<div className="modal-background" />
-				<div className="modal-content">
-					<OrderForm address={`${location.address} ${location.text}`} onClose={hideOrderForm} />
-				</div>
-			</div>
-		),
-		[ location ]
-	);
-
-	useEffect(
-		() => {
-			if (location && order) showOrderForm();
-		},
-		[ location, order ]
-	);
+	// const [ showOrderForm, hideOrderForm ] = useModal(
+	// 	() => (
+	// 		<div className="modal is-active">
+	// 			<div className="modal-background" />
+	// 			<div className="modal-content">
+	// 				<OrderForm address={`${location.address} ${location.text}`} onClose={hideOrderForm} />
+	// 			</div>
+	// 		</div>
+	// 	),
+	// 	[ location ]
+	// );
 
 	const handleGeocoderViewportChange = (viewport) => {
 		const geocoderDefaultOverrides = { transitionDuration: 1000 };
@@ -112,57 +112,79 @@ export default function Locations() {
 				>
 					{!location &&
 					!order && (
-						<GeolocateControl
-							style={geolocateStyle}
-							positionOptions={{ enableHighAccuracy: true }}
-							trackUserLocation={true}
+						<div className="is-hidden-desktop is-hidden-tablet">
+							<GeolocateControl
+								style={geolocateStyleMobile}
+								positionOptions={{ enableHighAccuracy: true }}
+								trackUserLocation={true}
+							/>
+						</div>
+					)}
+					{!location &&
+					!order && (
+						<div className="is-hidden-mobile">
+							<GeolocateControl
+								style={geolocateStyleDesktop}
+								positionOptions={{ enableHighAccuracy: true }}
+								trackUserLocation={true}
+							/>
+						</div>
+					)}
+					<Panel geoCoder={geoCoder} order={order} setOrder={setOrder} location={location} />
+
+					{order || (
+						<Geocoder
+							mapRef={mapRef}
+							containerRef={geoCoder}
+							onResult={handleOnResult}
+							onViewportChange={handleGeocoderViewportChange}
+							mapboxApiAccessToken={token}
+							countries="us"
+							filter={geoFilter}
 						/>
 					)}
 
-					<Geocoder
-						mapRef={mapRef}
-						containerRef={geoCoder}
-						onResult={handleOnResult}
-						onViewportChange={handleGeocoderViewportChange}
-						mapboxApiAccessToken={token}
-						countries="us"
-						filter={geoFilter}
-					/>
-
-					{location && (
+					{!order &&
+					location && (
 						<Marker latitude={location.center[1]} longitude={location.center[0]}>
 							<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
 						</Marker>
 					)}
 				</MapGL>
 			</div>
-
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-					position: 'absolute',
-					bottom: 50,
-					width: '100%'
-				}}
-			>
-				<div className="box has-background-light">
-					<div>
-						<p className="title is-size-4">Look up your address</p>
-						<div
-							ref={geoCoder}
-							style={{
-								alignItems: 'center'
-							}}
-						/>
-						<br />
-						<Button block size="medium" color="danger" action={() => setOrder(true)}>
-							Continue
-						</Button>
-					</div>
-				</div>
-			</div>
 		</div>
 	);
 }
+
+const Panel = ({ geoCoder, order, location, setOrder }) => (
+	<div
+		style={{
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center',
+			position: 'absolute',
+			bottom: '20%',
+			width: '100%'
+		}}
+	>
+		<div className="box has-background-light">
+			{!order ? (
+				<div>
+					<p className="title is-size-4">Look up your address</p>
+					<div
+						ref={geoCoder}
+						style={{
+							alignItems: 'center'
+						}}
+					/>
+					<br />
+					<Button block size="medium" color="danger" disabled={!location} action={() => setOrder(true)}>
+						Continue
+					</Button>
+				</div>
+			) : (
+				<OrderForm address={`${location.address} ${location.text}`} />
+			)}
+		</div>
+	</div>
+);

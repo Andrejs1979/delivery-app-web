@@ -71,8 +71,6 @@ export default function SearchableMap() {
 		setLocation(event);
 	};
 
-	console.log(location.center);
-
 	return (
 		<Box>
 			<div style={{ height: '70vh' }}>

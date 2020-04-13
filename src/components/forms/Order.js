@@ -116,7 +116,6 @@ export default function Order({ address, onClose }) {
 
 				try {
 					createOrder({ variables: { orderProps } });
-					onClose();
 				} catch (error) {
 					console.log(error);
 				}
@@ -140,7 +139,7 @@ export default function Order({ address, onClose }) {
 			{!item &&
 			!deliverySlot &&
 			!confirm && (
-				<Box>
+				<div>
 					<p className="title is-size-4-mobile">Choose your artwork</p>
 					{items.map((item) => (
 						<div className="box" key={item.id}>
@@ -155,20 +154,21 @@ export default function Order({ address, onClose }) {
 									<p className="subtitle">{item.title}</p>
 								</div>
 							</article>
+							<br />
 							<Button block color="danger" icon="check-circle" action={() => setItem(item.id)}>
-								Continue
+								Select
 							</Button>
 						</div>
 					))}
-				</Box>
+				</div>
 			)}
 
 			{item &&
 			!confirm && (
-				<Box>
+				<div>
 					<p className="title is-size-4-mobile">Choose your delivery</p>
 					<Button
-						color={day === 'Today' ? 'info' : 'light'}
+						color={day === 'Today' ? 'info' : 'info'}
 						size="medium"
 						block
 						active={day === 'Today'}
@@ -178,7 +178,7 @@ export default function Order({ address, onClose }) {
 					</Button>
 					<br />
 					<Button
-						color={day === 'Tomorrow' ? 'info' : 'light'}
+						color={day === 'Tomorrow' ? 'info' : 'info'}
 						size="medium"
 						block
 						active={day === 'Tomorrow'}
@@ -215,7 +215,7 @@ export default function Order({ address, onClose }) {
 					<Button color="text" action={() => setItem(null)}>
 						Back
 					</Button>
-				</Box>
+				</div>
 			)}
 
 			{/* {item &&
@@ -232,14 +232,14 @@ export default function Order({ address, onClose }) {
 			)} */}
 
 			{confirm && (
-				<Box>
+				<div>
 					<p className="title">Order Confirmed</p>
 					<p className="subtitle">Please check your text messages for the gift code!</p>
 					<br />
-					<p className="title is-size-5">Address: {address}</p>
 					<p className="title is-size-5">
-						When: {day}, {format(new Date(deliverySlot), 'MM/dd/yyyy hh a')}
+						{day}, {format(new Date(deliverySlot), 'MM/dd/yyyy hh a')}
 					</p>
+					<p className="subtitle is-size-5">{address}</p>
 
 					<label className="checkbox">
 						<input type="checkbox" onChange={() => setAccept(true)} />
@@ -257,7 +257,7 @@ export default function Order({ address, onClose }) {
 					>
 						Finish
 					</Button>
-				</Box>
+				</div>
 			)}
 		</div>
 	);

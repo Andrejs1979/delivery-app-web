@@ -1,22 +1,16 @@
-import React from "react";
-import { Logo, Icon } from "components/ui/Brand";
-export default function Spinner() {
-  return (
-    <section className="hero is-medium">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-centered">
-            <div className="column is-one-third has-text-centered">
-              {/* <div style={{ width: 75 }}>
-                <Icon />
-              </div> */}
+import React from 'react';
+import BounceLoader from 'react-spinners/BounceLoader';
 
-              <p className="title is-4">Loading, please wait...</p>
-              <progress className="progress is-small" max="100" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+export default function Spinner() {
+	return (
+		<section className="hero is-fullheight">
+			<div className="hero-body">
+				<div className="container has-text-centered">
+					<div style={{ display: 'inline-block' }}>
+						<BounceLoader size={150} color={'#ff3860'} />
+					</div>
+				</div>
+			</div>
+		</section>
+	);
 }

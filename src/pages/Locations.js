@@ -20,14 +20,14 @@ const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZG
 
 const geolocateStyleMobile = {
 	position: 'absolute',
-	bottom: '33%',
+	bottom: '23%',
 	right: '17%',
 	zIndex: 100
 };
 
 const geolocateStyleDesktop = {
 	position: 'absolute',
-	bottom: '32%',
+	bottom: '22%',
 	right: '42%',
 	zIndex: 100
 };
@@ -36,7 +36,6 @@ export default function Locations() {
 	const mapRef = useRef();
 	const geoCoder = useRef();
 
-	const [ extended, setExtended ] = useState(false);
 	const [ location, setLocation ] = useState();
 	const [ order, setOrder ] = useState();
 	const [ viewport, setViewport ] = useState({
@@ -85,21 +84,6 @@ export default function Locations() {
 
 	return (
 		<div className="has-text-centered">
-			<Menu extendedMenu={extended} extendMenu={setExtended} />
-			<nav className="level is-mobile">
-				<p className="level-item has-text-left">
-					<FontAwesomeIcon icon="bars" size="lg" color="#black" />
-				</p>
-
-				<p className="level-item has-text-left">
-					<img src={logo} width="120" />
-				</p>
-
-				<p className="level-item has-text-centered">
-					<br />
-				</p>
-			</nav>
-
 			<div style={{ height: '100vh' }}>
 				<MapGL
 					ref={mapRef}
@@ -110,6 +94,7 @@ export default function Locations() {
 					onViewportChange={_onViewportChange}
 					mapboxApiAccessToken={token}
 				>
+					<NavBar />
 					{!location &&
 					!order && (
 						<div className="is-hidden-desktop is-hidden-tablet">
@@ -156,6 +141,31 @@ export default function Locations() {
 	);
 }
 
+const NavBar = () => {
+	const [ extended, setExtended ] = useState(false);
+	return (
+		<div>
+			<Menu extendedMenu={extended} extendMenu={setExtended} />
+			<nav className="level is-mobile">
+				<p className="level-item has-text-left">
+					<span className="fa-layers fa-fw fa-3x" onClick={() => setExtended(true)}>
+						<FontAwesomeIcon icon="square" color="white" />
+						<FontAwesomeIcon icon="bars" color="black" transform="shrink-6" />
+					</span>
+				</p>
+
+				<p className="level-item has-text-left">
+					<img src={logo} width="120" />
+				</p>
+
+				<p className="level-item has-text-centered">
+					<br />
+				</p>
+			</nav>
+		</div>
+	);
+};
+
 const Panel = ({ geoCoder, order, location, setOrder }) => (
 	<div
 		style={{
@@ -163,7 +173,7 @@ const Panel = ({ geoCoder, order, location, setOrder }) => (
 			justifyContent: 'center',
 			alignItems: 'center',
 			position: 'absolute',
-			bottom: '20%',
+			bottom: '10%',
 			width: '100%'
 		}}
 	>

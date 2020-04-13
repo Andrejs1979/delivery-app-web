@@ -44,6 +44,7 @@
     "react-scripts": "3.4.1",
     "react-segment": "^0.1.8",
     "react-slick": "^0.25.2",
+    "react-spinners": "^0.8.1",
     "react-user-avatar": "^1.10.0",
     "slick-carousel": "^1.8.1",
     "yup": "^0.28.3"

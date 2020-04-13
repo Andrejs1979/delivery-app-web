@@ -31,7 +31,9 @@ import {
 	faStore,
 	faPhone,
 	faCreditCard,
-	faMapMarkerAlt
+	faMapMarkerAlt,
+	faMobileAlt,
+	faUnlock
 } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
@@ -66,6 +68,8 @@ export default () => {
 		faStore,
 		faPhone,
 		faCreditCard,
-		faMapMarkerAlt
+		faMapMarkerAlt,
+		faMobileAlt,
+		faUnlock
 	);
 };

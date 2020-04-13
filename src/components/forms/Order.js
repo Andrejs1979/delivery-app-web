@@ -59,14 +59,34 @@ const items = [
 ];
 
 const slots = [
-	{ title: 'Today', subtitle: 'Morning', start: setHours(Date.now(), 9), slot: '9am - 12pm' },
-	{ title: 'Today', subtitle: 'Midday', start: setHours(Date.now(), 12), slot: '12pm - 3pm' },
-	{ title: 'Today', subtitle: 'Afternoon', start: setHours(Date.now(), 15), slot: '3pm - 6pm' },
-	{ title: 'Today', subtitle: 'Evening', start: setHours(Date.now(), 18), slot: '6pm - 9pm' },
-	{ title: 'Tomorrow', subtitle: 'Morning', start: setHours(addDays(Date.now(), 1), 9), slot: '9am - 12pm' },
-	{ title: 'Tomorrow', subtitle: 'Midday', start: setHours(addDays(Date.now(), 1), 12), slot: '12pm - 3pm' },
-	{ title: 'Tomorrow', subtitle: 'Afternoon', start: setHours(addDays(Date.now(), 1), 15), slot: '3pm - 6pm' },
-	{ title: 'Tomorrow', subtitle: 'Evening', start: setHours(addDays(Date.now(), 1), 18), slot: '6pm - 9pm' }
+	{ title: 'Today', subtitle: 'Morning', start: startOfHour(setHours(Date.now(), 9)), slot: '9am - 12pm' },
+	{ title: 'Today', subtitle: 'Midday', start: startOfHour(setHours(Date.now(), 12)), slot: '12pm - 3pm' },
+	{ title: 'Today', subtitle: 'Afternoon', start: startOfHour(setHours(Date.now(), 15)), slot: '3pm - 6pm' },
+	{ title: 'Today', subtitle: 'Evening', start: startOfHour(setHours(Date.now(), 18)), slot: '6pm - 9pm' },
+	{
+		title: 'Tomorrow',
+		subtitle: 'Morning',
+		start: startOfHour(setHours(addDays(Date.now(), 1), 9)),
+		slot: '9am - 12pm'
+	},
+	{
+		title: 'Tomorrow',
+		subtitle: 'Midday',
+		start: startOfHour(setHours(addDays(Date.now(), 1), 12)),
+		slot: '12pm - 3pm'
+	},
+	{
+		title: 'Tomorrow',
+		subtitle: 'Afternoon',
+		start: startOfHour(setHours(addDays(Date.now(), 1), 15)),
+		slot: '3pm - 6pm'
+	},
+	{
+		title: 'Tomorrow',
+		subtitle: 'Evening',
+		start: startOfHour(setHours(addDays(Date.now(), 1), 18)),
+		slot: '6pm - 9pm'
+	}
 ];
 
 var settings = {
@@ -168,7 +188,8 @@ export default function Order({ address, onClose }) {
 					</Button>
 					<br />
 					<div className="select is-medium is-fullwidth">
-						<select onChange={({ target }) => setDelivery(target.value)}>
+						<select value={deliverySlot} onChange={({ target }) => setDelivery(target.value)}>
+							<option value={null}>Select delivery time</option>
 							{slots.filter((slot) => slot.title === day).map(
 								(slot) =>
 									differenceInHours(slot.start, Date.now()) > 0 && (

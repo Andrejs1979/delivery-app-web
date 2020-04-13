@@ -28,9 +28,12 @@ const auth = firebaseAppAuth;
 export default function App() {
 	const [ user, loading, error ] = useAuthState(firebaseAppAuth);
 
-	useEffect(() => {
-		auth.signInAnonymously();
-	}, []);
+	useEffect(
+		() => {
+			!loading && !user && auth.signInAnonymously();
+		},
+		[ loading, user ]
+	);
 
 	if (loading) return <Spinner />;
 	if (error) return <Error error={error} />;

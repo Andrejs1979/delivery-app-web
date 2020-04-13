@@ -47,7 +47,7 @@ export default function Welcome({ code, setCode }) {
 													<div className="field has-addons has-addons-centered is-hidden-mobile">
 														<FastField
 															name="phone"
-															icon="phone"
+															icon="mobile-alt"
 															size="large"
 															component={Input}
 															mask="999-999-9999"
@@ -66,7 +66,7 @@ export default function Welcome({ code, setCode }) {
 													<div className="field is-hidden-desktop is-hidden-tablet">
 														<FastField
 															name="phone"
-															icon="phone"
+															icon="mobile-alt"
 															size="large"
 															component={Input}
 															mask="999-999-9999"
@@ -110,7 +110,7 @@ export default function Welcome({ code, setCode }) {
 														<FastField
 															name="code"
 															label="code"
-															icon="code"
+															icon="unlock"
 															size="large"
 															component={Input}
 															mask="999 999"
@@ -126,7 +126,7 @@ export default function Welcome({ code, setCode }) {
 														<FastField
 															name="code"
 															label="code"
-															icon="code"
+															icon="unlock"
 															size="large"
 															component={Input}
 															mask="999 999"

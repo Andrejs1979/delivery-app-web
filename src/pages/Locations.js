@@ -85,7 +85,7 @@ export default function Locations({ phone }) {
 
 	return (
 		<div className="has-text-centered">
-			<div style={{ height: '85vh' }}>
+			<div style={{ height: '80vh' }}>
 				<MapGL
 					ref={mapRef}
 					{...viewport}

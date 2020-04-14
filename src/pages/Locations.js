@@ -21,8 +21,8 @@ const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZG
 
 const geolocateStyleMobile = {
 	position: 'absolute',
-	bottom: '23%',
-	right: '17%',
+	bottom: '27%',
+	right: '19%',
 	zIndex: 100
 };
 
@@ -85,7 +85,7 @@ export default function Locations({ phone }) {
 
 	return (
 		<div className="has-text-centered">
-			<div style={{ height: '100vh' }}>
+			<div style={{ height: '85vh' }}>
 				<MapGL
 					ref={mapRef}
 					{...viewport}

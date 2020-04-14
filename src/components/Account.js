@@ -17,6 +17,7 @@ import UserContext from 'context/UserContext';
 
 export default function Account() {
 	const [ user ] = useAuthState(firebaseAppAuth);
+	const [ phone, setPhone ] = useState();
 	const [ code, setCode ] = useState();
 	const [ location, setLocation ] = useState();
 
@@ -41,10 +42,10 @@ export default function Account() {
 		<CloudinaryContext cloudName="fastlabs">
 			<ModalProvider>
 				<Router>
-					{code ? (
-						<Welcome path="/" code={code} setCode={setCode} />
+					{!code ? (
+						<Welcome path="/" code={code} setCode={setCode} setPhone={setPhone} />
 					) : (
-						<Locations path="/" location={location} setLocation={setLocation} />
+						<Locations path="/" location={location} setLocation={setLocation} phone={phone} />
 					)}
 				</Router>
 			</ModalProvider>

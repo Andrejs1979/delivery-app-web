@@ -2,6 +2,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 import React, { useState, useEffect, useRef } from 'react';
+
 import { useModal } from 'react-modal-hook';
 import MapGL, { GeolocateControl, Marker } from 'react-map-gl';
 import { BaseControl } from 'react-map-gl';
@@ -32,7 +33,7 @@ const geolocateStyleDesktop = {
 	zIndex: 100
 };
 
-export default function Locations() {
+export default function Locations({ phone }) {
 	const mapRef = useRef();
 	const geoCoder = useRef();
 
@@ -115,7 +116,7 @@ export default function Locations() {
 							/>
 						</div>
 					)}
-					<Panel geoCoder={geoCoder} order={order} setOrder={setOrder} location={location} />
+					<Panel geoCoder={geoCoder} order={order} setOrder={setOrder} location={location} phone={phone} />
 
 					{order || (
 						<Geocoder
@@ -166,7 +167,7 @@ const NavBar = () => {
 	);
 };
 
-const Panel = ({ geoCoder, order, location, setOrder }) => (
+const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
 	<div
 		style={{
 			display: 'flex',
@@ -177,24 +178,24 @@ const Panel = ({ geoCoder, order, location, setOrder }) => (
 			width: '100%'
 		}}
 	>
-		<div className="box has-background-light">
-			{!order ? (
-				<div>
-					<p className="title is-size-4">Look up your address</p>
-					<div
-						ref={geoCoder}
-						style={{
-							alignItems: 'center'
-						}}
-					/>
-					<br />
-					<Button block size="medium" color="danger" disabled={!location} action={() => setOrder(true)}>
-						Continue
-					</Button>
-				</div>
-			) : (
-				<OrderForm address={`${location.address} ${location.text}`} />
-			)}
-		</div>
+		{!order ? (
+			<div className="box has-background-light">
+				<p className="title is-size-4">Look up your address</p>
+				<div
+					ref={geoCoder}
+					style={{
+						alignItems: 'center'
+					}}
+				/>
+				<br />
+				<Button block size="medium" color="danger" disabled={!location} action={() => setOrder(true)}>
+					Continue
+				</Button>
+			</div>
+		) : (
+			<div className="box has-background-light">
+				<OrderForm address={`${location.address} ${location.text}`} phone={phone} />
+			</div>
+		)}
 	</div>
 );

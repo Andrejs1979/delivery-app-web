@@ -1,10 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
+
 import { format, addDays, setHours, differenceInHours, startOfHour } from 'date-fns';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+
+import { Image } from 'cloudinary-react';
 
 // import useScript from '@charlietango/use-script';
 // import { StripeProvider, Elements, CardElement, injectStripe } from 'react-stripe-elements';
@@ -36,27 +39,6 @@ const CARD_ELEMENT_OPTIONS = {
 		}
 	}
 };
-
-const items = [
-	{
-		id: '5e84813c1c9d440000a35281',
-		title: 'Small Poster',
-		image: 'https://res.cloudinary.com/fastlabs/image/upload/v1585745990/delivery/poster40_y29kdb.jpg',
-		price: '40'
-	},
-	{
-		id: '5e848cdd1c9d440000a35282',
-		title: 'Medium Poster',
-		image: 'https://res.cloudinary.com/fastlabs/image/upload/v1585745990/delivery/poster60_q1rlkb.jpg',
-		price: '60'
-	},
-	{
-		id: '5e848cef1c9d440000a35283',
-		title: 'Large Poster',
-		image: 'https://res.cloudinary.com/fastlabs/image/upload/v1585745989/delivery/poster70_fkayov.jpg',
-		price: '70'
-	}
-];
 
 const slots = [
 	{ title: 'Today', subtitle: 'Morning', start: startOfHour(setHours(Date.now(), 9)), slot: '9am - 12pm' },
@@ -97,22 +79,24 @@ var settings = {
 	slidesToScroll: 1
 };
 
-export default function Order({ address, onClose }) {
+export default function Order({ address, phone }) {
 	const [ item, setItem ] = useState();
 	const [ image, setImage ] = useState();
 	// const [ payment, setPayment ] = useState();
 	const [ day, setDay ] = useState();
-	const [ deliverySlot, setDelivery ] = useState();
+	const [ deliveryDateTime, setDelivery ] = useState();
 	const [ accept, setAccept ] = useState();
 	const [ confirm, setConfirm ] = useState();
 	const [ finish, setFinish ] = useState();
 
+	const { loading, data, error } = useQuery(ITEMS);
 	const [ createOrder ] = useMutation(CREATE_ORDER);
 
 	useEffect(
 		() => {
 			if (finish && accept) {
-				const orderProps = { address, item, deliverySlot };
+				const orderProps = { address, phone, item, deliveryDateTime };
+				console.log(address, phone, item, deliveryDateTime);
 
 				try {
 					createOrder({ variables: { orderProps } });
@@ -121,105 +105,114 @@ export default function Order({ address, onClose }) {
 				}
 			}
 		},
-		[ item, deliverySlot, address, accept, finish ]
+		[ item, deliveryDateTime, address, phone, accept, finish ]
 	);
 
 	useEffect(
 		() => {
-			if (item && deliverySlot) {
-				const { image } = items.find((i) => i.id === item);
+			if (item && deliveryDateTime) {
+				const { image } = data.items.find((i) => i.id === item);
 				setImage(image);
 			}
 		},
-		[ item, deliverySlot ]
+		[ item, deliveryDateTime ]
 	);
 
-	return (
-		<div>
-			{!item &&
-			!deliverySlot &&
-			!confirm && (
-				<div>
-					<p className="title is-size-4-mobile">Choose your artwork</p>
-					{items.map((item) => (
-						<div className="box" key={item.id}>
-							<article className="media">
-								<figure className="media-left">
-									<p className="image is-64x64">
-										<img src={item.image} />
-									</p>
-								</figure>
-								<div className="media-content">
-									<p className="title">${item.price}</p>
-									<p className="subtitle">{item.title}</p>
+	if (!finish)
+		return (
+			<div>
+				{!item &&
+				!deliveryDateTime &&
+				!confirm && (
+					<div>
+						{data &&
+							data.items.map((item) => (
+								<div className="box has-background-light" key={item.id}>
+									<article class="media" style={{ marginBottom: 10 }}>
+										<figure class="media-left">
+											<p class="image is-64x64">
+												<Image publicId={`delivery/${item.picture}`} height="50" />
+											</p>
+										</figure>
+										<div class="media-content">
+											<p className="title is-size-4">${item.price}</p>
+											<p className="subtitle is-size-5">{item.name}</p>
+										</div>
+									</article>
+
+									<Button
+										block
+										color="danger"
+										size="small"
+										icon="shopping-cart"
+										action={() => setItem(item.id)}
+									>
+										Select
+									</Button>
 								</div>
-							</article>
-							<br />
-							<Button block color="danger" icon="check-circle" action={() => setItem(item.id)}>
-								Select
-							</Button>
-						</div>
-					))}
-				</div>
-			)}
-
-			{item &&
-			!confirm && (
-				<div>
-					<p className="title is-size-4-mobile">Choose your delivery</p>
-					<Button
-						color={day === 'Today' ? 'info' : 'info'}
-						size="medium"
-						block
-						active={day === 'Today'}
-						action={() => setDay('Today')}
-					>
-						Today
-					</Button>
-					<br />
-					<Button
-						color={day === 'Tomorrow' ? 'info' : 'info'}
-						size="medium"
-						block
-						active={day === 'Tomorrow'}
-						action={() => setDay('Tomorrow')}
-					>
-						Tomorrow
-					</Button>
-					<br />
-					<div className="select is-medium is-fullwidth">
-						<select value={deliverySlot} onChange={({ target }) => setDelivery(target.value)}>
-							<option value={null}>Select delivery time</option>
-							{slots.filter((slot) => slot.title === day).map(
-								(slot) =>
-									differenceInHours(slot.start, Date.now()) > 0 && (
-										<option value={slot.start} key={slot.start}>
-											{slot.slot}
-										</option>
-									)
-							)}
-						</select>
+							))}
 					</div>
-					<br />
-					<br />
-					<Button
-						block
-						color="danger"
-						size="medium"
-						icon="check-circle"
-						action={() => setConfirm(true)}
-						disabled={!deliverySlot}
-					>
-						Continue
-					</Button>
-					<Button color="text" action={() => setItem(null)}>
-						Back
-					</Button>
-				</div>
-			)}
+				)}
 
-			{/* {item &&
-			deliverySlot &&
+				{item &&
+				!confirm && (
+					<div>
+						<p className="title is-size-4-mobile">Choose your delivery</p>
+						<Button
+							outlined
+							color="info"
+							size="medium"
+							block
+							active={day === 'Today'}
+							action={() => setDay('Today')}
+						>
+							Today
+						</Button>
+						<br />
+						<Button
+							outlined
+							color="info"
+							size="medium"
+							block
+							active={day === 'Tomorrow'}
+							action={() => setDay('Tomorrow')}
+						>
+							Tomorrow
+						</Button>
+						<br />
+						<div className="select is-medium is-fullwidth">
+							<select value={deliveryDateTime} onChange={({ target }) => setDelivery(target.value)}>
+								<option value={null}>Select delivery time</option>
+								{slots.filter((slot) => slot.title === day).map(
+									(slot) =>
+										differenceInHours(slot.start, Date.now()) > 0 && (
+											<option value={slot.start} key={slot.start}>
+												{slot.slot}
+											</option>
+										)
+								)}
+							</select>
+						</div>
+						<br />
+						<br />
+						<Button
+							block
+							color="danger"
+							size="medium"
+							icon="check-circle"
+							action={() => setConfirm(true)}
+							disabled={!deliveryDateTime}
+						>
+							Continue
+						</Button>
+						<Button color="text" action={() => setItem(null)}>
+							Back
+						</Button>
+					</div>
+				)}
+
+				{/* {item &&
+			deliveryDateTime &&
 			!payment && (
 				<div>
 					{console.log(item)}
@@ -231,36 +224,39 @@ export default function Order({ address, onClose }) {
 				</div>
 			)} */}
 
-			{confirm && (
-				<div>
-					<p className="title">Order Confirmed</p>
-					<p className="subtitle">Please check your text messages for the gift code!</p>
-					<br />
-					<p className="title is-size-5">
-						{day}, {format(new Date(deliverySlot), 'MM/dd/yyyy hh a')}
-					</p>
-					<p className="subtitle is-size-5">{address}</p>
+				{confirm &&
+				!finish && (
+					<div>
+						<p className="title">Order Confirmed</p>
+						<p className="subtitle">Please check your text messages for the gift code!</p>
+						<br />
+						<p className="title is-size-5">
+							{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
+						</p>
+						<p className="subtitle is-size-5">{address}</p>
 
-					<label className="checkbox">
-						<input type="checkbox" onChange={() => setAccept(true)} />
-						I agree with the Terms&amp;Conditions and Privacy Policy.
-					</label>
-					<br />
-					<br />
-					<Button
-						block
-						color="danger"
-						size="medium"
-						icon="check-circle"
-						disabled={!accept}
-						action={() => setFinish(true)}
-					>
-						Finish
-					</Button>
-				</div>
-			)}
-		</div>
-	);
+						<label className="checkbox">
+							<input type="checkbox" onChange={() => setAccept(true)} />
+							I agree with the Terms&amp;Conditions and Privacy Policy.
+						</label>
+						<br />
+						<br />
+						<Button
+							block
+							color="danger"
+							size="medium"
+							icon="check-circle"
+							disabled={!accept}
+							action={() => setFinish(true)}
+						>
+							Finish
+						</Button>
+					</div>
+				)}
+			</div>
+		);
+
+	return null;
 }
 
 function CheckoutForm({ item, setPayment }) {
@@ -328,6 +324,17 @@ function CheckoutForm({ item, setPayment }) {
 		</div>
 	);
 }
+
+const ITEMS = gql`
+	query Items {
+		items {
+			id
+			name
+			price
+			picture
+		}
+	}
+`;
 
 const CREATE_ORDER = gql`
 	mutation CreateOrder($orderProps: OrderProps) {

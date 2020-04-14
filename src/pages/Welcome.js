@@ -13,7 +13,7 @@ import { firebaseAppAuth } from 'services/firebase';
 
 import logo from 'assets/logo.png';
 
-export default function Welcome({ code, setCode }) {
+export default function Welcome({ code, setCode, setPhone }) {
 	const [ sent, setSent ] = useState();
 	const [ sendCode ] = useMutation(SEND_CODE);
 	const [ validateCode ] = useMutation(VALIDATE_CODE);
@@ -39,6 +39,7 @@ export default function Welcome({ code, setCode }) {
 											// validate={validationSchema}
 											onSubmit={async ({ phone }, { setSubmitting }) => {
 												setSent(true);
+												setPhone(phone);
 												await sendCode({ variables: { phone } });
 											}}
 										>

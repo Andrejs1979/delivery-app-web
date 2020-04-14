@@ -18,6 +18,7 @@ export function Button({
 	size,
 	vertical,
 	block,
+	outlined,
 	rounded,
 	loading,
 	disabled
@@ -30,7 +31,8 @@ export function Button({
 				onClick={action}
 				disabled={disabled}
 				className={`button is-${color || 'primary'} is-${size || 'normal'} ${!block ||
-					'is-fullwidth'} ${!active || 'is-active'} ${!rounded || 'is-rounded'} ${!loading || 'is-loading'}`}
+					'is-fullwidth'} ${!active || 'is-active'} ${!outlined || 'is-outlined'} ${!rounded ||
+					'is-rounded'} ${!loading || 'is-loading'}`}
 			>
 				{icon && (
 					<span className="icon">

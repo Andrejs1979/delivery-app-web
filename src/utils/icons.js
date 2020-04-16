@@ -34,7 +34,8 @@ import {
 	faMapMarkerAlt,
 	faMobileAlt,
 	faUnlock,
-	faShoppingCart
+	faShoppingCart,
+	faArrowAltCircleLeft
 } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
@@ -72,6 +73,7 @@ export default () => {
 		faMapMarkerAlt,
 		faMobileAlt,
 		faUnlock,
-		faShoppingCart
+		faShoppingCart,
+		faArrowAltCircleLeft
 	);
 };

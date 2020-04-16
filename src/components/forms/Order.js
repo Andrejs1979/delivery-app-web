@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { format, addDays, setHours, differenceInHours, startOfHour } from 'date-fns';
 
 import Slider from 'react-slick';
@@ -79,7 +79,7 @@ var settings = {
 	slidesToScroll: 1
 };
 
-export default function Order({ address, phone }) {
+export default function Order({ address, phone, order, setOrder }) {
 	const [ item, setItem ] = useState();
 	const [ image, setImage ] = useState();
 	// const [ payment, setPayment ] = useState();
@@ -96,7 +96,6 @@ export default function Order({ address, phone }) {
 		() => {
 			if (finish && accept) {
 				const orderProps = { address, phone, item, deliveryDateTime };
-				console.log(address, phone, item, deliveryDateTime);
 
 				try {
 					createOrder({ variables: { orderProps } });
@@ -118,59 +117,97 @@ export default function Order({ address, phone }) {
 		[ item, deliveryDateTime ]
 	);
 
-	if (!finish)
-		return (
-			<div>
-				{!item &&
-				!deliveryDateTime &&
-				!confirm && (
-					<div>
-						{data &&
-							data.items.map((item) => (
-								<div className="box has-background-light" key={item.id}>
-									<article class="media" style={{ marginBottom: 10 }}>
-										<figure class="media-left">
-											<p class="image is-64x64">
-												<Image publicId={`delivery/${item.picture}`} height="50" />
-											</p>
-										</figure>
-										<div class="media-content">
-											<p className="title is-size-4">${item.price}</p>
-											<p className="subtitle is-size-5">{item.name}</p>
-										</div>
-									</article>
+	return (
+		<div>
+			{data &&
+			!item &&
+			!deliveryDateTime &&
+			!confirm && (
+				<div>
+					<Button icon="arrow-alt-circle-left" color="light" action={() => setOrder(false)} />
+					<br />
+					<div className="box has-background-light">
+						<div className="columns is-mobile">
+							<div className="column has-text-centered">
+								<Image publicId={`delivery/${data.items[0].picture}`} height="100" crop="scale" />
 
-									<Button
-										block
-										color="danger"
-										size="small"
-										icon="shopping-cart"
-										action={() => setItem(item.id)}
-									>
-										Select
-									</Button>
-								</div>
-							))}
+								<Button
+									block
+									color="danger"
+									icon="shopping-cart"
+									action={() => setItem(data.items[0].id)}
+								>
+									${data.items[0].price}
+								</Button>
+							</div>
+
+							<div className="column has-text-centered">
+								<Image publicId={`delivery/${data.items[1].picture}`} height="100" crop="scale" />
+
+								<Button
+									block
+									color="danger"
+									icon="shopping-cart"
+									action={() => setItem(data.items[1].id)}
+								>
+									${data.items[1].price}
+								</Button>
+							</div>
+						</div>
+
+						<div className="columns is-mobile">
+							<div className="column has-text-centered">
+								<Image publicId={`delivery/${data.items[2].picture}`} height="100" crop="scale" />
+
+								<Button
+									block
+									color="danger"
+									icon="shopping-cart"
+									action={() => setItem(data.items[2].id)}
+								>
+									${data.items[2].price}
+								</Button>
+							</div>
+							<div className="column has-text-centered">
+								<Image publicId={`delivery/${data.items[3].picture}`} height="100" crop="scale" />
+
+								<Button
+									block
+									color="danger"
+									icon="shopping-cart"
+									action={() => setItem(data.items[3].id)}
+								>
+									${data.items[3].price}
+								</Button>
+							</div>
+						</div>
 					</div>
-				)}
+				</div>
+			)}
 
-				{item &&
-				!confirm && (
-					<div>
+			{item &&
+			!confirm && (
+				<div>
+					<Button icon="arrow-alt-circle-left" color="light" action={() => setItem(false)} />
+					<br />
+					<div className="box has-background-light">
 						<p className="title is-size-4-mobile">Choose your delivery</p>
 						<Button
-							outlined
+							outlined={day !== 'Today'}
 							color="info"
 							size="medium"
 							block
 							active={day === 'Today'}
 							action={() => setDay('Today')}
+							disabled={slots
+								.filter((slot) => slot.title === day)
+								.filter((slot) => differenceInHours(slot.start, Date.now()) < 3)}
 						>
 							Today
 						</Button>
 						<br />
 						<Button
-							outlined
+							outlined={day !== 'Tomorrow'}
 							color="info"
 							size="medium"
 							block
@@ -185,7 +222,7 @@ export default function Order({ address, phone }) {
 								<option value={null}>Select delivery time</option>
 								{slots.filter((slot) => slot.title === day).map(
 									(slot) =>
-										differenceInHours(slot.start, Date.now()) > 0 && (
+										differenceInHours(slot.start, Date.now()) > 2 && (
 											<option value={slot.start} key={slot.start}>
 												{slot.slot}
 											</option>
@@ -209,9 +246,10 @@ export default function Order({ address, phone }) {
 							Back
 						</Button>
 					</div>
-				)}
+				</div>
+			)}
 
-				{/* {item &&
+			{/* {item &&
 			deliveryDateTime &&
 			!payment && (
 				<div>
@@ -224,16 +262,23 @@ export default function Order({ address, phone }) {
 				</div>
 			)} */}
 
-				{confirm &&
-				!finish && (
-					<div>
-						<p className="title">Order Confirmed</p>
-						<p className="subtitle">Please check your text messages for the gift code!</p>
+			{confirm && (
+				<div>
+					<Button
+						icon="arrow-alt-circle-left"
+						color="light"
+						action={() => setConfirm(false)}
+						disabled={finish}
+					/>
+					<br />
+					<div className="box has-background-light">
+						<p className="title">Order Confirmation</p>
+						<p className="subtitle">Confirm your order and check your text messages for the gift code!</p>
 						<br />
-						<p className="title is-size-5">
+						<p className="title is-size-6">
 							{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
 						</p>
-						<p className="subtitle is-size-5">{address}</p>
+						<p className="subtitle is-size-6">{address}</p>
 
 						<label className="checkbox">
 							<input type="checkbox" onChange={() => setAccept(true)} />
@@ -246,15 +291,16 @@ export default function Order({ address, phone }) {
 							color="danger"
 							size="medium"
 							icon="check-circle"
-							disabled={!accept}
+							disabled={!accept || finish}
 							action={() => setFinish(true)}
 						>
-							Finish
+							{!finish ? 'Confirm' : 'Thank you'}
 						</Button>
 					</div>
-				)}
-			</div>
-		);
+				</div>
+			)}
+		</div>
+	);
 
 	return null;
 }

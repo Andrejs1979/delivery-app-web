@@ -39,9 +39,11 @@ export function Button({
 						<FontAwesomeIcon icon={icon} size={size} color={iconColor} />
 					</span>
 				)}
-				<span>
-					<strong>{children}</strong>
-				</span>
+				{children && (
+					<span>
+						<strong>{children}</strong>
+					</span>
+				)}
 			</button>
 		</div>
 	);

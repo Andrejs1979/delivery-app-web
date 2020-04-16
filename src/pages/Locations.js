@@ -21,14 +21,14 @@ const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZG
 
 const geolocateStyleMobile = {
 	position: 'absolute',
-	bottom: '27%',
-	right: '19%',
+	bottom: '123px',
+	right: '15%',
 	zIndex: 100
 };
 
 const geolocateStyleDesktop = {
 	position: 'absolute',
-	bottom: '22%',
+	bottom: '15%',
 	right: '42%',
 	zIndex: 100
 };
@@ -146,8 +146,7 @@ const NavBar = () => {
 	const [ extended, setExtended ] = useState(false);
 	return (
 		<div>
-			<Menu extendedMenu={extended} extendMenu={setExtended} />
-			<nav className="level is-mobile">
+			<nav className="level is-mobile has-background-light box">
 				<p className="level-item has-text-left">
 					<span className="fa-layers fa-fw fa-3x" onClick={() => setExtended(true)}>
 						<FontAwesomeIcon icon="square" color="white" />
@@ -163,39 +162,47 @@ const NavBar = () => {
 					<br />
 				</p>
 			</nav>
+			<Menu extendedMenu={extended} extendMenu={setExtended} />
 		</div>
 	);
 };
 
 const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
-	<div
-		style={{
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			position: 'absolute',
-			bottom: '10%',
-			width: '100%'
-		}}
-	>
-		{!order ? (
-			<div className="box has-background-light">
-				<p className="title is-size-4">Look up your address</p>
-				<div
-					ref={geoCoder}
-					style={{
-						alignItems: 'center'
-					}}
+	<div className="columns is-mobile is-centered">
+		<div
+			className="column"
+			style={{
+				// display: 'flex',
+
+				justifyContent: 'center',
+				alignItems: 'center',
+				position: 'absolute',
+				bottom: '5px',
+				zIndex: 50
+			}}
+		>
+			{!order ? (
+				<div className="box has-background-light">
+					<p className="title is-size-4">Look up your address</p>
+					<div
+						ref={geoCoder}
+						style={{
+							alignItems: 'center'
+						}}
+					/>
+					<br />
+					<Button block size="medium" color="danger" disabled={!location} action={() => setOrder(true)}>
+						Continue
+					</Button>
+				</div>
+			) : (
+				<OrderForm
+					address={`${location.address} ${location.text}`}
+					phone={phone}
+					order={order}
+					setOrder={setOrder}
 				/>
-				<br />
-				<Button block size="medium" color="danger" disabled={!location} action={() => setOrder(true)}>
-					Continue
-				</Button>
-			</div>
-		) : (
-			<div className="box has-background-light">
-				<OrderForm address={`${location.address} ${location.text}`} phone={phone} />
-			</div>
-		)}
+			)}
+		</div>
 	</div>
 );

@@ -242,9 +242,6 @@ export default function Order({ address, phone, order, setOrder }) {
 						>
 							Continue
 						</Button>
-						<Button color="text" action={() => setItem(null)}>
-							Back
-						</Button>
 					</div>
 				</div>
 			)}

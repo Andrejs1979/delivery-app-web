@@ -42,7 +42,7 @@ export default function Account() {
 		<CloudinaryContext cloudName="fastlabs">
 			<ModalProvider>
 				<Router>
-					{code ? (
+					{!code ? (
 						<Welcome path="/" code={code} setCode={setCode} setPhone={setPhone} />
 					) : (
 						<Locations path="/" location={location} setLocation={setLocation} phone={phone} />

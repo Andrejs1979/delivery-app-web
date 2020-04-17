@@ -102,7 +102,10 @@ export default function Order({ address, phone, location, order, setOrder }) {
 	const [ showConfirmation, hideOrderForm ] = useModal(
 		() => (
 			<div className="modal is-active">
-				<div className="modal-background" />
+				{/* <div className="modal-background" /> */}
+				<br />
+				<br />
+				<br />
 				<div class="modal-card">
 					<div className="box has-background-light">
 						<div className="has-text-centered">
@@ -183,6 +186,14 @@ export default function Order({ address, phone, location, order, setOrder }) {
 						>
 							{!finish ? 'Confirm' : 'Thank you'}
 						</Button>
+
+						<p className="title is-size-7 has-text-centered">
+							<br />
+							<FontAwesomeIcon icon="phone-alt" />{' '}
+							<a href="tel:2029219888" className="has-text-black">
+								Need Help? Give us a call
+							</a>
+						</p>
 					</div>
 				</div>
 				{/* <button class="modal-close is-large" aria-label="close" /> */}
@@ -244,7 +255,12 @@ export default function Order({ address, phone, location, order, setOrder }) {
 						<p className="title is-size-5">Choose your artwork</p>
 						<div className="columns is-mobile">
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[0].picture}`} height="50" crop="scale" />
+								<Image
+									publicId={`delivery/${data.items[0].picture}`}
+									height="50"
+									crop="scale"
+									onClick={() => setItem(data.items[0].id)}
+								/>
 
 								<Button
 									block
@@ -258,7 +274,12 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							</div>
 
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[1].picture}`} height="50" crop="scale" />
+								<Image
+									publicId={`delivery/${data.items[1].picture}`}
+									height="50"
+									crop="scale"
+									onClick={() => setItem(data.items[1].id)}
+								/>
 
 								<Button
 									block
@@ -274,7 +295,12 @@ export default function Order({ address, phone, location, order, setOrder }) {
 
 						<div className="columns is-mobile">
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[2].picture}`} height="50" crop="scale" />
+								<Image
+									publicId={`delivery/${data.items[2].picture}`}
+									height="50"
+									crop="scale"
+									onClick={() => setItem(data.items[2].id)}
+								/>
 
 								<Button
 									block
@@ -287,7 +313,12 @@ export default function Order({ address, phone, location, order, setOrder }) {
 								</Button>
 							</div>
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[3].picture}`} height="50" crop="scale" />
+								<Image
+									publicId={`delivery/${data.items[3].picture}`}
+									height="50"
+									crop="scale"
+									onClick={() => setItem(data.items[3].id)}
+								/>
 
 								<Button
 									block

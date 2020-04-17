@@ -10,7 +10,7 @@ import Geocoder from 'react-map-gl-geocoder';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Menu from 'components/ui/Menu';
-import { Container, Box, Button } from 'components/ui/bulma';
+import { Container, Columns, Column, Box, Button } from 'components/ui/bulma';
 
 import OrderForm from 'components/forms/Order';
 
@@ -134,25 +134,51 @@ const NavBar = () => {
 	const [ extended, setExtended ] = useState(false);
 	return (
 		<div>
-			<nav className="level is-mobile has-background-light box">
-				<p className="level-item has-text-left">
-					<span className="fa-layers fa-fw fa-2x" onClick={() => setExtended(true)}>
-						<FontAwesomeIcon icon="bars" color="black" transform="shrink-6" />
-					</span>
-				</p>
-
-				<p className="level-item has-text-left">
-					<img src={logo} width="75" />
-				</p>
-
-				<p className="level-item has-text-centered">
-					<br />
-				</p>
+			<nav className="navbar is-fixed-top has-background-light">
+				<Columns mobile vertical>
+					<Column>
+						<FontAwesomeIcon
+							icon="bars"
+							size="lg"
+							color="black"
+							onClick={() => setExtended(true)}
+							style={{ margin: 20 }}
+						/>
+					</Column>
+					<Column>
+						<img src={logo} width="100" className="is-hidden-desktop" />
+						<img src={logo} width="200" className="is-hidden-mobile" />
+					</Column>
+					<Column />
+				</Columns>
 			</nav>
 			<Menu extendedMenu={extended} extendMenu={setExtended} />
 		</div>
 	);
 };
+// const NavBar = () => {
+// 	const [ extended, setExtended ] = useState(false);
+// 	return (
+// 		<div>
+// 			<nav className="level is-mobile has-background-light box">
+// 				<p className="level-item has-text-left">
+// 					<span className="fa-layers fa-fw fa-2x" onClick={() => setExtended(true)}>
+// 						<FontAwesomeIcon icon="bars" color="black" transform="shrink-6" />
+// 					</span>
+// 				</p>
+
+// 				<p className="level-item has-text-left">
+// 					<img src={logo} width="75" />
+// 				</p>
+
+// 				<p className="level-item has-text-centered">
+// 					<br />
+// 				</p>
+// 			</nav>
+// 			<Menu extendedMenu={extended} extendMenu={setExtended} />
+// 		</div>
+// 	);
+// };
 
 const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
 	<div className="columns is-mobile is-centered">

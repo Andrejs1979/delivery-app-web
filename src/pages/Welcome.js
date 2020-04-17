@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Columns, Container } from 'components/ui/bulma';
-import { Button, Box, Input } from 'components/ui/bulma';
+
+import Menu from 'components/ui/Menu';
+import { Container, Columns, Column, Box, Button, Input } from 'components/ui/bulma';
 
 import Timer from 'react-compound-timer';
 import { FastField, Formik, Form } from 'formik';
@@ -14,42 +15,33 @@ import { firebaseAppAuth } from 'services/firebase';
 import logo from 'assets/logo.png';
 
 export default function Welcome({ code, setCode, setPhone }) {
+	const [ extended, setExtended ] = useState(false);
 	const [ sent, setSent ] = useState();
 	const [ sendCode ] = useMutation(SEND_CODE);
 	const [ validateCode ] = useMutation(VALIDATE_CODE);
 
 	return (
 		<section className="hero is-info is-fullheight">
-			<div class="hero-head has-background-link">
-				<nav class="navbar">
-					<div class="container">
-						<div class="navbar-brand">
-							<a class="navbar-item">
-								<img src="https://bulma.io/images/bulma-type-white.png" alt="Logo" />
-							</a>
-							{/* <span class="navbar-burger burger" data-target="navbarMenuHeroA">
-								<span />
-								<span />
-								<span />
-							</span> */}
-						</div>
-						{/* <div id="navbarMenuHeroA" class="navbar-menu">
-							<div class="navbar-end">
-								<a class="navbar-item is-active">Home</a>
-								<a class="navbar-item">Examples</a>
-								<a class="navbar-item">Documentation</a>
-								<span class="navbar-item">
-									<a class="button is-primary is-inverted">
-										<span class="icon">
-											<i class="fab fa-github" />
-										</span>
-										<span>Download</span>
-									</a>
-								</span>
-							</div>
-						</div> */}
-					</div>
+			<div className="hero-head has-background-light">
+				<nav className="navbar is-fixed-top has-background-light">
+					<Columns mobile vertical>
+						<Column>
+							<FontAwesomeIcon
+								icon="bars"
+								size="lg"
+								color="black"
+								onClick={() => setExtended(true)}
+								style={{ margin: 20 }}
+							/>
+						</Column>
+						<Column>
+							<img src={logo} width="100" className="is-hidden-desktop" />
+							<img src={logo} width="200" className="is-hidden-mobile" />
+						</Column>
+						<Column />
+					</Columns>
 				</nav>
+				<Menu extendedMenu={extended} extendMenu={setExtended} />
 			</div>
 			<div className="hero-body">
 				<Container>
@@ -190,13 +182,13 @@ export default function Welcome({ code, setCode, setPhone }) {
 				</Container>
 			</div>
 
-			<div class="hero-foot has-background-link">
-				<div class="container has-text-centered">
+			<div className="hero-foot has-background-light">
+				<div className="container has-text-centered">
 					<br />
 
 					<p>
-						<FontAwesomeIcon icon="phone-alt" color="white" />{' '}
-						<a className="has-text-white" href="tel:2029219888">
+						<FontAwesomeIcon icon="phone-alt" color="black" />{' '}
+						<a className="title is-size-6 has-text-black" style={{ marginLeft: 10 }} href="tel:2029219888">
 							Need Help? Give us a call
 						</a>
 					</p>

@@ -10,42 +10,40 @@ export default function SidePanel({ extendedMenu, extendMenu }) {
 
 function ExtendedMenu({ extendedMenu, extendMenu }) {
 	return (
-		<div className="demo">
-			<div className="block">
-				<div className={`navigation-view  ${extendedMenu ? 'is-active' : ''}`} id="myNavigationView">
-					<div className="navbar-brand">
-						<Link to="/">
-							<span className="icon is-large has-text-primary">
-								<span className="fa-stack fa-lg">
-									<i className="fas fa-square fa-stack-2x" />
-									<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
-								</span>
+		<div className="block">
+			<div className={`navigation-view  ${extendedMenu ? 'is-active' : ''}`} id="myNavigationView">
+				<div className="navbar-brand">
+					<Link to="/">
+						<span className="icon is-large has-text-primary">
+							<span className="fa-stack fa-lg">
+								<i className="fas fa-square fa-stack-2x" />
+								<i className="fas fa-map-marker-alt fa-stack-1x fa-inverse" />
 							</span>
-						</Link>
-						<a
-							className={`navbar-burger ${extendedMenu ? 'is-active' : ''}`}
-							id="myToggleButton"
-							role="button"
-							aria-expanded="false"
-							aria-label="menu"
-							onClick={() => extendMenu(!extendedMenu)}
-						>
-							<span aria-hidden="true" />
-							<span aria-hidden="true" />
-							<span aria-hidden="true" />
-						</a>
-					</div>
+						</span>
+					</Link>
+					<a
+						className={`navbar-burger ${extendedMenu ? 'is-active' : ''}`}
+						id="myToggleButton"
+						role="button"
+						aria-expanded="false"
+						aria-label="menu"
+						onClick={() => extendMenu(!extendedMenu)}
+					>
+						<span aria-hidden="true" />
+						<span aria-hidden="true" />
+						<span aria-hidden="true" />
+					</a>
+				</div>
 
-					<Menu>
-						<MenuItem extended name="About" icon="tachometer-alt" route="/" />
-						{/* <MenuItem extended name="Campaigns" icon="globe" route="/campaigns" />
+				<Menu>
+					<MenuItem extended name="About" icon="tachometer-alt" route="/" />
+					{/* <MenuItem extended name="Campaigns" icon="globe" route="/campaigns" />
 						<MenuItem extended name="Posts" icon="images" route="/posts" />
 						<MenuItem extended name="Locations" icon="map-marked-alt" route="/locations" />
 						<MenuItem extended name="Ads" icon="ad" route="/ads" />
 						<MenuItem extended name="Promoters" icon="user-friends" route="/consumers" />
 						<MenuItem extended name="Payments" icon="money-check-alt" route="/transactions" /> */}
-					</Menu>
-				</div>
+				</Menu>
 			</div>
 		</div>
 	);

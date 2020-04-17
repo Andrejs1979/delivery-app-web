@@ -212,15 +212,13 @@ const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
 					</Button>
 				</div>
 			) : (
-				<div style={{ height: 350 }}>
-					<OrderForm
-						location={location}
-						address={`${location.address} ${location.text}`}
-						phone={phone}
-						order={order}
-						setOrder={setOrder}
-					/>
-				</div>
+				<OrderForm
+					location={location}
+					address={`${location.address} ${location.text}`}
+					phone={phone}
+					order={order}
+					setOrder={setOrder}
+				/>
 			)}
 		</div>
 	</div>

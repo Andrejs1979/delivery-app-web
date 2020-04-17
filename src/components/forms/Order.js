@@ -99,115 +99,115 @@ export default function Order({ address, phone, location, order, setOrder }) {
 	const { loading, data, error } = useQuery(ITEMS);
 	const [ createOrder ] = useMutation(CREATE_ORDER);
 
-	const [ showConfirmation, hideOrderForm ] = useModal(
-		() => (
-			<div className="modal is-active">
-				{/* <div className="modal-background" /> */}
-				<br />
-				<br />
-				<br />
-				<div class="modal-card">
-					<div className="box has-background-light">
-						<div className="has-text-centered">
-							<div style={{ height: '10vh' }}>
-								<MapGL
-									ref={mapRef}
-									latitude={location.center[1]}
-									longitude={location.center[0]}
-									zoom={12}
-									mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
-									width="100%"
-									height="100%"
-									// onViewportChange={_onViewportChange}
-									mapboxApiAccessToken={token}
-								>
-									<Marker latitude={location.center[1]} longitude={location.center[0]}>
-										<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
-									</Marker>
-								</MapGL>
-							</div>
-						</div>
-						<br />
-						<p className="title has-text-centered is-size-5-mobile">Confirmation</p>
-						<p className="subtitle has-text-centered is-size-6">
-							We'll text your gift code after confirmation.
-						</p>
+	// const [ showConfirmation, hideOrderForm ] = useModal(
+	// 	() => (
+	// 		<div className="modal is-active">
+	// 			{/* <div className="modal-background" /> */}
+	// 			<br />
+	// 			<br />
+	// 			<br />
+	// 			<div class="modal-card">
+	// 				<div className="box has-background-light">
+	// 					<div className="has-text-centered">
+	// 						<div style={{ height: '10vh' }}>
+	// 							<MapGL
+	// 								ref={mapRef}
+	// 								latitude={location.center[1]}
+	// 								longitude={location.center[0]}
+	// 								zoom={12}
+	// 								mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
+	// 								width="100%"
+	// 								height="100%"
+	// 								// onViewportChange={_onViewportChange}
+	// 								mapboxApiAccessToken={token}
+	// 							>
+	// 								<Marker latitude={location.center[1]} longitude={location.center[0]}>
+	// 									<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
+	// 								</Marker>
+	// 							</MapGL>
+	// 						</div>
+	// 					</div>
+	// 					<br />
+	// 					<p className="title has-text-centered is-size-5-mobile">Confirmation</p>
+	// 					<p className="subtitle has-text-centered is-size-6">
+	// 						We'll text your gift code after confirmation.
+	// 					</p>
 
-						<Columns mobile>
-							<Column>
-								{/* <p class="title is-6 has-text-centered">Where</p> */}
-								<p class="title is-6">{address}</p>
-							</Column>
-							<Column>
-								{/* <p class="title is-6  has-text-centered">When</p> */}
-								<p className="title is-size-6">
-									{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
-								</p>
-							</Column>
-						</Columns>
-						<Box>
-							{/* <p className="title is-5">Your order:</p> */}
-							<p className="title is-6">
-								Art print and delivery<span className="is-pulled-right">${price}</span>
-							</p>
-							<hr />
-							<p className="title is-6">
-								Total<span className="is-pulled-right">${price}</span>
-							</p>
-						</Box>
-						<p className="has-text-centered">Pay by CASH on delivery</p>
+	// 					<Columns mobile>
+	// 						<Column>
+	// 							{/* <p class="title is-6 has-text-centered">Where</p> */}
+	// 							<p class="title is-6">{address}</p>
+	// 						</Column>
+	// 						<Column>
+	// 							{/* <p class="title is-6  has-text-centered">When</p> */}
+	// 							<p className="title is-size-6">
+	// 								{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
+	// 							</p>
+	// 						</Column>
+	// 					</Columns>
+	// 					<Box>
+	// 						{/* <p className="title is-5">Your order:</p> */}
+	// 						<p className="title is-6">
+	// 							Art print and delivery<span className="is-pulled-right">${price}</span>
+	// 						</p>
+	// 						<hr />
+	// 						<p className="title is-6">
+	// 							Total<span className="is-pulled-right">${price}</span>
+	// 						</p>
+	// 					</Box>
+	// 					<p className="has-text-centered">Pay by CASH on delivery</p>
 
-						<Columns mobile vertical>
-							<Column size="1">
-								<label className="checkbox">
-									<input
-										type="checkbox"
-										style={{ height: 20, width: 20, marginRight: 20 }}
-										onChange={() => setAccept(true)}
-										// onClick={() => console.log('click')}
-									/>
-								</label>
-							</Column>
+	// 					<Columns mobile vertical>
+	// 						<Column size="1">
+	// 							<label className="checkbox">
+	// 								<input
+	// 									type="checkbox"
+	// 									style={{ height: 20, width: 20, marginRight: 20 }}
+	// 									onChange={() => setAccept(true)}
+	// 									// onClick={() => console.log('click')}
+	// 								/>
+	// 							</label>
+	// 						</Column>
 
-							<Column>
-								<p className="is-size-7 has-text-left">
-									I agree with the Terms&amp;Conditions and Privacy Policy.
-								</p>
-							</Column>
-						</Columns>
+	// 						<Column>
+	// 							<p className="is-size-7 has-text-left">
+	// 								I agree with the Terms&amp;Conditions and Privacy Policy.
+	// 							</p>
+	// 						</Column>
+	// 					</Columns>
 
-						<Button
-							block
-							color="danger"
-							size="medium"
-							icon="check-circle"
-							disabled={!accept || finish}
-							action={() => setFinish(true)}
-						>
-							{!finish ? 'Confirm' : 'Thank you'}
-						</Button>
+	// 					<Button
+	// 						block
+	// 						color="danger"
+	// 						size="medium"
+	// 						icon="check-circle"
+	// 						disabled={!accept || finish}
+	// 						action={() => setFinish(true)}
+	// 					>
+	// 						{!finish ? 'Confirm' : 'Thank you'}
+	// 					</Button>
 
-						<p className="title is-size-7 has-text-centered">
-							<br />
-							<FontAwesomeIcon icon="phone-alt" />{' '}
-							<a href="tel:2029219888" className="has-text-black">
-								Need Help? Give us a call
-							</a>
-						</p>
-					</div>
-				</div>
-				{/* <button class="modal-close is-large" aria-label="close" /> */}
-			</div>
-		),
-		[ day, location, price, address, finish, deliveryDateTime, accept, setAccept, setFinish ]
-	);
+	// 					<p className="title is-size-7 has-text-centered">
+	// 						<br />
+	// 						<FontAwesomeIcon icon="phone-alt" />{' '}
+	// 						<a href="tel:2029219888" className="has-text-black">
+	// 							Need Help? Give us a call
+	// 						</a>
+	// 					</p>
+	// 				</div>
+	// 			</div>
+	// 			{/* <button class="modal-close is-large" aria-label="close" /> */}
+	// 		</div>
+	// 	),
+	// 	[ day, location, price, address, finish, deliveryDateTime, accept, setAccept, setFinish ]
+	// );
 
-	useEffect(
-		() => {
-			if (confirm) showConfirmation();
-		},
-		[ confirm ]
-	);
+	// useEffect(
+	// 	() => {
+	// 		if (confirm) showConfirmation();
+	// 	},
+	// 	[ confirm ]
+	// );
 
 	useEffect(
 		() => {
@@ -239,9 +239,8 @@ export default function Order({ address, phone, location, order, setOrder }) {
 		<div>
 			{data &&
 			!item &&
-			!deliveryDateTime &&
 			!confirm && (
-				<div>
+				<div style={{ height: 500 }}>
 					<div className="has-text-left">
 						<FontAwesomeIcon
 							icon="arrow-alt-circle-left"
@@ -257,7 +256,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							<div className="column has-text-centered">
 								<Image
 									publicId={`delivery/${data.items[0].picture}`}
-									height="50"
+									height="120"
 									crop="scale"
 									onClick={() => setItem(data.items[0].id)}
 								/>
@@ -276,7 +275,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							<div className="column has-text-centered">
 								<Image
 									publicId={`delivery/${data.items[1].picture}`}
-									height="50"
+									height="120"
 									crop="scale"
 									onClick={() => setItem(data.items[1].id)}
 								/>
@@ -297,7 +296,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							<div className="column has-text-centered">
 								<Image
 									publicId={`delivery/${data.items[2].picture}`}
-									height="50"
+									height="120"
 									crop="scale"
 									onClick={() => setItem(data.items[2].id)}
 								/>
@@ -315,7 +314,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							<div className="column has-text-centered">
 								<Image
 									publicId={`delivery/${data.items[3].picture}`}
-									height="50"
+									height="120"
 									crop="scale"
 									onClick={() => setItem(data.items[3].id)}
 								/>
@@ -337,7 +336,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 
 			{item &&
 			!confirm && (
-				<div>
+				<div style={{ height: 400 }}>
 					<div className="has-text-left">
 						<FontAwesomeIcon
 							icon="arrow-alt-circle-left"
@@ -349,8 +348,10 @@ export default function Order({ address, phone, location, order, setOrder }) {
 					<br />
 					<div className="box has-background-light">
 						<p className="title is-size-4-mobile">Book your delivery</p>
-						<div class="buttons has-addons is-centered">
+
+						<div style={{ marginBottom: 10 }}>
 							<Button
+								block
 								outlined={day !== 'Today'}
 								color="info"
 								active={day === 'Today'}
@@ -363,8 +364,10 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							>
 								Today
 							</Button>
-							<br />
+						</div>
+						<div style={{ marginBottom: 10 }}>
 							<Button
+								block
 								outlined={day !== 'Tomorrow'}
 								color="info"
 								active={day === 'Tomorrow'}
@@ -416,45 +419,96 @@ export default function Order({ address, phone, location, order, setOrder }) {
 				</div>
 			)} */}
 
-			{/* {confirm && (
-				<div>
-					<div className="has-text-left">
-						<FontAwesomeIcon
-							icon="arrow-alt-circle-left"
-							size="3x"
-							color={!finish ? '#209cee' : '#ccc'}
-							onClick={() => !finish && setConfirm(false)}
-						/>
+			{confirm && (
+				<div className="box has-background-light">
+					<div className="has-text-centered">
+						<div style={{ height: '10vh' }}>
+							<MapGL
+								ref={mapRef}
+								latitude={location.center[1]}
+								longitude={location.center[0]}
+								zoom={12}
+								mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
+								width="100%"
+								height="100%"
+								// onViewportChange={_onViewportChange}
+								mapboxApiAccessToken={token}
+							>
+								<Marker latitude={location.center[1]} longitude={location.center[0]}>
+									<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
+								</Marker>
+							</MapGL>
+						</div>
 					</div>
 					<br />
-					<div className="box has-background-light">
-						<p className="title is-size-5-mobile">Confirmation</p>
-						<p className="subtitle">Confirm your order and check your text messages for the gift code!</p>
-						<br />
-						<p className="title is-size-6">
-							{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
-						</p>
-						<p className="subtitle is-size-6">{address}</p>
+					<p className="title has-text-centered is-size-5-mobile">Confirmation</p>
+					<p className="subtitle has-text-centered is-size-6">
+						We'll text your gift code after confirmation.
+					</p>
 
-						<label className="checkbox">
-							<input type="checkbox" onChange={() => setAccept(true)} />
-							I agree with the Terms&amp;Conditions and Privacy Policy.
-						</label>
+					<Columns mobile>
+						<Column>
+							{/* <p class="title is-6 has-text-centered">Where</p> */}
+							<p class="title is-6">{address}</p>
+						</Column>
+						<Column>
+							{/* <p class="title is-6  has-text-centered">When</p> */}
+							<p className="title is-size-6">
+								{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
+							</p>
+						</Column>
+					</Columns>
+					<Box>
+						{/* <p className="title is-5">Your order:</p> */}
+						<p className="title is-6">
+							Art print and delivery<span className="is-pulled-right">${price}</span>
+						</p>
+						<hr />
+						<p className="title is-6">
+							Total<span className="is-pulled-right">${price}</span>
+						</p>
+					</Box>
+					<p className="has-text-centered">Pay by CASH on delivery</p>
+
+					<Columns mobile vertical>
+						<Column size="1">
+							<label className="checkbox">
+								<input
+									type="checkbox"
+									style={{ height: 20, width: 20, marginRight: 20 }}
+									onChange={() => setAccept(true)}
+									// onClick={() => console.log('click')}
+								/>
+							</label>
+						</Column>
+
+						<Column>
+							<p className="is-size-7 has-text-left">
+								I agree with the Terms&amp;Conditions and Privacy Policy.
+							</p>
+						</Column>
+					</Columns>
+
+					<Button
+						block
+						color="danger"
+						size="medium"
+						icon="check-circle"
+						disabled={!accept || finish}
+						action={() => setFinish(true)}
+					>
+						{!finish ? 'Confirm' : 'Thank you'}
+					</Button>
+
+					<p className="title is-size-7 has-text-centered">
 						<br />
-						<br />
-						<Button
-							block
-							color="danger"
-							size="medium"
-							icon="check-circle"
-							disabled={!accept || finish}
-							action={() => setFinish(true)}
-						>
-							{!finish ? 'Confirm' : 'Thank you'}
-						</Button>
-					</div>
+						<FontAwesomeIcon icon="phone-alt" />{' '}
+						<a href="tel:2029219888" className="has-text-black">
+							Need Help? Give us a call
+						</a>
+					</p>
 				</div>
-			)} */}
+			)}
 		</div>
 	);
 

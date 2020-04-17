@@ -1,5 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
+import { useModal } from 'react-modal-hook';
+
+import MapGL, { GeolocateControl, Marker } from 'react-map-gl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { format, addDays, setHours, differenceInHours, startOfHour } from 'date-fns';
 
@@ -16,8 +19,10 @@ import { paymentIntents, loadStripe } from '@stripe/stripe-js';
 import 'styles/CardSectionStyles.css';
 
 import { Hero } from 'components/ui/bulma';
-import { Box, Button, ButtonGroup } from 'components/ui/bulma';
+import { Box, Button, ButtonGroup, Columns, Column } from 'components/ui/bulma';
 // import { Input } from 'components/ui/bulma';
+
+const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZGNkMCJ9.lfRQSV9ls7UYOQgG4zJSSg';
 
 const stripePromise = loadStripe('pk_test_xzpr0wSRpogemBQup8WLtrQW006uS5xBMe');
 const STRIPE_SECRET = 'sk_test_sTqpemWAIZHdMyfJI8NDlJXN00zlTS11Ll';
@@ -71,7 +76,7 @@ const slots = [
 	}
 ];
 
-var settings = {
+const settings = {
 	dots: true,
 	infinite: true,
 	speed: 500,
@@ -79,9 +84,11 @@ var settings = {
 	slidesToScroll: 1
 };
 
-export default function Order({ address, phone, order, setOrder }) {
+export default function Order({ address, phone, location, order, setOrder }) {
+	const mapRef = useRef();
 	const [ item, setItem ] = useState();
 	const [ image, setImage ] = useState();
+	const [ price, setPrice ] = useState();
 	// const [ payment, setPayment ] = useState();
 	const [ day, setDay ] = useState();
 	const [ deliveryDateTime, setDelivery ] = useState();
@@ -91,6 +98,100 @@ export default function Order({ address, phone, order, setOrder }) {
 
 	const { loading, data, error } = useQuery(ITEMS);
 	const [ createOrder ] = useMutation(CREATE_ORDER);
+
+	const [ showConfirmation, hideOrderForm ] = useModal(
+		() => (
+			<div className="modal is-active">
+				<div className="modal-background" />
+				<div class="modal-card">
+					<div className="box has-background-light">
+						<div className="has-text-centered">
+							<div style={{ height: '10vh' }}>
+								<MapGL
+									ref={mapRef}
+									latitude={location.center[1]}
+									longitude={location.center[0]}
+									zoom={12}
+									mapStyle="mapbox://styles/andrejs1979/ck8gin8zl09us1ioih7tkmcpi"
+									width="100%"
+									height="100%"
+									// onViewportChange={_onViewportChange}
+									mapboxApiAccessToken={token}
+								>
+									<Marker latitude={location.center[1]} longitude={location.center[0]}>
+										<FontAwesomeIcon icon="map-marker-alt" size="2x" color="#FF3366" />
+									</Marker>
+								</MapGL>
+							</div>
+						</div>
+						<br />
+						<p className="title has-text-centered is-size-5-mobile">Confirmation</p>
+						<p className="subtitle has-text-centered is-size-6">
+							We'll text your gift code after confirmation.
+						</p>
+
+						<Columns mobile>
+							<Column>
+								{/* <p class="title is-6 has-text-centered">Where</p> */}
+								<p class="title is-6">{address}</p>
+							</Column>
+							<Column>
+								{/* <p class="title is-6  has-text-centered">When</p> */}
+								<p className="title is-size-6">
+									{day}, {format(new Date(deliveryDateTime), 'MM/dd/yyyy hh a')}
+								</p>
+							</Column>
+						</Columns>
+						<Box>
+							{/* <p className="title is-5">Your order:</p> */}
+							<p className="title is-6">
+								Art print and delivery<span className="is-pulled-right">${price}</span>
+							</p>
+							<hr />
+							<p className="title is-6">
+								Total<span className="is-pulled-right">${price}</span>
+							</p>
+						</Box>
+						<p className="has-text-centered">Pay by CASH on delivery</p>
+						<Columns mobile vertical>
+							<Column size="1">
+								<input
+									type="checkbox"
+									style={{ height: 20, width: 20, marginRight: 20 }}
+									onChange={() => setAccept(true)}
+								/>
+							</Column>
+							<Column>
+								<p className="is-size-7 has-text-left">
+									I agree with the Terms&amp;Conditions and Privacy Policy.
+								</p>
+							</Column>
+						</Columns>
+
+						<Button
+							block
+							color="danger"
+							size="medium"
+							icon="check-circle"
+							disabled={!accept || finish}
+							action={() => setFinish(true)}
+						>
+							{!finish ? 'Confirm' : 'Thank you'}
+						</Button>
+					</div>
+				</div>
+				{/* <button class="modal-close is-large" aria-label="close" /> */}
+			</div>
+		),
+		[ day, location, price, address, finish, accept, deliveryDateTime, setAccept, setFinish ]
+	);
+
+	useEffect(
+		() => {
+			if (confirm) showConfirmation();
+		},
+		[ confirm ]
+	);
 
 	useEffect(
 		() => {
@@ -110,8 +211,9 @@ export default function Order({ address, phone, order, setOrder }) {
 	useEffect(
 		() => {
 			if (item && deliveryDateTime) {
-				const { image } = data.items.find((i) => i.id === item);
+				const { image, price } = data.items.find((i) => i.id === item);
 				setImage(image);
+				setPrice(price);
 			}
 		},
 		[ item, deliveryDateTime ]
@@ -124,15 +226,24 @@ export default function Order({ address, phone, order, setOrder }) {
 			!deliveryDateTime &&
 			!confirm && (
 				<div>
-					<Button icon="arrow-alt-circle-left" color="light" action={() => setOrder(false)} />
+					<div className="has-text-left">
+						<FontAwesomeIcon
+							icon="arrow-alt-circle-left"
+							size="3x"
+							color="#209cee"
+							onClick={() => setOrder(false)}
+						/>
+					</div>
 					<br />
 					<div className="box has-background-light">
+						<p className="title is-size-5">Choose your artwork</p>
 						<div className="columns is-mobile">
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[0].picture}`} height="100" crop="scale" />
+								<Image publicId={`delivery/${data.items[0].picture}`} height="50" crop="scale" />
 
 								<Button
 									block
+									size="small"
 									color="danger"
 									icon="shopping-cart"
 									action={() => setItem(data.items[0].id)}
@@ -142,10 +253,11 @@ export default function Order({ address, phone, order, setOrder }) {
 							</div>
 
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[1].picture}`} height="100" crop="scale" />
+								<Image publicId={`delivery/${data.items[1].picture}`} height="50" crop="scale" />
 
 								<Button
 									block
+									size="small"
 									color="danger"
 									icon="shopping-cart"
 									action={() => setItem(data.items[1].id)}
@@ -157,10 +269,11 @@ export default function Order({ address, phone, order, setOrder }) {
 
 						<div className="columns is-mobile">
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[2].picture}`} height="100" crop="scale" />
+								<Image publicId={`delivery/${data.items[2].picture}`} height="50" crop="scale" />
 
 								<Button
 									block
+									size="small"
 									color="danger"
 									icon="shopping-cart"
 									action={() => setItem(data.items[2].id)}
@@ -169,10 +282,11 @@ export default function Order({ address, phone, order, setOrder }) {
 								</Button>
 							</div>
 							<div className="column has-text-centered">
-								<Image publicId={`delivery/${data.items[3].picture}`} height="100" crop="scale" />
+								<Image publicId={`delivery/${data.items[3].picture}`} height="50" crop="scale" />
 
 								<Button
 									block
+									size="small"
 									color="danger"
 									icon="shopping-cart"
 									action={() => setItem(data.items[3].id)}
@@ -188,35 +302,42 @@ export default function Order({ address, phone, order, setOrder }) {
 			{item &&
 			!confirm && (
 				<div>
-					<Button icon="arrow-alt-circle-left" color="light" action={() => setItem(false)} />
+					<div className="has-text-left">
+						<FontAwesomeIcon
+							icon="arrow-alt-circle-left"
+							size="3x"
+							color="#209cee"
+							onClick={() => setItem(false)}
+						/>
+					</div>
 					<br />
 					<div className="box has-background-light">
-						<p className="title is-size-4-mobile">Choose your delivery</p>
-						<Button
-							outlined={day !== 'Today'}
-							color="info"
-							size="medium"
-							block
-							active={day === 'Today'}
-							action={() => setDay('Today')}
-							disabled={slots
-								.filter((slot) => slot.title === day)
-								.filter((slot) => differenceInHours(slot.start, Date.now()) < 3)}
-						>
-							Today
-						</Button>
-						<br />
-						<Button
-							outlined={day !== 'Tomorrow'}
-							color="info"
-							size="medium"
-							block
-							active={day === 'Tomorrow'}
-							action={() => setDay('Tomorrow')}
-						>
-							Tomorrow
-						</Button>
-						<br />
+						<p className="title is-size-4-mobile">Book your delivery</p>
+						<div class="buttons has-addons is-centered">
+							<Button
+								outlined={day !== 'Today'}
+								color="info"
+								active={day === 'Today'}
+								action={() => setDay('Today')}
+								disabled={
+									!slots
+										.filter((slot) => slot.title === day)
+										.filter((slot) => differenceInHours(slot.start, Date.now()) < 3)
+								}
+							>
+								Today
+							</Button>
+							<br />
+							<Button
+								outlined={day !== 'Tomorrow'}
+								color="info"
+								active={day === 'Tomorrow'}
+								action={() => setDay('Tomorrow')}
+							>
+								Tomorrow
+							</Button>
+						</div>
+
 						<div className="select is-medium is-fullwidth">
 							<select value={deliveryDateTime} onChange={({ target }) => setDelivery(target.value)}>
 								<option value={null}>Select delivery time</option>
@@ -259,17 +380,19 @@ export default function Order({ address, phone, order, setOrder }) {
 				</div>
 			)} */}
 
-			{confirm && (
+			{/* {confirm && (
 				<div>
-					<Button
-						icon="arrow-alt-circle-left"
-						color="light"
-						action={() => setConfirm(false)}
-						disabled={finish}
-					/>
+					<div className="has-text-left">
+						<FontAwesomeIcon
+							icon="arrow-alt-circle-left"
+							size="3x"
+							color={!finish ? '#209cee' : '#ccc'}
+							onClick={() => !finish && setConfirm(false)}
+						/>
+					</div>
 					<br />
 					<div className="box has-background-light">
-						<p className="title">Order Confirmation</p>
+						<p className="title is-size-5-mobile">Confirmation</p>
 						<p className="subtitle">Confirm your order and check your text messages for the gift code!</p>
 						<br />
 						<p className="title is-size-6">
@@ -295,7 +418,7 @@ export default function Order({ address, phone, order, setOrder }) {
 						</Button>
 					</div>
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 

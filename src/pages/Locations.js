@@ -3,7 +3,6 @@ import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { useModal } from 'react-modal-hook';
 import MapGL, { GeolocateControl, Marker } from 'react-map-gl';
 import { BaseControl } from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from 'deck.gl';
@@ -21,15 +20,15 @@ const token = 'pk.eyJ1IjoiYW5kcmVqczE5NzkiLCJhIjoiY2s4ZXg3M3hxMDBtaDNkbjZwMGl1ZG
 
 const geolocateStyleMobile = {
 	position: 'absolute',
-	bottom: '123px',
-	right: '15%',
+	bottom: '150px',
+	right: '12%',
 	zIndex: 100
 };
 
 const geolocateStyleDesktop = {
 	position: 'absolute',
-	bottom: '15%',
-	right: '42%',
+	bottom: '19%',
+	right: '40%',
 	zIndex: 100
 };
 
@@ -44,18 +43,6 @@ export default function Locations({ phone }) {
 		longitude: -77.02,
 		zoom: 12
 	});
-
-	// const [ showOrderForm, hideOrderForm ] = useModal(
-	// 	() => (
-	// 		<div className="modal is-active">
-	// 			<div className="modal-background" />
-	// 			<div className="modal-content">
-	// 				<OrderForm address={`${location.address} ${location.text}`} onClose={hideOrderForm} />
-	// 			</div>
-	// 		</div>
-	// 	),
-	// 	[ location ]
-	// );
 
 	const handleGeocoderViewportChange = (viewport) => {
 		const geocoderDefaultOverrides = { transitionDuration: 1000 };
@@ -85,7 +72,7 @@ export default function Locations({ phone }) {
 
 	return (
 		<div className="has-text-centered">
-			<div style={{ height: '85vh' }}>
+			<div style={{ height: '100vh' }}>
 				<MapGL
 					ref={mapRef}
 					{...viewport}
@@ -116,6 +103,7 @@ export default function Locations({ phone }) {
 							/>
 						</div>
 					)}
+
 					<Panel geoCoder={geoCoder} order={order} setOrder={setOrder} location={location} phone={phone} />
 
 					{order || (
@@ -148,14 +136,13 @@ const NavBar = () => {
 		<div>
 			<nav className="level is-mobile has-background-light box">
 				<p className="level-item has-text-left">
-					<span className="fa-layers fa-fw fa-3x" onClick={() => setExtended(true)}>
-						<FontAwesomeIcon icon="square" color="white" />
+					<span className="fa-layers fa-fw fa-2x" onClick={() => setExtended(true)}>
 						<FontAwesomeIcon icon="bars" color="black" transform="shrink-6" />
 					</span>
 				</p>
 
 				<p className="level-item has-text-left">
-					<img src={logo} width="120" />
+					<img src={logo} width="75" />
 				</p>
 
 				<p className="level-item has-text-centered">
@@ -170,24 +157,27 @@ const NavBar = () => {
 const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
 	<div className="columns is-mobile is-centered">
 		<div
-			className="column"
+			className="column is-11-mobile is-11-touch is-5-tablet is-3-desktop"
 			style={{
 				// display: 'flex',
 
 				justifyContent: 'center',
 				alignItems: 'center',
 				position: 'absolute',
-				bottom: '5px',
+				bottom: '15px',
 				zIndex: 50
 			}}
 		>
 			{!order ? (
-				<div className="box has-background-light">
-					<p className="title is-size-4">Look up your address</p>
+				<div className="box has-background-light" style={{ height: 300 }}>
+					<br />
+					<br />
+					<p className="title is-size-5">Where would you like your art and gift delivered?</p>
 					<div
 						ref={geoCoder}
 						style={{
-							alignItems: 'center'
+							alignItems: 'right',
+							marginRight: 50
 						}}
 					/>
 					<br />
@@ -196,12 +186,15 @@ const Panel = ({ geoCoder, order, location, phone, setOrder }) => (
 					</Button>
 				</div>
 			) : (
-				<OrderForm
-					address={`${location.address} ${location.text}`}
-					phone={phone}
-					order={order}
-					setOrder={setOrder}
-				/>
+				<div style={{ height: 350 }}>
+					<OrderForm
+						location={location}
+						address={`${location.address} ${location.text}`}
+						phone={phone}
+						order={order}
+						setOrder={setOrder}
+					/>
+				</div>
 			)}
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Columns, Container } from 'components/ui/bulma';
 import { Button, Box, Input } from 'components/ui/bulma';
 
@@ -20,6 +20,37 @@ export default function Welcome({ code, setCode, setPhone }) {
 
 	return (
 		<section className="hero is-info is-fullheight">
+			<div class="hero-head has-background-link">
+				<nav class="navbar">
+					<div class="container">
+						<div class="navbar-brand">
+							<a class="navbar-item">
+								<img src="https://bulma.io/images/bulma-type-white.png" alt="Logo" />
+							</a>
+							{/* <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+								<span />
+								<span />
+								<span />
+							</span> */}
+						</div>
+						{/* <div id="navbarMenuHeroA" class="navbar-menu">
+							<div class="navbar-end">
+								<a class="navbar-item is-active">Home</a>
+								<a class="navbar-item">Examples</a>
+								<a class="navbar-item">Documentation</a>
+								<span class="navbar-item">
+									<a class="button is-primary is-inverted">
+										<span class="icon">
+											<i class="fab fa-github" />
+										</span>
+										<span>Download</span>
+									</a>
+								</span>
+							</div>
+						</div> */}
+					</div>
+				</nav>
+			</div>
 			<div className="hero-body">
 				<Container>
 					<Columns centered>
@@ -32,7 +63,9 @@ export default function Welcome({ code, setCode, setPhone }) {
 
 										<br />
 										<br /> */}
-									<p className="title has-text-centered">Please enter your phone number</p>
+									<p className="title is-size-1 has-text-centered">Art &amp; Initiative 71 Gifts</p>
+									<p className="subtitle is-size-3 has-text-centered">straight to your doorstep</p>
+									<br />
 									<Formik
 										initialValues={{ phone: '' }}
 										// validate={validationSchema}
@@ -51,7 +84,7 @@ export default function Welcome({ code, setCode, setPhone }) {
 														size="large"
 														component={Input}
 														mask="(999) 999-9999"
-														placeholder="Phone number"
+														placeholder="Mobile number..."
 													/>
 
 													<div className="control">
@@ -59,7 +92,7 @@ export default function Welcome({ code, setCode, setPhone }) {
 															type="submit"
 															className="button is-danger is-full is-large"
 														>
-															Get the code
+															Login
 														</button>
 													</div>
 												</div>
@@ -70,7 +103,7 @@ export default function Welcome({ code, setCode, setPhone }) {
 														size="large"
 														component={Input}
 														mask="(999) 999-9999"
-														placeholder="Phone number"
+														placeholder="Mobile number..."
 													/>
 													<br />
 													<div className="control">
@@ -78,7 +111,7 @@ export default function Welcome({ code, setCode, setPhone }) {
 															type="submit"
 															className="button is-fullwidth is-danger is-full is-large"
 														>
-															Get the code
+															Login
 														</button>
 													</div>
 												</div>
@@ -157,10 +190,18 @@ export default function Welcome({ code, setCode, setPhone }) {
 				</Container>
 			</div>
 
-			<div className="hero-foot">
-				<nav className="is-fullwidth">
-					<div className="container">{/* <p>© 2020 Cloud9</p> */}</div>
-				</nav>
+			<div class="hero-foot has-background-link">
+				<div class="container has-text-centered">
+					<br />
+
+					<p>
+						<FontAwesomeIcon icon="phone-alt" color="white" />{' '}
+						<a className="has-text-white" href="tel:2029219888">
+							Need Help? Give us a call
+						</a>
+					</p>
+					<br />
+				</div>
 			</div>
 		</section>
 	);

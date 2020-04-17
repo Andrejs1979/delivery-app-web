@@ -35,7 +35,8 @@ import {
 	faMobileAlt,
 	faUnlock,
 	faShoppingCart,
-	faArrowAltCircleLeft
+	faArrowAltCircleLeft,
+	faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
@@ -68,12 +69,13 @@ export default () => {
 		faPhoneAlt,
 		faUserTie,
 		faStore,
-		faPhone,
 		faCreditCard,
 		faMapMarkerAlt,
 		faMobileAlt,
 		faUnlock,
 		faShoppingCart,
-		faArrowAltCircleLeft
+		faArrowAltCircleLeft,
+		faPhone,
+		faArrowCircleLeft
 	);
 };

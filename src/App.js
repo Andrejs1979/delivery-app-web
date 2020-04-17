@@ -17,12 +17,12 @@ import Spinner from 'components/ui/Spinner';
 
 import Icons from 'utils/icons';
 
-Icons();
-
 const PROD = 'https://cloud9-app-api.herokuapp.com/';
 // const DEV = 'https://g5m8o3plv8.execute-api.us-east-1.amazonaws.com/dev/graphql';
 
 const auth = firebaseAppAuth;
+
+Icons();
 
 export default function App() {
 	const [ user, loading, error ] = useAuthState(firebaseAppAuth);

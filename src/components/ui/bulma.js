@@ -187,7 +187,7 @@ export function Input({ field, form: { touched, errors }, type, placeholder, siz
 				)}
 				{icon && (
 					<span className={`icon is-${size} is-left`}>
-						<FontAwesomeIcon name={icon} />
+						<FontAwesomeIcon icon={icon} />
 					</span>
 				)}
 

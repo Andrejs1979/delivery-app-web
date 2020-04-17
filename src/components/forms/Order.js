@@ -153,14 +153,19 @@ export default function Order({ address, phone, location, order, setOrder }) {
 							</p>
 						</Box>
 						<p className="has-text-centered">Pay by CASH on delivery</p>
+
 						<Columns mobile vertical>
 							<Column size="1">
-								<input
-									type="checkbox"
-									style={{ height: 20, width: 20, marginRight: 20 }}
-									onChange={() => setAccept(true)}
-								/>
+								<label className="checkbox">
+									<input
+										type="checkbox"
+										style={{ height: 20, width: 20, marginRight: 20 }}
+										onChange={() => setAccept(true)}
+										// onClick={() => console.log('click')}
+									/>
+								</label>
 							</Column>
+
 							<Column>
 								<p className="is-size-7 has-text-left">
 									I agree with the Terms&amp;Conditions and Privacy Policy.
@@ -183,7 +188,7 @@ export default function Order({ address, phone, location, order, setOrder }) {
 				{/* <button class="modal-close is-large" aria-label="close" /> */}
 			</div>
 		),
-		[ day, location, price, address, finish, accept, deliveryDateTime, setAccept, setFinish ]
+		[ day, location, price, address, finish, deliveryDateTime, accept, setAccept, setFinish ]
 	);
 
 	useEffect(

@@ -43,9 +43,9 @@ export default function App() {
 			headers: {
 				authorization: user ? user.uid : null
 			},
-			// uri: process.env.REACT_APP_API_ROOT_URL
+			uri: process.env.REACT_APP_API_ROOT_URL
 			// uri: PROD
-			uri: 'http://192.168.0.18:5000/graphql'
+			// uri: 'http://192.168.0.18:5000/graphql'
 		})
 	});
 
